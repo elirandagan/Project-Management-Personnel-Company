@@ -10,10 +10,10 @@
         "ecmaVersion": 12
     },
     "rules": {
-        "indent": [
-            "error",
-            "tab"
-        ],
+        // "indent": [
+        //     "error",
+        //     "tab"
+        // ],
         "linebreak-style": [
             "error",
             "windows"
@@ -22,10 +22,10 @@
             "error",
             // "double"
             "single"
-        ],
-        "semi": [
-            "error",
-            "never"
         ]
+        // "semi": [
+        //     "error",
+        //     "never"
+        // ]
     }
 }
