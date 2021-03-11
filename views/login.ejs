@@ -18,13 +18,28 @@
         <input id="pass" type="password" name="" required="">
         <label>Password</label>
       </div>
-      <a href="/dashboard">
+      <a  onclick="check()">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
         Login
       </a>
+      
+      <script>
+        this.check = function(){
+          let user = document.getElementById("user").value;
+          let pass = document.getElementById("pass").value;
+          // alert(user + pass);
+          if(user == "Eliran" && pass == "123456"){
+            window.location = "/dashboard";
+          }
+          else{
+            alert("wrong User name or Password\n ** try username:Eliran \n password:123456 **")
+          }
+        }
+
+      </script>
       
     </form>
   </div>
