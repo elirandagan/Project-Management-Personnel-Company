@@ -1,50 +1,59 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>Login Page </title>
-<link href="css/login.css" rel="stylesheet">
-<!-- <link rel="stylesheet" type="text/css" href="public/css/login.css" -->
+  <title>Login Page </title>
+  <link href="css/login.css" rel="stylesheet">
+  <!-- <link rel="stylesheet" type="text/css" href="public/css/login.css" -->
 </head>
+
 <body>
   <div class="login-box">
     <h1 style="color: aliceblue;text-align: center;">WELCOME TO G.L.E.M COMPANY!</h1>
     <h2>Login Page</h2>
     <form>
       <div class="user-box">
-        <input id="user" type="text" name="" required="">
+        <input id="user" type="text" name="user" required="">
         <label>Username</label>
       </div>
       <div class="user-box">
-        <input id="pass" type="password" name="" required="">
+        <input id="pass" type="password" name="pass" required="">
         <label>Password</label>
       </div>
-      <a  onclick="check()">
+      <a onclick="check()">
         <span></span>
         <span></span>
         <span></span>
         <span></span>
         Login
       </a>
-      
+
       <script>
-        this.check = function(){
+        this.check = function () {
           let user = document.getElementById("user").value;
           let pass = document.getElementById("pass").value;
           // alert(user + pass);
-          if(user == "Eliran" && pass == "123456"){
+          if (user == "GLEM" && pass == "123456") {
             window.location = "/dashboard";
           }
-          else{
-            alert("wrong User name or Password\n ** try username:Eliran \n password:123456 **")
+          else {
+            swal({
+              title: "Wrong Username Or Password",
+              text: "try username:GLEM \n password:123456",
+              icon: "warning",
+            });
+            // swal("wrong User name or Password\n ** try username:Eliran \n password:123456 **")
           }
         }
 
       </script>
-      
+
+      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     </form>
   </div>
- 
+
 
 </body>
-</html>
 
+</html>
