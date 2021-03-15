@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <div class="login-box">
+  <div class="login-box" onkeydown= "enter()">
     <div class="logo">
       <img src="https://i.ibb.co/4dfK1RZ/0587a81c-623f-4938-8932-291cbaab4e5b-200x200.png" alt="Logo"
         border="0"></a><br /><br />
@@ -36,6 +36,10 @@
       </div>
 
       <script>
+        this.enter = function () {
+          if (event.keyCode == 13) document.getElementById('login_btn').click()
+        }
+
         this.check = function () {
           let user = document.getElementById("user").value;
           let pass = document.getElementById("pass").value;
