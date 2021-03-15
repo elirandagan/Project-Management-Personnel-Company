@@ -1,12 +1,7 @@
 const express = require('express')
-const httpStatus = require('http-status');
 const app_port = process.env.PORT || 3000
 const app = express()
 const router = express.Router()
-
-
-const ApiError = require('./utlits/ApiError');
-const MongoClient = require('mongodb').MongoClient;
 
 
 app.set('view engine', 'ejs')
@@ -30,6 +25,8 @@ console.log(`app is running. port: ${app_port}`)
 console.log(`http://127.0.0.1:${app_port}/`)
 
 
+
+// const MongoClient = require('mongodb').MongoClient;
 // const uri = 'mongodb+srv://Admin:<>@cluster0.6vq53.mongodb.net/ProjectManger?retryWrites=true&w=majority';
 // const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 // // eslint-disable-next-line no-unused-vars
