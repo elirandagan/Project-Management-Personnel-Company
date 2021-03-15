@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Login Page </title>
+  <title>Login Page</title>
   <link href="css/login.css" rel="stylesheet">
   <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
   <!-- <link rel="stylesheet" type="text/css" href="public/css/login.css" -->
@@ -15,7 +15,7 @@
         border="0"></a><br /><br />
     </div>
     <h1 style="color:#3d3b38 ;text-align: center;">Contractors Management System</h1>
-    <h2> Login Page</h2>
+    <h2>Login Page</h2>
     <form>
       <div class="user-box">
         <input id="user" type="text" name="user" required="">
@@ -25,14 +25,15 @@
         <input id="pass" type="password" name="pass" required="">
         <label>Password</label>
       </div>
-      <a onclick="check()">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        Login
-      </a>
-
+      <div style="display: flex;justify-content: center;">
+        <a id="login_btn" onclick="check()">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Login
+        </a>  
+      </div>
 
       <script>
         this.check = function () {
@@ -45,12 +46,11 @@
           else {
             swal({
               title: "Wrong Username Or Password",
-              text: "try:\n username:GLEM \n password:123456",
+              text: "TRY\n username: GLEM \n password: 123456",
               icon: "warning",
             });
           }
         }
-
       </script>
 
       <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
