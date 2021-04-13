@@ -10,7 +10,6 @@ const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/my
 MongoClient.connect(uri, { useUnifiedTopology: true })
   .then(client => {
     console.log("Connected to Database")
-    // console.log('commit after connected')
     const db = client.db("GLEM-TECH")
     const HR_Users_Collection = db.collection("HR_Users")
 
@@ -20,9 +19,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
 
+          // HOW TO "GET" FROM COLLECTION
     router.get("/", function (req, res) {
       console.log("Login")
-      //
       HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
         if (err) {
           console.log(err);
@@ -30,7 +29,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
           console.log(JSON.stringify(result));
       }
       })
-      // console.log(cursor)
       console.log("succed")
       
       res.status(200).render("login");
@@ -70,6 +68,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
     //DB Actions
 
+
+              // HOW TO "POST" TO COLLECTION
     // router.post('/user', (req, res) => {
     //   UsersCollection.insertOne(req.body)
     //     .then(result => {
