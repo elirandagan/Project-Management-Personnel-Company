@@ -10,15 +10,29 @@ const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/my
 MongoClient.connect(uri, { useUnifiedTopology: true })
   .then(client => {
     console.log('Connected to Database')
+    // console.log('commit after connected')
     const db = client.db('GLEM-TECH')
-    const UsersCollection = db.collection('Users')
+    const HR_Users_Collection = db.collection('HR_Users')
 
     app.set("view engine", "ejs");
 
     app.use(express.static("public"));
     app.use(bodyParser.urlencoded({ extended: true }))
+    app.use(bodyParser.json())
 
     router.get("/", function (req, res) {
+      console.log('Login')
+      //
+      const cursor = HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
+        if (err) {
+          console.log(err);
+      } else {
+          console.log(JSON.stringify(result));
+      }
+      })
+      // console.log(cursor)
+      console.log('succed')
+      
       res.status(200).render("login");
     });
 
@@ -56,15 +70,15 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
     //DB Actions
 
-    router.post('/user', (req, res) => {
-      UsersCollection.insertOne(req.body)
-        .then(result => {
-          // console.log(req.body)
-          console.log(result)
-          res.redirect('/dashboard')
-        })
-        .catch(error => console.error(error))
-    })
+    // router.post('/user', (req, res) => {
+    //   UsersCollection.insertOne(req.body)
+    //     .then(result => {
+    //       // console.log(req.body)
+    //       console.log(result)
+    //       res.redirect('/dashboard')
+    //     })
+    //     .catch(error => console.error(error))
+    // })
 
     // app.get('/', (req, res) => {
     //   const cursor = db.collection('Users').find().toArray()
