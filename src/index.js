@@ -23,7 +23,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     router.get("/", function (req, res) {
       console.log("Login")
       //
-      const cursor = HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
+      HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
         if (err) {
           console.log(err);
       } else {
