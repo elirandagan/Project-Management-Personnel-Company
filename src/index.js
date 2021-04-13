@@ -1,18 +1,18 @@
 const express = require("express");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const app_port = process.env.PORT || 3000;
 const app = express();
 const router = express.Router();
 
-const MongoClient = require('mongodb').MongoClient;
+const MongoClient = require("mongodb").MongoClient;
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, { useUnifiedTopology: true })
   .then(client => {
-    console.log('Connected to Database')
+    console.log("Connected to Database")
     // console.log('commit after connected')
-    const db = client.db('GLEM-TECH')
-    const HR_Users_Collection = db.collection('HR_Users')
+    const db = client.db("GLEM-TECH")
+    const HR_Users_Collection = db.collection("HR_Users")
 
     app.set("view engine", "ejs");
 
@@ -21,7 +21,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     app.use(bodyParser.json())
 
     router.get("/", function (req, res) {
-      console.log('Login')
+      console.log("Login")
       //
       const cursor = HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
         if (err) {
@@ -31,7 +31,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
       }
       })
       // console.log(cursor)
-      console.log('succed')
+      console.log("succed")
       
       res.status(200).render("login");
     });
