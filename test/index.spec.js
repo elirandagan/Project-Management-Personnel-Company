@@ -18,22 +18,22 @@
 //   });
 // });
 
-var expect = require('chai').expect
+var expect = require("chai").expect
 
-describe('Login-Page', () => {
-  describe('- Password validation', () => {
-          it('true if email format is validate', () => {
-              var validPassword = 'password123'
+describe("Login-Page", () => {
+  describe("- Password validation", () => {
+          it("Suppose to be True (password format validate)", () => {
+              var validPassword = "GLEM123"
               expect(validatePassword(validPassword)).to.be.eql(true)
           })
 
-          it('true if email format is validate', () => {
-              var validPassword = 'A!12A!'
+          it("Suppose to be True (password format is validate)", () => {
+              var validPassword = "123456"
               expect(validatePassword(validPassword)).to.be.eql(true)
           })
   
-          it('false if password format is not validate', () => {
-              var invalidPassword = ''
+          it("Suppose to be false (password format is not validate)", () => {
+              var invalidPassword = ""
               expect(validatePassword(invalidPassword)).to.be.eql(false)
           })
   })   
