@@ -5,7 +5,7 @@ html {
     margin:0;
     padding:0;
     font-family: sans-serif;
-    background: linear-gradient(#F07654, #F5DF2E);
+    background: linear-gradient(#f9c5d1, #9795ef);
   }
 
   .logo{
@@ -174,3 +174,8 @@ html {
     }
   }
 
+.user-box-checkbox{
+  display: inline-block;
+  padding-top: 5px;
+  padding-bottom: 20px;
+}

@@ -2,68 +2,74 @@
 <html>
 
 <head>
-  <title>Login Page</title>
-  <link href="css/login.css" rel="stylesheet">
-  <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
-  <!-- <link rel="stylesheet" type="text/css" href="public/css/login.css" -->
+    <title>Login Page</title>
+    <link href="css/login.css" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
+    <!-- <link rel="stylesheet" type="text/css" href="public/css/login.css" -->
 </head>
 
 <body>
-  <div class="login-box" onkeydown= "enter()">
+<div class="login-box" onkeydown="enter()">
     <div class="logo">
-      <img src="https://i.ibb.co/4dfK1RZ/0587a81c-623f-4938-8932-291cbaab4e5b-200x200.png" alt="Logo"
-        border="0"></a><br /><br />
+        <img src="https://i.ibb.co/4dfK1RZ/0587a81c-623f-4938-8932-291cbaab4e5b-200x200.png" alt="Logo"
+             border="0"></a><br/><br/>
     </div>
     <h1 style="color:#3d3b38 ;text-align: center;">Contractors Management System</h1>
     <h2>Login Page</h2>
     <form>
-      <div class="user-box">
-        <input id="user" type="text" name="user" required="">
-        <label>Username</label>
-      </div>
-      <div class="user-box">
-        <input id="pass" type="password" name="pass" required="">
-        <label>Password</label>
-      </div>
-      <div style="display: flex;justify-content: center;">
-        <a id="login_btn" onclick="check()">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          Login
-        </a>  
-      </div>
+        <div class="user-box-checkbox">
+            <input type="checkbox" id="identity1" name="vehicle1" value="Bike">
+            <label for="identity1">HR</label>
+            <input type="checkbox" id="identity2" name="vehicle2" value="Car">
+            <label for="identity1">Employer</label>
+            <input type="checkbox" id="identity3" name="vehicle3" value="Boat">
+            <label for="identity1">Other</label>
+        </div>
+        <div class="user-box">
+            <input id="user" type="text" name="user" required="">
+            <label>Username</label>
+        </div>
+        <div class="user-box">
+            <input id="pass" type="password" name="pass" required="">
+            <label>Password</label>
+            <div style="display: flex;justify-content: center;">
+                <a id="login_btn" onclick="check()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    Login
+                </a>
+            </div>
 
-      <script>
-        this.enter = function () {
-          if (event.keyCode == 13) document.getElementById('login_btn').click()
-        }
+            <script>
+                this.enter = function () {
+                    if (event.keyCode == 13) document.getElementById('login_btn').click()
+                }
 
-        this.check = function () {
-          let user = document.getElementById("user").value;
-          let pass = document.getElementById("pass").value;
-          // alert(user + pass);
-          if (user == "GLEM" && pass == "123456") {
-            window.location = "/dashboard";
-          }
-          else {
-            swal({
-              title: "Wrong Username Or Password",
-              text: "TRY\n username: GLEM \n password: 123456",
-              icon: "warning",
-            });
-          }
-        }
-      </script>
+                this.check = function () {
+                    let user = document.getElementById("user").value;
+                    let pass = document.getElementById("pass").value;
+                    // alert(user + pass);
+                    if (user == "GLEM" && pass == "123456") {
+                        window.location = "/dashboard";
+                    } else {
+                        swal({
+                            title: "Wrong Username Or Password",
+                            text: "TRY\n username: GLEM \n password: 123456",
+                            icon: "warning",
+                        });
+                    }
+                }
+            </script>
 
-      <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     </form>
-  </div>
-  <div style="position: absolute; bottom: 8px; left: 16px; font-size: 12px;color:#3d3b38;">
+</div>
+<div style="position: absolute; bottom: 8px; left: 16px; font-size: 12px;color:#3d3b38;">
     Copyright 2021 &copy; GLEM TECH LTD.
-  </div>
+</div>
 
 </body>
 
