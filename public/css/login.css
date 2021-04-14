@@ -184,4 +184,13 @@ html {
   font-family: "Papyrus";
 }
 
+.signup {
+  color: orange;
+  font-family: "Papyrus";
+  padding-bottom: 20px;
+}
+
+#A2{
+  left: 70px;
+}
 
