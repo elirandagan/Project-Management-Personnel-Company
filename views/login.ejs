@@ -16,14 +16,15 @@
     </div>
     <h1 style="color:#3d3b38 ;text-align: center;">Contractors Management System</h1>
     <h2>Login Page</h2>
-    <form>
-        <div class="user-box-checkbox">
-            <input type="checkbox" id="identity1" name="vehicle1" value="Bike">
-            <label class="identityCheckBox" for="identity1">HR</label>
-            <input type="checkbox" id="identity2" name="vehicle2" value="Car">
-            <label class="identityCheckBox" for="identity1">Employer</label>
-            <input type="checkbox" id="identity3" name="vehicle3" value="Boat">
-            <label class="identityCheckBox" for="identity1">Other</label>
+    <form id="login-form">
+        <div id="radioBtnIdentity" class="user-box-checkbox">
+            <label class="identityCheckBox" for="identity1">HR
+            <input type="radio" name="identity" id="identity1" value="HR"></label>
+            <label class="identityCheckBox" for="identity2">Employer
+            <input type="radio" name="identity" id="identity2" value="Emp"></label>
+            <label class="identityCheckBox" for="identity3">Other
+            <input type="radio" name="identity" id="identity3" value="Other"></label>
+
         </div>
         <div class="user-box">
             <input id="user" type="text" name="user" required="">
@@ -41,17 +42,47 @@
                     Login
                 </a>
             </div>
-
             <script>
+                const loginForm = document.getElementById("login-form");
+                const loginButton = document.getElementById("login_btn");
+
+
                 this.enter = function () {
                     if (event.keyCode == 13) document.getElementById('login_btn').click()
                 }
 
                 this.check = function () {
-                    let user = document.getElementById("user").value;
-                    let pass = document.getElementById("pass").value;
+                    const username = loginForm.user.value;
+                    const password = loginForm.pass.value;
+                    const radioBtnSelect = document.querySelector('input[name="identity"]:checked')
+                    let identity = radioBtnSelect ? radioBtnSelect.value : "empty" ;
+                    console.log(HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log(JSON.stringify(result));
+                        }
+                    }))
                     // alert(user + pass);
-                    if (user == "GLEM" && pass == "123456") {
+                    if ( identity==="empty") {
+                        swal({
+                            title: "identity field is empty\n",
+                            text: "Please fill identity field",
+                            icon: "warning",
+                        });
+                    }else if ( password.length<6) {
+                        swal({
+                            title: "Password too short\n",
+                            text: "Password have to be more then 6 char",
+                            icon: "warning",
+                        });
+                    }else if ( username.length<1) {
+                        swal({
+                            title: "User name is required field.\n",
+                            text: "Enter user name",
+                            icon: "warning",
+                        });
+                    }else if(password=="123456" && username=="GLEM"){
                         window.location = "/dashboard";
                     } else {
                         swal({
@@ -62,7 +93,6 @@
                     }
                 }
             </script>
-
             <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     </form>
