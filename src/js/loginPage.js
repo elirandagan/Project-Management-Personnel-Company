@@ -7,6 +7,5 @@ loginButton.addEventListener("click",(e)=>{
     const username = loginForm.user.value;
     const password = loginForm.pass.value;
     console.log(password,username)
-    console.log("HERHEHEREE")
 
 })
