@@ -219,8 +219,9 @@
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Password</label>
-                          <input type="text" class="form-control" name="Password">
+                          <input type="password" id="password" name="password" class="form-control">
+                          <label for="password" class="bmd-label-floating">Password</label>
+                          <span toggle="#password" id="eye" class="mdi mdi-eye" onclick="myFunction(this)">show</span>
                         </div>
                       </div>
                     </div>
@@ -551,6 +552,24 @@
       });
     });
   </script>
+  <script> // show password
+    function myFunction(e) {
+
+      var x = document.getElementById("password");
+      var y = document.getElementById("eye");
+      if (x.type === "password") {
+          e.classList.add('mdi-eye')
+          y.innerHTML="Hide"
+          e.classList.remove('mdi-eye-off')
+          x.type = "text";
+      } else {
+          e.classList.add('mdi-eye-off')
+          y.innerHTML="Show"
+          e.classList.remove('mdi-eye')
+          x.type = "password";
+      }
+    }
+</script>
 </body>
 
 </html>
