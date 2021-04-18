@@ -15,6 +15,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
     app.set("view engine", "ejs");
 
+    
+    app.get("/", (req, res)=>{
+      res.render("login", {name:"lior elisberg"});
+      });
+
+
     app.use(express.static("public"));
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
@@ -27,6 +33,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
           console.log(err);
       } else {
           console.log(JSON.stringify(result));
+          //send user to user.ejs
+          // app.get("/", (req, res) => {  
+          //   res.render("login", {name:"lior elisberg"})
+          // });
       }
       })
       console.log("succed")
@@ -68,8 +78,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
     //DB Actions
 
-
-              // HOW TO "POST" TO COLLECTION
+    // // HOW TO "POST" TO COLLECTION
     // router.post('/user', (req, res) => {
     //   UsersCollection.insertOne(req.body)
     //     .then(result => {
