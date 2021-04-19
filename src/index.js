@@ -3,36 +3,43 @@ const bodyParser = require("body-parser");
 const app_port = process.env.PORT || 3000;
 const app = express();
 const router = express.Router();
-
 const MongoClient = require("mongodb").MongoClient;
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
+
 MongoClient.connect(uri, { useUnifiedTopology: true })
   .then(client => {
-    console.log("Connected to Database")
-    const db = client.db("GLEM-TECH")
-    const HR_Users_Collection = db.collection("HR_Users")
+            console.log("Connected to Database")
+            const db = client.db("GLEM-TECH")
+            const HR_Users_Collection = db.collection("HR_Users")
 
-    app.set("view engine", "ejs");
+            app.set("view engine", "ejs");
 
-    app.use(express.static("public"));
-    app.use(bodyParser.urlencoded({ extended: true }))
-    app.use(bodyParser.json())
+            app.use(express.static("public"));
+            app.use(bodyParser.urlencoded({ extended: true }))
+            app.use(bodyParser.json())
 
-          // HOW TO "GET" FROM COLLECTION
-    router.get("/", function (req, res) {
-      console.log("Login")
-      HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
-        if (err) {
-          console.log(err);
-      } else {
-          console.log(JSON.stringify(result));
-      }
-      })
-      console.log("succed")
-      
+            // HOW TO "GET" FROM COLLECTION
+            router.get("/", function (req, res) {
+                console.log("Login")
+                HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.log(JSON.stringify(result));
+                    }
+                })
+                console.log("succed")
+
       res.status(200).render("login");
     });
+
+    app.post("register", async(req,res)=>{
+        res.json({status:"ok"})
+        console.log(req.body)
+        // HR_Users_Collection.find()
+    })
+
 
     router.get("/typography", function (req, res) {
       res.status(200).render("typography");
@@ -84,7 +91,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     //   const cursor = db.collection('Users').find().toArray()
     //   console.log(cursor)
     //   // console.log('succed')
-    //   // 
+    //   //
     // })
 
     //add the router
