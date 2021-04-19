@@ -42,16 +42,16 @@
                 </a>
             </div>
             <div class="signup">
-                <a id="A1" href="src/validations/loginPage.js">first time here ? </a>
-                <a id="A2" href="src/validations/loginPage.js">sign up</a>
+                <a id="A1" href="src/js/loginPage.js">first time here ? </a>
+                <a id="A2" href="src/js/loginPage.js">sign up</a>
             </div>
             <script>
                 const loginForm = document.getElementById("login-form");
                 const loginButton = document.getElementById("login_btn");
 
-
                 this.enter = function () {
-                    if (event.keyCode == 13) document.getElementById('login_btn').click()
+                    if (event.keyCode == 13) 
+                        document.getElementById('login_btn').click()
                 }
 
                 this.check = function () {
@@ -59,6 +59,13 @@
                     const password = loginForm.pass.value;
                     const radioBtnSelect = document.querySelector('input[name="identity"]:checked')
                     let identity = radioBtnSelect ? radioBtnSelect.value : "empty" ;
+                    // console.log(HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
+                    //     if (err) {
+                    //         console.log(err);
+                    //     } else {
+                    //         console.log(JSON.stringify(result));
+                    //     }
+                    // }))
                     // alert(user + pass);
                     if ( identity==="empty") {
                         swal({
