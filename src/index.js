@@ -34,25 +34,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
       res.status(200).render("login");
     });
 
-    router.get("/typography", function (req, res) {
-      res.status(200).render("typography");
-    });
-
-    router.get("/notifications", function (req, res) {
-      res.status(200).render("notifications");
-    });
-
     router.get("/template", function (req, res) {
       res.status(200).render("template");
     });
 
-    router.get("/icons", function (req, res) {
-      res.status(200).render("icons");
-    });
-
-    router.get("/tables", function (req, res) {
-      res.status(200).render("tables");
-    });
 
     router.get("/workHistory", function (req, res) {
       res.status(200).render("workHistory");
@@ -67,7 +52,17 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     });
 
     router.get("/recruit", function (req, res) {
-      res.status(200).render("recruit");
+      console.log("recruit")
+      HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
+        if (err) {
+          console.log(err);
+      } else {
+          console.log(JSON.stringify(result));
+          res.status(200).render("recruit",{data : JSON.stringify(result)});
+      }
+      })
+      console.log("succed")
+      
     });
     
     router.get("/trackingWorkers", function (req, res) {
@@ -88,10 +83,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
     router.get("/user", function (req, res) {
       res.status(200).render("user");
-    });
-
-    router.get("/map", function (req, res) {
-      res.status(200).render("map");
     });
 
     router.get("/dashboard", function (req, res) {

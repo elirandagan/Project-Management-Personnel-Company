@@ -118,6 +118,7 @@
           <div class="navbar-wrapper">
             <a class="navbar-brand" href="javascript:void(0)">Recruit</a>
           </div>
+         
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
             aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
             <span class="sr-only">Toggle navigation</span>
@@ -174,6 +175,10 @@
       </nav>
       <!-- End Navbar -->
       <div class="content">
+        <div id="test">
+          MENDAL YA GEVER
+          <%= data %>
+        </div>
       </div>
       <footer class="footer">
         <div class="container-fluid">
@@ -213,6 +218,8 @@
         date.innerHTML = '&copy; ' + x + date.innerHTML;
       </script>
     </div>
+
+    
   </div>
   
   </div>
@@ -396,12 +403,16 @@
       });
     });
   </script>
+
   <script>
     $(document).ready(function () {
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
-
+      var data = 'TEST'
     });
+    
+    // document.getElementById.innerHTML = data;
+
   </script>
 </body>
 
