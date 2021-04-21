@@ -27,11 +27,11 @@
 
         </div>
         <div class="user-box">
-            <input id="user" type="text" name="user" required="">
+            <input id="user" type="text" autocomplete="off" name="user" required="">
             <label>Username</label>
         </div>
         <div class="user-box">
-            <input id="pass" type="password" name="pass" required="">
+            <input id="pass" type="password" autocomplete="off" name="pass" required="">
             <label>Password</label>
             <div style="display: flex;justify-content: center;">
                 <a id="login_btn" onclick="check()">
@@ -42,31 +42,23 @@
                 </a>
             </div>
             <div class="signup">
-                <a id="A1" href="src/validations/loginPage.js">first time here ? </a>
-                <a id="A2" href="src/validations/loginPage.js">sign up</a>
+                <a id="A1" href="src/js/loginPage.js">first time here ? </a>
+                <a id="A2" href="src/js/loginPage.js">sign up</a>
             </div>
             <script>
                 const loginForm = document.getElementById("login-form");
                 const loginButton = document.getElementById("login_btn");
 
-
                 this.enter = function () {
-                    if (event.keyCode == 13) document.getElementById('login_btn').click()
+                    if (event.keyCode == 13)
+                        loginButton.click()
                 }
 
-                this.check = function () {
+                this.check = async function () {
                     const username = loginForm.user.value;
                     const password = loginForm.pass.value;
                     const radioBtnSelect = document.querySelector('input[name="identity"]:checked')
                     let identity = radioBtnSelect ? radioBtnSelect.value : "empty" ;
-                    console.log(HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
-                        if (err) {
-                            console.log(err);
-                        } else {
-                            console.log(JSON.stringify(result));
-                        }
-                    }))
-                    // alert(user + pass);
                     if ( identity==="empty") {
                         swal({
                             title: "identity field is empty\n",
@@ -88,11 +80,23 @@
                     }else if(password=="123456" && username=="GLEM"){
                         window.location = "/dashboard";
                     } else {
-                        swal({
-                            title: "Wrong Username Or Password",
-                            text: "TRY\n username: GLEM \n password: 123456",
-                            icon: "warning",
-                        });
+                        // swal({
+                        //     title: "Wrong Username Or Password",
+                        //     text: "TRY\n username: GLEM \n password: 123456",
+                        //     icon: "warning",
+                        // });
+                        const result = await fetch('/api/register',{
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                username,
+                                password
+                            })
+
+                        }).then(res => res.json())
+                        console.log(result)
                     }
                 }
             </script>

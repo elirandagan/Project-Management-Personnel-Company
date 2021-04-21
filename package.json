@@ -25,15 +25,19 @@
     "chai": "^4.3.3",
     "eslint": "^7.21.0",
     "mocha": "^8.3.1",
+    "mogoose": "0.0.1-security",
     "nodemon": "^2.0.7"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "chai-http": "^4.3.0",
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-ejs-layouts": "^2.5.0",
     "jquery": "^3.6.0",
-    "mongodb": "^3.6.5"
+    "mongodb": "^3.6.5",
+    "mongoose": "^5.12.5",
+    "validator": "^13.5.2"
   }
 }

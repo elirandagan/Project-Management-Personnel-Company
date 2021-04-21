@@ -1,17 +1,4 @@
-<!--
-=========================================================
-* Material Dashboard Dark Edition - v2.1.0
-=========================================================
 
-* Product Page: https://www.creative-tim.com/product/material-dashboard-dark
-* Copyright 2019 Creative Tim (http://www.creative-tim.com)
-
-* Coded by www.creative-tim.com
-
-=========================================================
-
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
--->
 <!DOCTYPE html>
 <html lang="en">
 
@@ -181,30 +168,9 @@
               <div class="card">
                 <div class="card-header card-header-primary">
                   <h4 class="card-title">Edit Profile</h4>
-                  <p class="card-category">Complete your profile</p>
                 </div>
                 <div class="card-body">
                   <form action="/user" method="POST">
-                    <div class="row">
-                      <div class="col-md-5">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Company </label>
-                          <input type="text" class="form-control" name="Company">
-                        </div>
-                      </div>
-                      <div class="col-md-3">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Username</label>
-                          <input type="text" class="form-control" name="UserName">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Email address</label>
-                          <input type="email" class="form-control" name="EmailAdress">
-                        </div>
-                      </div>
-                    </div>
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
@@ -216,45 +182,74 @@
                         <div class="form-group">
                           <label class="bmd-label-floating">Last Name</label>
                           <input type="text" class="form-control" name="LastName">
+                          <!-- <label class="bmd-label-floating">Username</label>
+                          <input type="text" class="form-control" name="UserName"> -->
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">ID</label>
+                          <input type="text" class="form-control" name="id">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Company</label>
+                          <input type="text" class="form-control" name="Company">
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <select class="form-control" name="expertises" id="expertises">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option style="color:black" value="Technician">A.C Technician</option>
+                            <option style="color:black" value="Carpenter">Carpenter</option>
+                            <option style="color:black" value="Electrician">Electrician</option>
+                            <option style="color:black" value="Gardener">Gardener</option>
+                            <option style="color:black" value="Painter">Painter</option>
+                            <option style="color:black" value="Plumber">Plumber</option>
+                          </select>
+                          <label for="expertises">Expertise</label>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <select class="form-control" name="areas" id="ares">
+                            <option value="" disabled selected>Choose your option</option>
+                            <option style="color:black" value="Technician">North</option>
+                            <option style="color:black" value="Carpenter">Center</option>
+                            <option style="color:black" value="Electrician">South</option>
+                          </select>
+                          <label for="areas">Area</label>
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">Hourly Payment (₪)</label>
+                          <input type="number" min="0 "class="form-control" name="Payment">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label class="bmd-label-floating">UserName</label>
+                          <input type="text" class="form-control" name="UserName">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <input type="password" id="password" name="password" class="form-control">
+                          <label for="password" class="bmd-label-floating">Password</label>
+                          <span toggle="#password" id="eye" class="mdi mdi-eye" onclick="myFunction(this)">show</span>
                         </div>
                       </div>
                     </div>
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Adress</label>
-                          <input type="text" class="form-control" name="Adress">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">City</label>
-                          <input type="text" class="form-control" name="City">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Country</label>
-                          <input type="text" class="form-control" name="Country">
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Postal Code</label>
-                          <input type="text" class="form-control" name="PostalCode">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-12">
-                        <div class="form-group">
-                          <label>About Me</label>
+                          <label>About Me</label>     
                           <div class="form-group">
-                            <label class="bmd-label-floating"> Lamborghini Mercy, Your chick she so thirsty, I'm in that
-                              two seat Lambo.</label>
-                            <textarea class="form-control" rows="5"></textarea>
+                            <label class="bmd-label-floating"> I don't like to brag, but...</label>
+                            <textarea class="form-control" maxlength="200" rows="1"></textarea>
                           </div>
                         </div>
                       </div>
@@ -269,17 +264,16 @@
               <div class="card card-profile">
                 <div class="card-avatar">
                   <a href="#pablo">
-                    <img class="img" src="img/faces/marc.jpg" />
+                    <img class="img" src="img/faces/Blank-Avatar-Image.jpg" />
                   </a>
                 </div>
                 <div class="card-body">
-                  <h6 class="card-category">CEO / Co-Founder</h6>
-                  <h4 class="card-title">Alec Thompson</h4>
+                  <h6 class="card-category">enter expertise</h6>
+                  <h4 class="card-title">enter name + last name of user</h4>
                   <p class="card-description">
-                    Don't be scared of the truth because we need to restart the human foundation in truth And I love you
-                    like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
+                    personal description here
                   </p>
-                  <a href="#pablo" class="btn btn-primary btn-round">Follow</a>
+                  <a href="#pablo" class="btn btn-primary btn-round">Change Image</a>
                 </div>
               </div>
             </div>
@@ -576,6 +570,24 @@
       });
     });
   </script>
+  <script> // show password
+    function myFunction(e) {
+
+      var x = document.getElementById("password");
+      var y = document.getElementById("eye");
+      if (x.type === "password") {
+          e.classList.add('mdi-eye')
+          y.innerHTML="Hide"
+          e.classList.remove('mdi-eye-off')
+          x.type = "text";
+      } else {
+          e.classList.add('mdi-eye-off')
+          y.innerHTML="Show"
+          e.classList.remove('mdi-eye')
+          x.type = "password";
+      }
+    }
+</script>
 </body>
 
 </html>
