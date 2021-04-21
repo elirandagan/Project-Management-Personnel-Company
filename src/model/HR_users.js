@@ -1,4 +1,4 @@
-const mongoose = require("mogoose")
+const mongoose = require("mongoose")
 
 const HR_UserSchema = new mongoose.Schema({
     firstName:{type:String, required: true },
