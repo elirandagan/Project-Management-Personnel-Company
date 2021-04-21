@@ -19,18 +19,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     app.use(bodyParser.urlencoded({ extended: true }))
     app.use(bodyParser.json())
 
-          // HOW TO "GET" FROM COLLECTION
+    // HOW TO "GET" FROM COLLECTION
     router.get("/", function (req, res) {
       console.log("Login")
-      HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
+      HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err, result) {
         if (err) {
           console.log(err);
-      } else {
+        } else {
           console.log(JSON.stringify(result));
-      }
+        }
       })
       console.log("succed")
-      
+
       res.status(200).render("login");
     });
 
@@ -53,19 +53,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
     router.get("/recruit", function (req, res) {
       console.log("recruit")
-      HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
+      HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err, result) {
         if (err) {
           console.log(err);
-      } else {
+        } else {
           // console.log(JSON.stringify(result));
           console.log(result);
-          res.status(200).render("recruit",{data : result});
-      }
+          res.status(200).render("recruit", { data: result });
+        }
       })
       console.log("succed")
-      
     });
-    
+
     router.get("/trackingWorkers", function (req, res) {
       res.status(200).render("trackingWorkers");
     });
@@ -93,7 +92,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     //DB Actions
 
 
-              // HOW TO "POST" TO COLLECTION
+    // HOW TO "POST" TO COLLECTION
     // router.post('/user', (req, res) => {
     //   UsersCollection.insertOne(req.body)
     //     .then(result => {
