@@ -54,6 +54,38 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
       res.status(200).render("tables");
     });
 
+    router.get("/workHistory", function (req, res) {
+      res.status(200).render("workHistory");
+    });
+
+    router.get("/shifts", function (req, res) {
+      res.status(200).render("shifts");
+    });
+
+    router.get("/absences", function (req, res) {
+      res.status(200).render("absences");
+    });
+
+    router.get("/recruit", function (req, res) {
+      res.status(200).render("recruit");
+    });
+    
+    router.get("/trackingWorkers", function (req, res) {
+      res.status(200).render("trackingWorkers");
+    });
+
+    router.get("/statistics", function (req, res) {
+      res.status(200).render("statistics");
+    });
+
+    router.get("/searchWorker", function (req, res) {
+      res.status(200).render("searchWorker");
+    });
+
+    router.get("/hiringHistory", function (req, res) {
+      res.status(200).render("hiringHistory");
+    });
+
     router.get("/user", function (req, res) {
       res.status(200).render("user");
     });
