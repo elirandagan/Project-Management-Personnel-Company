@@ -57,8 +57,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         if (err) {
           console.log(err);
       } else {
-          console.log(JSON.stringify(result));
-          res.status(200).render("recruit",{data : JSON.stringify(result)});
+          // console.log(JSON.stringify(result));
+          console.log(result);
+          res.status(200).render("recruit",{data : result});
       }
       })
       console.log("succed")
