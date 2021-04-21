@@ -12,7 +12,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     console.log("Connected to Database")
     const db = client.db("GLEM-TECH")
     const HR_Users_Collection = db.collection("HR_Users")
-
+    
     app.set("view engine", "ejs");
 
     app.use(express.static("public"));
