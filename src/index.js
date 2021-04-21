@@ -34,6 +34,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
       res.status(200).render("login");
     });
 
+
     app.post("register", async(req,res)=>{
         res.json({status:"ok"})
         console.log(req.body)
@@ -43,30 +44,56 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
     router.get("/typography", function (req, res) {
       res.status(200).render("typography");
-    });
-
-    router.get("/notifications", function (req, res) {
-      res.status(200).render("notifications");
-    });
-
     router.get("/template", function (req, res) {
       res.status(200).render("template");
     });
 
-    router.get("/icons", function (req, res) {
-      res.status(200).render("icons");
+
+    router.get("/workHistory", function (req, res) {
+      res.status(200).render("workHistory");
     });
 
-    router.get("/tables", function (req, res) {
-      res.status(200).render("tables");
+    router.get("/shifts", function (req, res) {
+      res.status(200).render("shifts");
+    });
+
+    router.get("/absences", function (req, res) {
+      res.status(200).render("absences");
+    });
+
+    router.get("/recruit", function (req, res) {
+      console.log("recruit")
+      HR_Users_Collection.find({firstName:"Lior"}).toArray(function (err, result){
+        if (err) {
+          console.log(err);
+      } else {
+          // console.log(JSON.stringify(result));
+          console.log(result);
+          res.status(200).render("recruit",{data : result});
+      }
+      })
+      console.log("succed")
+      
+    });
+    
+    router.get("/trackingWorkers", function (req, res) {
+      res.status(200).render("trackingWorkers");
+    });
+
+    router.get("/statistics", function (req, res) {
+      res.status(200).render("statistics");
+    });
+
+    router.get("/searchWorker", function (req, res) {
+      res.status(200).render("searchWorker");
+    });
+
+    router.get("/hiringHistory", function (req, res) {
+      res.status(200).render("hiringHistory");
     });
 
     router.get("/user", function (req, res) {
       res.status(200).render("user");
-    });
-
-    router.get("/map", function (req, res) {
-      res.status(200).render("map");
     });
 
     router.get("/dashboard", function (req, res) {
@@ -101,5 +128,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
   .catch(error => console.error(error))
 
 module.exports = app.listen(app_port);
+
 console.log(`app is running. port: ${app_port}`);
 console.log(`http://127.0.0.1:${app_port}/`);
