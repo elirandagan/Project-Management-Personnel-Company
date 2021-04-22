@@ -74,13 +74,16 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             Contractor_Users_Collection.find({ID: req.body.ID}).toArray(function(err, res){
                 if(res){
                     res.status(200).render("recruit", { exist: 1, ID: res.body.ID });
+                    console.log(res + " Failed")
                 }
                 else{
                     Contractor_Users_Collection.find({userName: req.body.userName}).toArray(function(err, res){
                         if(res){
                             res.status(200).render("recruit", { exist: 1, ID: res.body.ID });
+                            console.log(res + " Failed")
                         }
                         else{
+                            console.log(res + " Succeed")
                             Contractor_Users_Collection.insertOne(req.body)
                             .then(result =>{
                                 res.status(200).render("recruit", { exist: 0 , ID: req.body.ID });

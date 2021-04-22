@@ -313,24 +313,7 @@
             x.type = "password";
           }
         }
-        // function addWorker(e) {
-        //   console.log("exist");
-        // }
-        $(document).ready(function(){
-        var exist,pass;
-        $("#submit").click(function(){
-          user=$("#user").val();
-          pass=$("#password").val();
-          $.post("/recruit",{exist: exist,ID: ID}, function(){
-            if(exist === 1) {
-                alert("ALREADY IN THE SYSTEM: " + ID);
-              }
-              else{
-                alert("ADD NEW TO THE SYSTEM: " + ID);
-              }
-          });
-        });
-      });
+
 
 
 
@@ -527,6 +510,19 @@
     $(document).ready(function () {
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
+      var exist,ID;
+        $("#submit").click(function(){
+          exist=$("#exist").val();
+          ID=$("#ID").val();
+          $.post("http://127.0.0.1:3000/recruit",{exist: exist,ID: ID}, function(){
+            if(exist === 1) {
+                alert("ALREADY IN THE SYSTEM: " + ID);
+              }
+              else{
+                alert("ADD NEW TO THE SYSTEM: " + ID);
+              }
+          });
+        });
     });
 
   </script>
