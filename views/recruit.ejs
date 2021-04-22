@@ -199,13 +199,13 @@
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="bmd-label-floating">ID</label>
-                    <input type="text" class="form-control" name="id">
+                    <input type="text" class="form-control" name="ID">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="bmd-label-floating">Company</label>
-                    <input type="text" class="form-control" name="Company">
+                    <input type="text" class="form-control" name="partOfCompany">
                   </div>
                 </div>
                 <div class="col-md-4">
@@ -224,7 +224,7 @@
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
-                    <select class="form-control" name="areas" id="ares">
+                    <select class="form-control" name="areas" id="area">
                       <option value="" disabled selected>Choose Worker Area</option>
                       <option style="color:black" value="Technician">North</option>
                       <option style="color:black" value="Carpenter">Center</option>
@@ -236,13 +236,13 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="bmd-label-floating">Hourly Payment (₪)</label>
-                    <input type="number" min="0 " class="form-control" name="Payment">
+                    <input type="number" min="0 " class="form-control" name="hourlyPay">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="bmd-label-floating">UserName</label>
-                    <input type="text" class="form-control" name="UserName">
+                    <input type="text" class="form-control" name="userName">
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -254,7 +254,7 @@
                   </div>
                 </div>
               </div>
-              <button type="submit"  class="btn btn-primary pull-right">Add New Worker</button>
+              <button type="submit" class="btn btn-primary pull-right">Add New Worker</button>
               <div class="clearfix"></div>
             </form>
           </div>
@@ -510,19 +510,15 @@
     $(document).ready(function () {
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
-      var exist,ID;
-        $("#submit").click(function(){
-          exist=$("#exist").val();
-          ID=$("#ID").val();
-          $.post("http://127.0.0.1:3000/recruit",{exist: exist,ID: ID}, function(){
-            if(exist === 1) {
-                alert("ALREADY IN THE SYSTEM: " + ID);
-              }
-              else{
-                alert("ADD NEW TO THE SYSTEM: " + ID);
-              }
-          });
-        });
+      // var exist, id;
+      // fetch("/recruit", {
+      //   method: 'POST',
+      //   body: JSON.stringify(data)
+      // })
+      //   .then(response => response.data)
+
+
+
     });
 
   </script>

@@ -16,7 +16,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         const HR_Users_Collection = db.collection("HR_Users")
         const Contractor_Users_Collection = db.collection("Contractor_Users")
-        const Employer_Users_Collection = db.collection("Employer_Uses")
+        const Employer_Users_Collection = db.collection("Employer_Users")
 
         app.set("view engine", "ejs");
 
@@ -72,24 +72,27 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.post("/recruit", (req, res) => {
-            Contractor_Users_Collection.find({ID: req.body.ID}).toArray(function(err, result){
-                console.log("result: " + result)
-                if(result){
-                    res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
-                    console.log(req.body + " 1 Failed")
+            Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result) {
+                console.log("ID: " + JSON.stringify(req.body.ID))
+                console.log("result: " + result.length)
+                if (result.length != 0) {
+                    res.status(200).render("recruit", { exist: 1, id: req.body.ID });
+                    console.log(req.body.ID + " 1 Failed")
                 }
-                else{
-                    Contractor_Users_Collection.find({userName: req.body.userName}).toArray(function(err, result2){
-                        if(result2){
-                            res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
-                            console.log(result2 + "2 Failed")
+                else {
+                    Contractor_Users_Collection.find({ userName: req.body.userName }).toArray(function (err, result2) {
+                        console.log("ID: " + req.body.userName)
+                        console.log("result: " + result2.length)
+                        if (result2.length != 0) {
+                            res.status(200).render("recruit", { exist: 1, id: req.body.ID });
+                            console.log(result2[0] + "2 Failed")
                         }
-                        else{
+                        else {
                             console.log(res + " Succeed")
                             Contractor_Users_Collection.insertOne(req.body)
-                            .then(result =>{
-                                res.status(200).render("recruit", { exist: 0 , ID: req.body.ID });
-                            })
+                                .then(result => {
+                                    res.status(200).render("recruit", { exist: 0, ID: req.body.ID });
+                                })
                         }
                     })
                 }
