@@ -15,7 +15,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         // CREATING THE DB COLLECTIONS
 
         const HR_Users_Collection = db.collection("HR_Users")
-        const Contractor_Users_Collection = db.collection("Contractor_Uses")
+        const Contractor_Users_Collection = db.collection("Contractor_Users")
         const Employer_Users_Collection = db.collection("Employer_Uses")
 
         app.set("view engine", "ejs");
@@ -64,23 +64,25 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 } else {
                     // console.log(JSON.stringify(result));
                     console.log(result);
-                    res.status(200).render("recruit", { firstName: result[0].firstName });
+                    // res.status(200).render("recruit", { firstName: result[0].firstName });
+                    res.status(200).render("recruit");
                 }
             })
             // console.log("succed")
         });
 
         router.post("/recruit", (req, res) => {
-            Contractor_Users_Collection.find({ID: req.body.ID}).toArray(function(err, res){
-                if(res){
-                    res.status(200).render("recruit", { exist: 1, ID: res.body.ID });
-                    console.log(res + " Failed")
+            Contractor_Users_Collection.find({ID: req.body.ID}).toArray(function(err, result){
+                console.log("result: " + result)
+                if(result){
+                    res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
+                    console.log(req.body + " 1 Failed")
                 }
                 else{
-                    Contractor_Users_Collection.find({userName: req.body.userName}).toArray(function(err, res){
-                        if(res){
-                            res.status(200).render("recruit", { exist: 1, ID: res.body.ID });
-                            console.log(res + " Failed")
+                    Contractor_Users_Collection.find({userName: req.body.userName}).toArray(function(err, result2){
+                        if(result2){
+                            res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
+                            console.log(result2 + "2 Failed")
                         }
                         else{
                             console.log(res + " Succeed")
