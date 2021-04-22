@@ -11,7 +11,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     .then(client => {
         console.log("Connected to Database")
         const db = client.db("GLEM-TECH")
+
+        // CREATING THE DB COLLECTIONS
+
         const HR_Users_Collection = db.collection("HR_Users")
+        const Contractor_Users_Collection = db.collection("Contractor_Uses")
+        const Employer_Users_Collection = db.collection("Employer_Uses")
 
         app.set("view engine", "ejs");
 
@@ -59,11 +64,32 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 } else {
                     // console.log(JSON.stringify(result));
                     console.log(result);
-                    res.status(200).render("recruit", { data: result });
+                    res.status(200).render("recruit", { firstName: result[0].firstName });
                 }
             })
-            console.log("succed")
+            // console.log("succed")
         });
+
+        router.post("/recruit", (req, res) => {
+            Contractor_Users_Collection.find({ID: req.body.ID}).toArray(function(err, res){
+                if(res){
+                    res.status(200).render("recruit", { exist: 1, ID: res.body.ID });
+                }
+                else{
+                    Contractor_Users_Collection.find({userName: req.body.userName}).toArray(function(err, res){
+                        if(res){
+                            res.status(200).render("recruit", { exist: 1, ID: res.body.ID });
+                        }
+                        else{
+                            Contractor_Users_Collection.insertOne(req.body)
+                            .then(result =>{
+                                res.status(200).render("recruit", { exist: 0 , ID: req.body.ID });
+                            })
+                        }
+                    })
+                }
+            })
+        })
 
         router.get("/trackingWorkers", function (req, res) {
             res.status(200).render("trackingWorkers");

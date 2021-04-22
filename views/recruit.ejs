@@ -46,70 +46,70 @@
       <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
           GLEM TECH
         </a></div>
-        <div class="sidebar-wrapper">
-            <ul class="nav">
-              <li class="nav-item">
-                <a class="nav-link" href="./dashboard">
-                  <i class="material-icons">dashboard</i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./shifts">
-                  <i class="material-icons">content_paste</i>
-                  <p>Shifts</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./workHistory">
-                  <i class="material-icons">library_books</i>
-                  <p>Work History</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./absences">
-                  <i class="material-icons">content_paste</i>
-                  <p>Absences</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./user">
-                  <i class="material-icons">person</i>
-                  <p>User Profile</p>
-                </a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="./recruit">
-                  <i class="material-icons">person</i>
-                  <p>Recruit</p>
-                </a>
-              </li>
-             <li class="nav-item ">
-                <a class="nav-link" href="./trackingWorkers">
-                  <i class="material-icons">person</i>
-                  <p>Tracking Workers</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./statistics">
-                  <i class="material-icons">person</i>
-                  <p>Statistics</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./searchWorker">
-                  <i class="material-icons">person</i>
-                  <p>Search Worker</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./hiringHistory">
-                  <i class="material-icons">person</i>
-                  <p>Hiring History</p>
-                </a>
-              </li>
-            </ul>
-          </div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="./dashboard">
+              <i class="material-icons">dashboard</i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./shifts">
+              <i class="material-icons">content_paste</i>
+              <p>Shifts</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./workHistory">
+              <i class="material-icons">library_books</i>
+              <p>Work History</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./absences">
+              <i class="material-icons">content_paste</i>
+              <p>Absences</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./user">
+              <i class="material-icons">person</i>
+              <p>User Profile</p>
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="./recruit">
+              <i class="material-icons">person</i>
+              <p>Recruit</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./trackingWorkers">
+              <i class="material-icons">person</i>
+              <p>Tracking Workers</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./statistics">
+              <i class="material-icons">person</i>
+              <p>Statistics</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./searchWorker">
+              <i class="material-icons">person</i>
+              <p>Search Worker</p>
+            </a>
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link" href="./hiringHistory">
+              <i class="material-icons">person</i>
+              <p>Hiring History</p>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="main-panel">
       <!-- Navbar -->
@@ -118,7 +118,7 @@
           <div class="navbar-wrapper">
             <a class="navbar-brand" href="javascript:void(0)">Recruit</a>
           </div>
-         
+
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
             aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
             <span class="sr-only">Toggle navigation</span>
@@ -165,7 +165,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item fa fa-sign-out" href="\" id="logout_btn">
-                    <span style="margin-left: 6px;"> Logout </span> 
+                    <span style="margin-left: 6px;"> Logout </span>
                   </a>
                 </div>
               </li>
@@ -175,9 +175,89 @@
       </nav>
       <!-- End Navbar -->
       <div class="content">
-        <div id="test">
-          MENDAL YA GEVER
-          <%= data[0].firstName %>
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <div class="card-title">
+              Add New Worker , test = <%= firstName %>
+            </div>
+          </div>
+          <div class="card-body">
+            <form action="/user" method="POST">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">First Name</label>
+                    <input type="text" class="form-control" name="FirstName">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Last Name</label>
+                    <input type="text" class="form-control" name="LastName">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">ID</label>
+                    <input type="text" class="form-control" name="id">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Company</label>
+                    <input type="text" class="form-control" name="Company">
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <select class="form-control" name="expertises" id="expertises">
+                      <option value="" disabled selected>Choose Worker Expertise</option>
+                      <option style="color:black" value="Technician">A.C Technician</option>
+                      <option style="color:black" value="Carpenter">Carpenter</option>
+                      <option style="color:black" value="Electrician">Electrician</option>
+                      <option style="color:black" value="Gardener">Gardener</option>
+                      <option style="color:black" value="Painter">Painter</option>
+                      <option style="color:black" value="Plumber">Plumber</option>
+                    </select>
+                    <label for="expertises">Expertise</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <select class="form-control" name="areas" id="ares">
+                      <option value="" disabled selected>Choose Worker Area</option>
+                      <option style="color:black" value="Technician">North</option>
+                      <option style="color:black" value="Carpenter">Center</option>
+                      <option style="color:black" value="Electrician">South</option>
+                    </select>
+                    <label for="areas">Area</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Hourly Payment (₪)</label>
+                    <input type="number" min="0 " class="form-control" name="Payment">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">UserName</label>
+                    <input type="text" class="form-control" name="UserName">
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <input type="password" id="password" name="password" class="form-control">
+                    <label for="password" class="bmd-label-floating">Password</label>
+                    <span toggle="#password" id="eye" style="cursor: pointer;" class="mdi mdi-eye"
+                      onclick="myFunction(this)">show</span>
+                  </div>
+                </div>
+              </div>
+              <button type="submit"  class="btn btn-primary pull-right">Add New Worker</button>
+              <div class="clearfix"></div>
+            </form>
+          </div>
         </div>
       </div>
       <footer class="footer">
@@ -216,14 +296,53 @@
         const x = new Date().getFullYear();
         let date = document.getElementById('date');
         date.innerHTML = '&copy; ' + x + date.innerHTML;
+
+        function myFunction(e) {
+
+          var x = document.getElementById("password");
+          var y = document.getElementById("eye");
+          if (x.type === "password") {
+            e.classList.add('mdi-eye')
+            y.innerHTML = "Hide"
+            e.classList.remove('mdi-eye-off')
+            x.type = "text";
+          } else {
+            e.classList.add('mdi-eye-off')
+            y.innerHTML = "Show"
+            e.classList.remove('mdi-eye')
+            x.type = "password";
+          }
+        }
+        // function addWorker(e) {
+        //   console.log("exist");
+        // }
+        $(document).ready(function(){
+        var exist,pass;
+        $("#submit").click(function(){
+          user=$("#user").val();
+          pass=$("#password").val();
+          $.post("/recruit",{exist: exist,ID: ID}, function(){
+            if(exist === 1) {
+                alert("ALREADY IN THE SYSTEM: " + ID);
+              }
+              else{
+                alert("ADD NEW TO THE SYSTEM: " + ID);
+              }
+          });
+        });
+      });
+
+
+
       </script>
     </div>
 
-    
+
   </div>
-  
+
   </div>
   <!--   Core JS Files   -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
   <script src="js/core/jquery.min.js"></script>
   <script src="js/core/popper.min.js"></script>
   <script src="js/core/bootstrap-material-design.min.js"></script>
@@ -408,10 +527,7 @@
     $(document).ready(function () {
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
-      // var data = 'TEST'
     });
-    
-    // document.getElementById.innerHTML = data;
 
   </script>
 </body>
