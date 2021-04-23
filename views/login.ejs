@@ -19,11 +19,11 @@
     <form id="login-form">
         <div id="radioBtnIdentity" class="user-box-checkbox">
             <label class="identityCheckBox" for="identity1">HR
-            <input type="radio" name="identity" id="identity1" value="HR"></label>
+                <input type="radio" name="identity" id="identity1" value="HR_Users"></label>
             <label class="identityCheckBox" for="identity2">Employer
-            <input type="radio" name="identity" id="identity2" value="Emp"></label>
+                <input type="radio" name="identity" id="identity2" value="Employer_Users"></label>
             <label class="identityCheckBox" for="identity3">Other
-            <input type="radio" name="identity" id="identity3" value="Other"></label>
+                <input type="radio" name="identity" id="identity3" value="Contractor_Users"></label>
 
         </div>
         <div class="user-box">
@@ -46,59 +46,41 @@
                 <a id="A2" href="src/js/loginPage.js">sign up</a>
             </div>
             <script>
+
                 const loginForm = document.getElementById("login-form");
                 const loginButton = document.getElementById("login_btn");
-
-                this.enter = function () {
-                    if (event.keyCode == 13)
-                        loginButton.click()
-                }
 
                 this.check = async function () {
                     const username = loginForm.user.value;
                     const password = loginForm.pass.value;
                     const radioBtnSelect = document.querySelector('input[name="identity"]:checked')
-                    let identity = radioBtnSelect ? radioBtnSelect.value : "empty" ;
-                    if ( identity==="empty") {
+                    let identity = radioBtnSelect ? radioBtnSelect.value : "empty";
+                    console.log(identity)
+                    if (identity === "empty") {
                         swal({
                             title: "identity field is empty\n",
                             text: "Please fill identity field",
                             icon: "warning",
                         });
-                    }else if ( password.length<6) {
+                    } else if (password.length < 6) {
                         swal({
                             title: "Password too short\n",
                             text: "Password have to be more then 6 char",
                             icon: "warning",
                         });
-                    }else if ( username.length<1) {
+                    } else if (username.length < 1) {
                         swal({
                             title: "User name is required field.\n",
                             text: "Enter user name",
                             icon: "warning",
                         });
-                    }else if(password=="123456" && username=="GLEM"){
+                    } else if (password == "123456" && username == "GLEM") {
                         window.location = "/dashboard";
                     } else {
-                        // swal({
-                        //     title: "Wrong Username Or Password",
-                        //     text: "TRY\n username: GLEM \n password: 123456",
-                        //     icon: "warning",
-                        // });
-                        const result = await fetch('/api/register',{
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                username,
-                                password
-                            })
 
-                        }).then(res => res.json())
-                        console.log(result)
                     }
                 }
+
             </script>
             <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 

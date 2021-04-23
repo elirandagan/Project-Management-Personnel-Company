@@ -4,14 +4,18 @@ const app_port = process.env.PORT || 3000;
 const app = express();
 const router = express.Router();
 
-const MongoClient = require("mongodb").MongoClient;
+const mongoose = require("mongoose");
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
-MongoClient.connect(uri, { useUnifiedTopology: true })
+HR_Users_Collection = require("./model/HR_users")
+Employer_Users_Collection = require("./model/Employer_Users")
+Contractor_Users_Collection = require("./model/Constractor_Users")
+
+mongoose.connect(uri, { useUnifiedTopology: true,useNewUrlParser: true})
     .then(client => {
         console.log("Connected to Database")
-        const db = client.db("GLEM-TECH")
-        const HR_Users_Collection = db.collection("HR_Users")
+        // const db = client.db("GLEM-TECH")
+        // const HR_Users_Collection = db.collection("HR_Users")
 
         app.set("view engine", "ejs");
 
@@ -20,17 +24,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         app.use(bodyParser.json())
 
         // HOW TO "GET" FROM COLLECTION
-        router.get("/", function (req, res) {
-            console.log("Login")
-            HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err, result) {
-                if (err) {
-                    console.log(err);
-                } else {
-                    console.log(JSON.stringify(result));
-                }
-            })
-            console.log("succed")
-
             res.status(200).render("login");
         });
 
