@@ -62,13 +62,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 if (err) {
                     console.log(err);
                 } else {
-                    // console.log(JSON.stringify(result));
                     console.log(result);
-                    // res.status(200).render("recruit", { firstName: result[0].firstName });
-                    res.status(200).render("recruit");
+                    res.status(200).render("recruit", {exist : 2, ID : 0});
                 }
             })
-            // console.log("succed")
         });
 
         router.post("/recruit", (req, res) => {
@@ -76,7 +73,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 console.log("ID: " + JSON.stringify(req.body.ID))
                 console.log("result: " + result.length)
                 if (result.length != 0) {
-                    res.status(200).render("recruit", { exist: 1, id: req.body.ID });
+                    res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
                     console.log(req.body.ID + " 1 Failed")
                 }
                 else {
@@ -84,7 +81,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         console.log("userName: " + req.body.userName)
                         console.log("result: " + result2.length)
                         if (result2.length != 0) {
-                            res.status(200).render("recruit", { exist: 1, id: req.body.ID });
+                            res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
                             console.log(result2[0] + "2 Failed")
                         }
                         else {
