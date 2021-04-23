@@ -255,7 +255,7 @@
                 </div>
               </div>
               <!-- <button type="submit" id="submit-worker" class="btn btn-primary pull-right">Add New Worker</button> -->
-              <button id="submit-worker" class="btn btn-primary pull-right">Add New Worker</button>
+              <button onclick="TEST()" class="btn btn-primary pull-right">Add New Worker</button>
               <div class="clearfix"></div>
             </form>
           </div>
@@ -314,17 +314,15 @@
           }
         }
 
-        $('#submit-worker').click(function () {
+        function TEST(){
           $.ajax({
             type: 'POST',
-            url: 'http://localhost:3000/recruit',
+            url: 'http://127.0.0.1:3000/recruit',
             success: function(res){
               console.log("CLIENT RESPOND" + res)
             }
           });
-        });
-
-
+        }
       </script>
     </div>
 
