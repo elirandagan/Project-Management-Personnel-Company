@@ -254,7 +254,8 @@
                   </div>
                 </div>
               </div>
-              <button type="submit" class="btn btn-primary pull-right">Add New Worker</button>
+              <!-- <button type="submit" id="submit-worker" class="btn btn-primary pull-right">Add New Worker</button> -->
+              <button id="submit-worker" class="btn btn-primary pull-right">Add New Worker</button>
               <div class="clearfix"></div>
             </form>
           </div>
@@ -298,7 +299,6 @@
         date.innerHTML = '&copy; ' + x + date.innerHTML;
 
         function myFunction(e) {
-
           var x = document.getElementById("password");
           var y = document.getElementById("eye");
           if (x.type === "password") {
@@ -314,7 +314,15 @@
           }
         }
 
-
+        $('#submit-worker').click(function () {
+          $.ajax({
+            type: 'POST',
+            url: 'http://localhost:3000/recruit',
+            success: function(res){
+              console.log("CLIENT RESPOND" + res)
+            }
+          });
+        });
 
 
       </script>
