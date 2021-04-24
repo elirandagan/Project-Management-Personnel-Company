@@ -56,6 +56,17 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             res.status(200).render("absences");
         });
 
+        router.get("/user", function (req, res) {
+            console.log("user")
+            HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err, result) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log(result);
+                    res.status(200).render("user", { exist: 1, ID: 0 });
+                }
+            })
+        });
         router.get("/recruit", function (req, res) {
             console.log("recruit")
             HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err, result) {
