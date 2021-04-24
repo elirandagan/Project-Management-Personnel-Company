@@ -39,6 +39,7 @@
     "jquery": "^3.6.0",
     "mongodb": "^3.6.5",
     "mongoose": "^5.12.5",
+    "sweetalert": "^2.1.2",
     "validator": "^13.5.2"
   }
 }
