@@ -97,7 +97,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:void(0)">User Profile</a>
+            <a class="navbar-brand" href="javascript:void(0)"> <%= user['firstName'].replace(/\w/, c => c.toUpperCase()) %>'s Profile</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
             aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
@@ -166,10 +166,15 @@
                   </a>
                 </div>
                 <div class="card-body">
-                  <h6 class="card-category">enter expertise</h6>
-                  <h4 class="card-title">enter name + last name of user</h4>
+                  <h3 class="card-category"><%=user["expertise"]%></h3>
+                  <h4 class="card-title"> <%=user["firstName"]%> <%=user["lastName"]%> </h4>
                   <p class="card-description">
-                    personal description here
+                    <h5>
+                      Part of Company : <%=user["partOfCompany"]%></br>
+                      Hourly Payment : <%=user["hourlyPay"]%>₪</br>
+                      Area : <%=user["area"]%></br>
+                      User Name : <%=user["userName"]%></br>
+                    </h5>
                   </p>
                   <a href="#pablo" class="btn btn-primary btn-round">Change Image</a>
                 </div>
@@ -181,9 +186,9 @@
                   <h4 class="card-title">About Me</h4>
                 </div>
                 <div class="card-body">
-                  <h6 class="card-category">enter expertise</h6>
+                  <h6 class="card-category"><%=user["expertise"]%></h6>
                   <br/>
-                  <h4 class="card-title">enter name + last name of user</h4>
+                  <h4 class="card-title"><%= user["firstName"] %> <%= user["lastName"] %></h4>
                   <br/><br/>
                   <p class="card-description">
                     personal description here
@@ -342,30 +347,13 @@
       }
     }
   </script>
-
-  <script>
+  <!-- <script>
     $(document).ready(function () {
       md.initDashboardPageCharts();
-      var exist = "<%= exist %>";
-      var ID = "<%= ID %>";
-
-      document.getElementsByClassName('navbar-brand').innerHTML =ID+'0'+ID;
-      // if (exist == 0) {
-      //   swal({
-      //     title: "Adding Worker\n",
-      //     text: "Worker: " + ID + " added succecfully.",
-      //     icon: "success",
-      //   });
-      // }
-      // if (exist == 1) {
-      //   swal({
-      //     title: "Adding Worker\n",
-      //     text: "The User Name or The ID is already registered in the system, please check again.",
-      //     icon: "info",
-      //   });
-      // }
+      var user = "<%= user %>";
+      console.log("in user.ejs",user)
+      document.getElementsByClassName('navbar-brand').innerHTML = 'hello';
     });
-
-  </script>
+  </script> -->
   </body>
 </html>
