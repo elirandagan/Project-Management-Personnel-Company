@@ -5,6 +5,7 @@ const app = express();
 const router = express.Router();
 
 const MongoClient = require("mongodb").MongoClient;
+const { Timestamp } = require("bson");
 const uri ="mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, { useUnifiedTopology: true })
@@ -64,20 +65,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         if (err) {
           console.log("***this is an error\n ***",err.body);
         } else {
-            console.log(result[0]);
-          res.status(200).render("user", { user: result[0], status:'none' });
-        }
-      });
-    });
-
-    router.get("/recruit", function (req, res) {
-      console.log("recruit");
-      HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err,result) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(result);
-          res.status(200).render("recruit", { exist: 2, ID: 0 });
+          console.log(result[0]);
+          res.status(200).render("user", { user: result[0], status:'Success' });
         }
       });
     });
@@ -86,24 +75,44 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
       console.log("post in user - request", req.body);
       Contractor_Users_Collection.find({ ID: "308032473" }).toArray(function (err, result) {
         if (err) {
-          console.log(err.body + " ** Failed **");
+          console.log(err.body + " ** Failed to get **");
         } else { //if user exists in db
-          console.log(result[0], "\n** Success **");
-            myquery = { ID: result[0].body.ID };
-            newvalues = {
-              firstName: req.body.firstName,
-              LastName: req.body.LastName,
-              partOfCompany: req.body.partOfCompany,
-              expertise: req.body.expertise,
-              area: req.body.area
+          console.log(result[0], "\n** Success to get **");
+          myquery = { ID: result[0]['ID'] };
+          newvalues = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            partOfCompany: req.body.partOfCompany,
+            expertise: req.body.expertise,
+            area: req.body.area,
+            lastUpdate: new Timestamp()
+          }
+          var status;
+          Contractor_Users_Collection.updateOne(myquery, { $set: newvalues}, function (err, res2) {
+            if (err) {
+              console.log(err.body + " ** Failed to update **");
+              status = 'Failed';
+            } else {
+              console.log(result[0], "\n** Success to update **");
+              status = 'Success';
             }
-          Contractor_Users_Collection.updateOne(myquery, newvalues, function (err, res2) {
           });
-          
-          res.status(200).render("user", { user: result[0], status:'Success' });
+          res.status(200).render("user", { user: result[0], status: status });
         }
-      }
-    );
+      });
+    });
+
+    router.get("/recruit", function (req, res) {
+      console.log("recruit");
+      HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err, result) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(result);
+          res.status(200).render("recruit", { exist: 2, ID: 0 });
+        }
+      });
+    });
 
     router.post("/recruit", (req, res) => {
       Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err,result) {
