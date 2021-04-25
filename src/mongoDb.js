@@ -1,6 +1,7 @@
 const MongoClient = require("mongodb").MongoClient;
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
+
 let existKeyReturnValue = true
 let insertToDbReturnValue = true
 let validateLoginReturnValue = {valid :"validate" , userNameNotExist:"userNameNotExist" , wrongPassword:"wrongPassword"}
@@ -18,7 +19,7 @@ async function existKey(ID, uN, identityType) {
                     existKeyReturnValue = true;
                 } else {
                     return user.find({userName: uN}).toArray(function (err, result2) {
-                        existKeyReturnValue = result.length !== 0;
+                        existKeyReturnValue = result2.length !== 0;
                     })
                 }
             })

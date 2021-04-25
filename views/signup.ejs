@@ -138,7 +138,7 @@
             <input type="password" name="password" placeholder="Password" required name="password">
             <input id="ID" type="text" name="ID" placeholder="ID" required name="ID">
             <input id="fname" type="text" name="firstName" placeholder="First name" required name="firstName">
-            <input id="lname" type="text" name="LastName" placeholder="Last name" required name="LastName">
+            <input id="lname" type="text" name="lastName" placeholder="Last name" required name="LastName">
             <input id="partOfComp"type="text" name="partOfComp" placeholder="Part of company" required name="partOfCompany">
         </div>
         <div class="checkbox">
@@ -148,28 +148,50 @@
     </form>
 </div>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
 <script>
     $(document).ready(function () {
         // Javascript method's body can be found in assets/js/demos.js
-        md.initDashboardPageCharts();
-        var exist = "<%= exist %>";
+        const exist = "<%= exist %>";
         console.log(exist)
-        if (exist === 0) {
+        if (exist == 0) {
+            console.log("DEFAULT")
+
+        }
+        else if (exist == 1) {
+            swal({
+                title: "Sign Up\n",
+                text: "The User Name Or ID are Already Exist, please try again.",
+                icon: "info",
+            });
+        }else if (exist == 2) {
+            swal({
+                title: "Sign Up\n",
+                text: "The First name and Last name most contain chars only, please try again.",
+                icon: "info",
+            });
+        }
+        else if (exist == 3) {
+            swal({
+                title: "Sign Up\n",
+                text: "invalid ID, please try again.",
+                icon: "info",
+            });
+        }else if (exist == 4) {
+            swal({
+                title: "Sign Up\n",
+                text: "invalid password length, please try again.",
+                icon: "info",
+            });
+        }else if (exist == 5) {
             swal({
                 title: "Adding Worker\n",
                 text:  "added succecfully.",
                 icon: "success",
             });
         }
-        if (exist === 1) {
-            swal({
-                title: "Sign Up\n",
-                text: "The User Password is too short, please try again.",
-                icon: "info",
-            });
-        }
     });
-
 </script>
 </body>
 </html>

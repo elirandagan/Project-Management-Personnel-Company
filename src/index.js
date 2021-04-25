@@ -5,6 +5,10 @@ const app = express();
 const router = express.Router();
 const mongoDbFunction = require("./mongoDb");
 
+const validateFunction = require("./validate")
+
+//const bcrypt = require("bcrypt")
+
 const validateUser = false
 let identity = {HR_Users :"HR_Users" , Contractor_Users:"Contractor_Users" , Employer_Users:"Employer_Users"}
 
@@ -51,20 +55,37 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         })
 
         router.get("/signup", function (req, res) {
-            res.status(200).render("signup",{exist: 1});
+            console.log("signupGet")
+            res.status(200).render("signup",{exist: 0});
         });
 
-
         router.post("/signup", async (req, res) => {
-            //TODO fix the swal and add more condition
-            if (await (mongoDbFunction.inserToDb(identity.Employer_Users, req.body))) {
-                res.status(200).render("login", {exist: 0});
-                console.log("router build user")
-            } else {
-                res.status(200).render("signup", {exist: 1});
-                console.log("router Failed user")
-            }
+            const validateSignUp =await validateFunction.validate(req.body)
+            console.log(validateSignUp)
+            switch (validateSignUp){
+                case "nameFieldMostContainChars":
+                    res.status(200).render("signup", {exist: 2});
+                    console.log("router Failed user - nameFieldMostContainChars")
+                    break;
+                case "invalidID":
+                    res.status(200).render("signup", {exist: 3});
+                    console.log("router Failed user - invalidID")
+                    break;
+                case "invalidPasswordLength":
+                    res.status(200).render("signup", {exist: 4});
+                    console.log("router Failed user - invalidPasswordLength")
+                    break;
+                case "valid":
+                    if (await (mongoDbFunction.inserToDb(identity.Employer_Users, req.body))) {
+                        res.status(200).render("login", {exist: 5});
+                        console.log("router build user")
+                    } else {
+                        res.status(200).render("signup", {exist: 1});
+                        console.log("router Failed user - exist id or user name")
+                    }
+                    break;
 
+            }
         });
 
         router.get("/privacyPolicy", function (req, res) {
