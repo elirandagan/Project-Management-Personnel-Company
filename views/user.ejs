@@ -15,10 +15,34 @@
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css"
     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- CSS Files -->
   <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <link href="css/user.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      console.log("user.ejs is ready");
+      md.initDashboardPageCharts();
+      var user = '<%= user %>';
+      var status = "<%= status %>";
+      if (status == 'Success') {
+        swal({
+          title: "status\n",
+          text: "Success",
+          icon: "success",
+        });
+      }
+      else if (status == 'Failed') {
+        swal({
+          title: "status\n",
+          text: "Success",
+          icon: "info",
+        });
+      }
+    });
+  </script>
 </head>
 
 <body class="dark-edition">
@@ -97,7 +121,7 @@
       <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
         <div class="container-fluid">
           <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:void(0)"> <%= user['firstName'].replace(/\w/, c => c.toUpperCase()) %>'s Profile</a>
+            <a class="navbar-brand" href="javascript:void(0)"></a>User Profile</a>
           </div>
           <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
             aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
@@ -170,10 +194,10 @@
                   <h4 class="card-title"> <%=user["firstName"]%> <%=user["lastName"]%> </h4>
                   <p class="card-description">
                     <h5>
+                      User Name : <%=user["userName"]%></br>
                       Part of Company : <%=user["partOfCompany"]%></br>
                       Hourly Payment : <%=user["hourlyPay"]%>₪</br>
                       Area : <%=user["area"]%></br>
-                      User Name : <%=user["userName"]%></br>
                     </h5>
                   </p>
                   <a href="#pablo" class="btn btn-primary btn-round">Change Image</a>
@@ -207,31 +231,26 @@
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">First Name</label>
-                          <input type="text" class="form-control" name="FirstName">
+                          <label class="bmd-label-floating">First Name *</label>
+                          <input required type="text" class="form-control" name="FirstName">
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">Last Name</label>
-                          <input type="text" class="form-control" name="LastName">
+                          <label class="bmd-label-floating">Last Name *</label>
+                          <input required type="text" class="form-control" name="LastName">
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label class="bmd-label-floating">ID</label>
-                          <input type="text" class="form-control" name="id">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Company</label>
-                          <input type="text" class="form-control" name="Company">
+                          <label class="bmd-label-floating">Company *</label>
+                          <input required type="text" class="form-control" name="partOfCompany">
                         </div>
                       </div>
                       <div class="col-md-4">
                         <div class="form-group">
-                          <select class="form-control" name="expertises" id="expertises">
+                          <label for="expertise">Expertise *</label>
+                          <select required class="form-control" name="expertise" id="expertise">
                             <option value="" disabled selected>Choose your option</option>
                             <option style="color:black" value="Technician">A.C Technician</option>
                             <option style="color:black" value="Carpenter">Carpenter</option>
@@ -240,37 +259,17 @@
                             <option style="color:black" value="Painter">Painter</option>
                             <option style="color:black" value="Plumber">Plumber</option>
                           </select>
-                          <label for="expertises">Expertise</label>
                         </div>
                       </div>
-                      <div class="col-md-4">
+                      <div class="col-md-6">
                         <div class="form-group">
-                          <select class="form-control" name="areas" id="ares">
+                          <label for="area">Area *</label>
+                          <select required class="form-control" name="area" id="area">
                             <option value="" disabled selected>Choose your option</option>
-                            <option style="color:black" value="Technician">North</option>
-                            <option style="color:black" value="Carpenter">Center</option>
-                            <option style="color:black" value="Electrician">South</option>
+                            <option style="color:black" value="North">North</option>
+                            <option style="color:black" value="Center">Center</option>
+                            <option style="color:black" value="South">South</option>
                           </select>
-                          <label for="areas">Area</label>
-                        </div>
-                      </div>
-                      <div class="col-md-4">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">Hourly Payment (₪)</label>
-                          <input type="number" min="0 "class="form-control" name="Payment">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label class="bmd-label-floating">UserName</label>
-                          <input type="text" class="form-control" name="UserName">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <input type="password" id="password" name="password" class="form-control">
-                          <label for="password" class="bmd-label-floating">Password</label>
-                          <span toggle="#password" id="eye" class="mdi mdi-eye" onclick="myFunction(this)">show</span>
                         </div>
                       </div>
                     </div>
@@ -347,13 +346,8 @@
       }
     }
   </script>
-  <!-- <script>
-    $(document).ready(function () {
-      md.initDashboardPageCharts();
-      var user = "<%= user %>";
-      console.log("in user.ejs",user)
-      document.getElementsByClassName('navbar-brand').innerHTML = 'hello';
-    });
-  </script> -->
+
+  
+
   </body>
 </html>

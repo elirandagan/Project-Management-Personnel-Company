@@ -5,8 +5,7 @@ const app = express();
 const router = express.Router();
 
 const MongoClient = require("mongodb").MongoClient;
-const uri =
-  "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const uri ="mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, { useUnifiedTopology: true })
   .then((client) => {
@@ -61,24 +60,19 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
     router.get("/user", function (req, res) {
       console.log("user");
-        Contractor_Users_Collection.find({ ID: "308032473" }).toArray(function (
-        err,
-        result
-      ) {
+        Contractor_Users_Collection.find({ ID: "308032473" }).toArray(function (err,result) {
         if (err) {
-          console.log(err);
+          console.log("***this is an error\n ***",err.body);
         } else {
             console.log(result[0]);
-          res.status(200).render("user", { user: result[0] });
+          res.status(200).render("user", { user: result[0], status:'none' });
         }
       });
     });
+
     router.get("/recruit", function (req, res) {
       console.log("recruit");
-      HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (
-        err,
-        result
-      ) {
+      HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err,result) {
         if (err) {
           console.log(err);
         } else {
@@ -88,11 +82,31 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
       });
     });
 
+    router.post("/user", (req, res) => {
+      console.log("post in user - request", req.body);
+      Contractor_Users_Collection.find({ ID: "308032473" }).toArray(function (err, result) {
+        if (err) {
+          console.log(err.body + " ** Failed **");
+        } else { //if user exists in db
+          console.log(result[0], "\n** Success **");
+            myquery = { ID: result[0].body.ID };
+            newvalues = {
+              firstName: req.body.firstName,
+              LastName: req.body.LastName,
+              partOfCompany: req.body.partOfCompany,
+              expertise: req.body.expertise,
+              area: req.body.area
+            }
+          Contractor_Users_Collection.updateOne(myquery, newvalues, function (err, res2) {
+          });
+          
+          res.status(200).render("user", { user: result[0], status:'Success' });
+        }
+      }
+    );
+
     router.post("/recruit", (req, res) => {
-      Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (
-        err,
-        result
-      ) {
+      Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err,result) {
         console.log("ID: " + JSON.stringify(req.body.ID));
         console.log("result: " + result.length);
         if (result.length != 0) {
@@ -105,14 +119,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log("userName: " + req.body.userName);
             console.log("result: " + result2.length);
             if (result2.length != 0) {
-              res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
+              res.status(200).render("r1ecruit", { exist: 1, ID: req.body.ID });
               console.log(result2[0] + "2 Failed");
             } else {
-              console.log(res + " Succeed");
+              console.log(res.body + " Succeed");
               Contractor_Users_Collection.insertOne(req.body).then((result) => {
-                res
-                  .status(200)
-                  .render("recruit", { exist: 0, ID: req.body.ID });
+                res.status(200).render("recruit", { exist: 0, ID: req.body.ID });
               });
             }
           });
