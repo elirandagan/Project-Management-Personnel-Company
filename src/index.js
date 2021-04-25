@@ -85,7 +85,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             partOfCompany: req.body.partOfCompany,
             expertise: req.body.expertise,
             area: req.body.area,
-            lastUpdate: new Timestamp()
+            // lastUpdate: new Timestamp()
           }
           var status;
           Contractor_Users_Collection.updateOne(myquery, { $set: newvalues}, function (err, res2) {
@@ -97,6 +97,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
               status = 'Success';
             }
           });
+
+          window.location.reload();
           res.status(200).render("user", { user: result[0], status: status });
         }
       });
