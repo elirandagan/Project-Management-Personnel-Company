@@ -194,3 +194,11 @@ html {
   left: 70px;
 }
 
+.star-rating {
+  line-height:32px;
+  font-size:5em;
+}
+
+.checked{
+  color: orange;
+}
