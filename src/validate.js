@@ -9,9 +9,6 @@ let validateSignUp = {
 
 async function validate(data) {
     let returnValue
-    console.log("Validate function")
-    console.log("first name :", data.firstName, "!isAlpha(data.firstName) :",!validator.isAlpha(data.firstName), "last name :", data.lastName, "!isAlpha(data.lastName):", !validator.isAlpha(data.lastName))
-    console.log("ID", data.ID,isValidIsraeliID(data.ID))
     if (!validator.isAlpha(data.firstName) || !validator.isAlpha(data.lastName)) {
         returnValue = validateSignUp.nameFieldMostContainChars
     } else if (!isValidIsraeliID(data.ID)) {
@@ -21,7 +18,6 @@ async function validate(data) {
     } else {
         returnValue = validateSignUp.valid
     }
-    console.log("returnValue valide:",  returnValue)
     return returnValue
 }
 
