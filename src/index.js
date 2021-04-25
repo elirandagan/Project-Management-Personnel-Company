@@ -6,6 +6,8 @@ const router = express.Router();
 const mongoDbFunction = require("./mongoDb");
 
 const validateUser = false
+let identity = {HR_Users :"HR_Users" , Contractor_Users:"Contractor_Users" , Employer_Users:"Employer_Users"}
+
 
 const MongoClient = require("mongodb").MongoClient;
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
@@ -55,7 +57,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         router.post("/signup", async (req, res) => {
             //TODO fix the swal and add more condition
-            if (await (mongoDbFunction.inserToDb("Contractor", req.body))) {
+            if (await (mongoDbFunction.inserToDb(identity.Employer_Users, req.body))) {
                 res.status(200).render("login", {exist: 0});
                 console.log("router build user")
             } else {

@@ -114,6 +114,7 @@
             .main-block {
                 flex-direction: column ;
                 height: calc(100% - 50px);
+                width: auto;
             }
             .left-part, form {
                 flex: 1;
@@ -126,6 +127,9 @@
 <div class="main-block">
     <form action="/signup" method="POST">
         <div class="title">
+            <br></br>
+            <br></br>
+            <br></br>
             <i class="fas fa-pencil-alt"></i>
             <h2>Register here</h2>
         </div>
@@ -136,19 +140,6 @@
             <input id="fname" type="text" name="firstName" placeholder="First name" required name="firstName">
             <input id="lname" type="text" name="LastName" placeholder="Last name" required name="LastName">
             <input id="partOfComp"type="text" name="partOfComp" placeholder="Part of company" required name="partOfCompany">
-            <select name="expertise">
-                <option value="expertise" selected>expertise*</option>
-                <option value="Painter">Painter</option>
-                <option value="Plumber">Plumber</option>
-                <option value="Electrician">Electrician</option>
-                <option value="Technician">Technician</option>
-                <option value="certificate">more</option>
-                <option value="masters-degree">more</option>
-                <option value="postgraduate">more</option>
-            </select>
-            <input type="areas" name="areas" placeholder="areas" required name="area">
-            <input type="hourlyPay" name="hourlyPay" placeholder="hourlyPay" required name="hourlyPay">
-
         </div>
         <div class="checkbox">
             <input required name="checkbox"  type="checkbox" name="checkbox"><span>I agree to the <a href="/privacyPolicy">Privacy Poalicy for GLEM Tech</a></span>
