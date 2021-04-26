@@ -121,17 +121,19 @@
                 height: auto;
             }
         }
+        .title{
+            padding: 45px;
+            margin: auto;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+        }
     </style>
 </head>
 <body>
 <div class="main-block">
     <form action="/signup" method="POST">
         <div class="title">
-            <br></br>
-            <br></br>
-            <br></br>
             <i class="fas fa-pencil-alt"></i>
-            <h2>Register here</h2>
+            <h2 class="H2-register">Register here</h2>
         </div>
         <div class="info">
             <input id="userName"type="text" name="userName" placeholder="User name" required name="userName">
@@ -144,6 +146,8 @@
         <div class="checkbox">
             <input required name="checkbox"  type="checkbox" name="checkbox"><span>I agree to the <a href="/privacyPolicy">Privacy Poalicy for GLEM Tech</a></span>
         </div>
+        <br>
+        <br>
         <button type="submit" href="/signup">Submit</button>
     </form>
 </div>

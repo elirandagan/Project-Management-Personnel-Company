@@ -1,22 +1,26 @@
-const validator = require("validator")
+//const validator = require("validator")
 
-let validateSignUp = {
+let validateDic = {
     nameFieldMostContainChars: "nameFieldMostContainChars",
     invalidID: "invalidID",
     invalidPasswordLength: "invalidPasswordLength",
+    emptyIdentity: "emptyIdentity",
     valid: "valid"
 }
 
-async function validate(data) {
+
+
+async function validateSignUp(data) {
     let returnValue
-    if (!validator.isAlpha(data.firstName) || !validator.isAlpha(data.lastName)) {
-        returnValue = validateSignUp.nameFieldMostContainChars
+    if (!/[^a-zA-Z]/.test(data.firstName)){
+        //if(!validator.isAlpha(data.firstName) || !validator.isAlpha(data.lastName)) {
+        returnValue = validateDic.nameFieldMostContainChars
     } else if (!isValidIsraeliID(data.ID)) {
-        returnValue = validateSignUp.invalidID
+        returnValue = validateDic.invalidID
     } else if (data.password.length<6 ||data.password.length>12) {
-        returnValue = validateSignUp.invalidPasswordLength
+        returnValue = validateDic.invalidPasswordLength
     } else {
-        returnValue = validateSignUp.valid
+        returnValue = validateDic.valid
     }
     return returnValue
 }
@@ -36,4 +40,22 @@ function isValidIsraeliID(id) {
         }) % 10 === 0;
 }
 
-exports.validate = validate;
+function validateLogin(data) {
+    let returnValue
+    console.log(data)
+    console.log("validator.isEmpty(data.identity) : " , data.identity)
+    if ((typeof data.identity==="undefined")) {
+        returnValue = validateDic.emptyIdentity
+    } else if (data.userName.length<2) {
+        returnValue = validateDic.invalidID
+    } else if (data.password.length<6 ||data.password.length>12) {
+        returnValue = validateDic.invalidPasswordLength
+    } else {
+        returnValue = validateDic.valid
+    }
+    console.log(returnValue)
+    return returnValue
+}
+
+exports.validateSignUp = validateSignUp;
+exports.validateLogin = validateLogin;

@@ -9,8 +9,8 @@ const validateFunction = require("./validate")
 
 //const bcrypt = require("bcrypt")
 
-const validateUser = false
-let identity = {HR_Users :"HR_Users" , Contractor_Users:"Contractor_Users" , Employer_Users:"Employer_Users"}
+let validateUser = false
+let identity = {HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Employer_Users: "Employer_Users"}
 
 
 const MongoClient = require("mongodb").MongoClient;
@@ -36,33 +36,70 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         // HOW TO "GET" FROM COLLECTION
         router.get("/", async function (req, res) {
             console.log("HOMEPAGE")
-            res.status(200).render("login");
+            res.status(200).render("login", {exist: 0});
         });
 
         router.get("/login", function (req, res) {
-            console.log("loginGet")
-            console.log("router get/login",req.body.userName, req.body.password, req.body.identity)
-            mongoDbFunction.validateLogin(req.body.userName, req.body.password, req.body.identity).then(r  =>{
-                console.log("router r : ", r)
-            })
+            res.status(200).render("login", {exist: 0});
+
         });
 
-        router.post("/login", (req, res) => {
-            console.log("router set/login",req.body.userName, req.body.password, req.body.identity)
-            mongoDbFunction.validateLogin(req.body.userName, req.body.password, req.body.identity).then(r  =>{
-                console.log("router r : ", r)
-            })
+        router.get("/loaderLogin", function (req, res) {
+            res.status(200).render("loaderLogin", {exist: 0});
+
+        });
+//TODO return value comeBack too late sync it to the time needed
+        router.post("/login", async (req, res) => {
+            const validateLogin = await validateFunction.validateLogin(req.body)
+            console.log("validateLogin : ", validateLogin)
+            switch (validateLogin) {
+                case "invalidID":
+                    res.status(200).render("login", {exist: 1});
+                    console.log("router Failed user - invalidID")
+                    break;
+                case "invalidPasswordLength":
+                    res.status(200).render("login", {exist: 2});
+                    console.log("router Failed user - invalidPasswordLength")
+                    break;
+                case "emptyIdentity":
+                    res.status(200).render("login", {exist: 3});
+                    console.log("router Failed user - emptyIdentity")
+                    break;
+                case "valid":
+                    console.log("insider Valid")
+                    res.status(200).render("loaderLogin", {exist: 0});
+                    const loginAuthorize = await (mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity))
+                    console.log("login loginAuthorize",loginAuthorize)
+                        if("validate" === loginAuthorize){
+                            res.status(200).render("loaderLogin", {exist: 1});
+                            validateUser = true
+                            console.log("validateUser = true")
+                            res.status(200).render("dashboard", {exist: 0});
+                            console.log("router Failed user - validate")
+                        }else if("userNameNotExist" === loginAuthorize) {
+                            console.log("router Failed user - userNameNotExist")
+                            res.status(200).render("login", {exist: 4});
+                        }else if("wrongPassword" === loginAuthorize) {
+                            console.log("router Failed user - wrongPassword")
+                            res.status(200).render("login", {exist: 5});
+                        }else{
+                            console.log("router Failed user - unexpectedToken")
+                            res.status(200).render("login", {exist: 6});
+                        }
+
+
+            }
         })
 
         router.get("/signup", function (req, res) {
             console.log("signupGet")
-            res.status(200).render("signup",{exist: 0});
+            res.status(200).render("signup", {exist: 0});
         });
 
         router.post("/signup", async (req, res) => {
-            const validateSignUp =await validateFunction.validate(req.body)
+            const validateSignUp = await validateFunction.validateSignUp(req.body)
             console.log(validateSignUp)
-            switch (validateSignUp){
+            switch (validateSignUp) {
                 case "nameFieldMostContainChars":
                     res.status(200).render("signup", {exist: 2});
                     console.log("router Failed user - nameFieldMostContainChars")
@@ -108,6 +145,10 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         router.get("/absences", function (req, res) {
             res.status(200).render("absences");
+        });
+
+        router.get("/loaderLogin", function (req, res) {
+            res.status(200).render("loaderLogin");
         });
 
         router.get("/recruit", function (req, res) {
@@ -171,7 +212,6 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         router.get("/dashboard", function (req, res) {
             validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
         });
-
 
 
 //DB Actions

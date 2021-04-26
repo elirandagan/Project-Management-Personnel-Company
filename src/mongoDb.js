@@ -4,7 +4,8 @@ const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/my
 
 let existKeyReturnValue = true
 let insertToDbReturnValue = true
-let validateLoginReturnValue = {valid :"validate" , userNameNotExist:"userNameNotExist" , wrongPassword:"wrongPassword"}
+let validateLoginReturn = {empty:"empty", valid: "validate", userNameNotExist: "userNameNotExist", wrongPassword: "wrongPassword",unexpectedToken:"unexpectedToken"}
+let validateLoginReturnValue = validateLoginReturn.empty;
 
 //check if the id or the username (SK) are already exist in the DB - return TRUE for exist
 async function existKey(ID, uN, identityType) {
@@ -12,7 +13,7 @@ async function existKey(ID, uN, identityType) {
         .then(async client => {
             console.log("existKeyFunction")
             const db = client.db("GLEM-TECH")
-            let user = await(getIdentity(identityType))
+            let user = await (getIdentity(identityType))
             user.find({ID: ID}).toArray(function (err, result) {
                 if (result.length !== 0) {
                     console.log("existKey ID")
@@ -41,7 +42,7 @@ async function insertToDb(identityType, data) {
             } else {
                 console.log("insertToDbReturnValue = true")
                 insertToDbReturnValue = true;
-                let user = await(getIdentity(identityType))
+                let user = await (getIdentity(identityType))
                 user.insertOne(data).then(res => {
                 }).catch(error => console.log("error not insert"))
             }
@@ -70,23 +71,31 @@ async function getIdentity(identityType) {
         .catch(error => console.error(error))
 }
 
-async function validateLogin(userName, passwrod , identityType) {
+async function loginAuth(userName, password, identityType) {
     return MongoClient.connect(uri, {useUnifiedTopology: true})
         .then(async client => {
             console.log("existKeyFunction")
-            const db = client.db("GLEM-TECH")
+            // eslint-disable-next-line no-undef
             let user = await(getIdentity(identityType))
             user.find({userName: userName}).toArray(function (err, result) {
-                if(result.length===0){
-                    validateLoginReturnValue = validateLoginReturnValue.userNameNotExist
-                }else if (userName === result.userName && passwrod!==result.password){
-                    validateLoginReturnValue = validateLoginReturnValue.wrongPassword
-                }else if (userName === result.userName && passwrod===result.password){
-                    validateLoginReturnValue = validateLoginReturnValue.valid
+                console.log(result.length,"result.length === 0", result.length === 0,result)
+                if (result.length === 0) {
+                    console.log("validateLoginReturnValue = userNameNotExist")
+                    validateLoginReturnValue = validateLoginReturn.userNameNotExist
+                }else {
+                    if (userName.localeCompare(result[0].userName) === 0 && password.localeCompare(result[0].password) !== 0) {
+                        console.log("validateLoginReturnValue = wrongPassword")
+                        validateLoginReturnValue = validateLoginReturn.wrongPassword
+                    } else if (userName.localeCompare(result[0].userName) === 0 && password.localeCompare(result[0].password) === 0) {
+                        console.log("validateLoginReturnValue = valid")
+                        validateLoginReturnValue = validateLoginReturnValue = validateLoginReturn.valid
+                    }else{
+                        console.log("validateLoginReturnValue = unexpectedToken")
+                        validateLoginReturnValue = validateLoginReturn.unexpectedToken
+                    }
                 }
             })
-            console.log("validateLoginReturnValue : ", validateLoginReturnValue)
-            return validateLoginReturnValue
+            return validateLoginReturnValue;
         })
         .catch(error => console.error(error))
 }
@@ -97,8 +106,8 @@ async function validateLogin(userName, passwrod , identityType) {
 async function pullFromDbById(identityType, keyId) {
     return MongoClient.connect(uri, {useUnifiedTopology: true})
         .then(async client => {
-            const user = await(getIdentity(identityType))
-            return user.find({ID: keyId}).toArray(function (err, result){
+            const user = await (getIdentity(identityType))
+            return user.find({ID: keyId}).toArray(function (err, result) {
                 pullFromDbByIdReturnValue = result.length !== 0 ? result : "Empty"
             })
             return pullFromDbByIdReturnValue
@@ -109,5 +118,5 @@ async function pullFromDbById(identityType, keyId) {
 
 exports.existKey = existKey;
 exports.inserToDb = insertToDb;
-exports.validateLogin = validateLogin;
+exports.loginAuth = loginAuth;
 //exports.pullFromDb = pullFromDbById;
