@@ -194,4 +194,4 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
   .catch((error) => console.error(error));
 module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
-console.log(`http://127.0.0.1:${app_port}/user`);
+console.log(`http://127.0.0.1:${app_port}`);
