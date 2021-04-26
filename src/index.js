@@ -60,6 +60,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
     });
 
     router.get("/user", function (req, res) {
+      // console.log(location.href, "*** the location href")
+      // console.log(location, "*** the locatiom obj")
+    
       console.log("user");
         Contractor_Users_Collection.find({ ID: "308032473" }).toArray(function (err,result) {
         if (err) {
@@ -97,8 +100,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
               status = 'Success';
             }
           });
-
-          window.location.reload();
           res.status(200).render("user", { user: result[0], status: status });
         }
       });
@@ -193,4 +194,4 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
   .catch((error) => console.error(error));
 module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
-console.log(`http://127.0.0.1:${app_port}/`);
+console.log(`http://127.0.0.1:${app_port}/user`);
