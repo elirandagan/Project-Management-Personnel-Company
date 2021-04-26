@@ -43,7 +43,7 @@ function isValidIsraeliID(id) {
 function validateLogin(data) {
     let returnValue
     console.log(data)
-    console.log("validator.isEmpty(data.identity) : " , data.identity)
+    console.log("Data.identity : " , data.identity)
     if ((typeof data.identity==="undefined")) {
         returnValue = validateDic.emptyIdentity
     } else if (data.userName.length<2) {

@@ -58,23 +58,22 @@
                     // Javascript method's body can be found in assets/js/demos.js
                     const exist = "<%= exist %>";
                     console.log(exist)
-
                     if (exist == 0) {
                         console.log("DEFAULT")
 
-                    }else if (exist==1) {
+                    }else if (exist=="invalidID") {
                         swal({
                             title: "User invalid length.\n",
                             text: "User Name Most Contain More Then 2 character",
                             icon: "warning",
                         });
-                    } else if (exist==2) {
+                    } else if (exist=="invalidPasswordLength") {
                         swal({
                             title: "Password invalid length\n",
                             text: "Password Most Contain More Then 6 character And less then 12",
                             icon: "warning",
                         });
-                    } else if (exist==3) {
+                    } else if (exist=="emptyIdentity") {
                         swal({
                             title: "identity field is empty\n",
                             text: "Please fill identity field",

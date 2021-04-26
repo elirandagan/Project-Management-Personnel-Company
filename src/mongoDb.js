@@ -4,8 +4,14 @@ const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/my
 
 let existKeyReturnValue = true
 let insertToDbReturnValue = true
-let validateLoginReturn = {empty:"empty", valid: "validate", userNameNotExist: "userNameNotExist", wrongPassword: "wrongPassword",unexpectedToken:"unexpectedToken"}
-let validateLoginReturnValue = validateLoginReturn.empty;
+let validateLoginReturn = {
+    empty: "empty",
+    valid: "validate",
+    userNameNotExist: "userNameNotExist",
+    wrongPassword: "wrongPassword",
+    unexpectedToken: "unexpectedToken"
+}
+let validateLoginReturnValue
 
 //check if the id or the username (SK) are already exist in the DB - return TRUE for exist
 async function existKey(ID, uN, identityType) {
@@ -34,7 +40,6 @@ async function existKey(ID, uN, identityType) {
 async function insertToDb(identityType, data) {
     return MongoClient.connect(uri, {useUnifiedTopology: true})
         .then(async client => {
-            const db = client.db("GLEM-TECH")
             console.log("insertToDb connect mongo")
             if (data.password.length < 6 || await (existKey(data.ID, data.userName, identityType))) {
                 console.log("insertToDbReturnValue = false")
@@ -71,49 +76,42 @@ async function getIdentity(identityType) {
         .catch(error => console.error(error))
 }
 
+
 async function loginAuth(userName, password, identityType) {
-    return MongoClient.connect(uri, {useUnifiedTopology: true})
-        .then(async client => {
-            console.log("existKeyFunction")
-            // eslint-disable-next-line no-undef
-            let user = await(getIdentity(identityType))
-            user.find({userName: userName}).toArray(function (err, result) {
-                console.log(result.length,"result.length === 0", result.length === 0,result)
-                if (result.length === 0) {
-                    console.log("validateLoginReturnValue = userNameNotExist")
-                    validateLoginReturnValue = validateLoginReturn.userNameNotExist
-                }else {
-                    if (userName.localeCompare(result[0].userName) === 0 && password.localeCompare(result[0].password) !== 0) {
-                        console.log("validateLoginReturnValue = wrongPassword")
-                        validateLoginReturnValue = validateLoginReturn.wrongPassword
-                    } else if (userName.localeCompare(result[0].userName) === 0 && password.localeCompare(result[0].password) === 0) {
-                        console.log("validateLoginReturnValue = valid")
-                        validateLoginReturnValue = validateLoginReturnValue = validateLoginReturn.valid
-                    }else{
-                        console.log("validateLoginReturnValue = unexpectedToken")
-                        validateLoginReturnValue = validateLoginReturn.unexpectedToken
-                    }
-                }
-            })
-            return validateLoginReturnValue;
-        })
-        .catch(error => console.error(error))
+    return MongoClient.connect(uri, {useUnifiedTopology: true}).then(async client => {
+        let user = await (getIdentity(identityType))
+        user = await user.find({userName: userName}).toArray()
+        if (user.length === 0) {
+            console.log("validateLoginReturnValue = userNameNotExist")
+            validateLoginReturnValue = validateLoginReturn.userNameNotExist
+        } else {
+            if (userName.localeCompare(user[0].userName) === 0 && password.localeCompare(user[0].password) !== 0) {
+                console.log("validateLoginReturnValue = wrongPassword")
+                validateLoginReturnValue = validateLoginReturn.wrongPassword
+            } else if (userName.localeCompare(user[0].userName) === 0 && password.localeCompare(user[0].password) === 0) {
+                console.log("validateLoginReturnValue = valid")
+                validateLoginReturnValue = validateLoginReturnValue = validateLoginReturn.valid
+            } else {
+                console.log("validateLoginReturnValue = unexpectedToken")
+                validateLoginReturnValue = validateLoginReturn.unexpectedToken
+            }
+        }
+        return validateLoginReturnValue
+    }).catch(e =>{console.error(e)})
 }
 
 
-//query that return user by key (id)
-//TODO fix this function
-async function pullFromDbById(identityType, keyId) {
-    return MongoClient.connect(uri, {useUnifiedTopology: true})
-        .then(async client => {
-            const user = await (getIdentity(identityType))
-            return user.find({ID: keyId}).toArray(function (err, result) {
-                pullFromDbByIdReturnValue = result.length !== 0 ? result : "Empty"
-            })
-            return pullFromDbByIdReturnValue
-        })
-        .catch(error => console.error(error))
-}
+// .then(async client => {
+//     console.log("existKeyFunction")
+//     // eslint-disable-next-line no-undef
+//
+//      {
+//         console.log(result.length, "result.length === 0", result.length === 0, result)
+//
+//     })
+//     return validateLoginReturnValue
+// })
+// .catch(error => console.error(error))
 
 
 exports.existKey = existKey;
