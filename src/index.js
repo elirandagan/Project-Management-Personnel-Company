@@ -14,7 +14,8 @@ let identity = {HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Empl
 
 
 const MongoClient = require("mongodb").MongoClient;
-const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+const { Timestamp } = require("bson");
+const uri ="mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, {useUnifiedTopology: true})
     .then(client => {
@@ -68,26 +69,26 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                 case "valid":
                     console.log("insider Valid")
                     res.status(200).render("loaderLogin", {exist: 0});
-                   mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity).then(async returnValue => {
-                       if (returnValue==="empty"){
-                            sleep(5000)}
-                       if("validate" === returnValue){
-                           res.status(200).render("loaderLogin", {exist: 1});
-                           validateUser = true
-                           console.log("validateUser = true")
-                           res.status(200).render("dashboard", {exist: 0});
-                           console.log("router Failed user - validate")
-                       }else if("userNameNotExist" === returnValue) {
-                           console.log("router Failed user - userNameNotExist")
-                           res.status(200).render("login", {exist: 4});
-                       }else if("wrongPassword" === returnValue) {
-                           console.log("router Failed user - wrongPassword")
-                           res.status(200).render("login", {exist: 5});
-                       }else{
-                           console.log("router Failed user - unexpectedToken")
-                           res.status(200).render("login", {exist: 6});
-                       }
-                   }).catch(err=>console.log(err))
+                    const loginAuthorize = await (mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity))
+                    console.log("login loginAuthorize",loginAuthorize)
+                        if("validate" === loginAuthorize){
+                            res.status(200).render("loaderLogin", {exist: 1});
+                            validateUser = true
+                            console.log("validateUser = true")
+                            res.status(200).render("dashboard", {exist: 0});
+                            console.log("router Failed user - validate")
+                        }else if("userNameNotExist" === loginAuthorize) {
+                            console.log("router Failed user - userNameNotExist")
+                            res.status(200).render("login", {exist: 4});
+                        }else if("wrongPassword" === loginAuthorize) {
+                            console.log("router Failed user - wrongPassword")
+                            res.status(200).render("login", {exist: 5});
+                        }else{
+                            console.log("router Failed user - unexpectedToken")
+                            res.status(200).render("login", {exist: 6});
+                        }
+
+
             }
         })
 
@@ -189,6 +190,52 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             })
         })
 
+        router.get("/user", function (req, res) {
+            // console.log(location.href, "*** the location href")
+            // console.log(location, "*** the locatiom obj")
+
+            console.log("user");
+            Contractor_Users_Collection.find({ ID: "308032473" }).toArray(function (err, result) {
+                if (err) {
+                    console.log("***this is an error\n ***", err.body);
+                } else {
+                    console.log(result[0]);
+                    res.status(200).render("user", { user: result[0], status: 'Success' });
+                }
+            });
+        });
+
+        router.post("/user", (req, res) => {
+            console.log("post in user - request", req.body);
+            Contractor_Users_Collection.find({ ID: "308032473" }).toArray(function (err, result) {
+                if (err) {
+                    console.log(err.body + " ** Failed to get **");
+                } else { //if user exists in db
+                    console.log(result[0], "\n** Success to get **");
+                    myquery = { ID: result[0]['ID'] };
+                    newvalues = {
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        partOfCompany: req.body.partOfCompany,
+                        expertise: req.body.expertise,
+                        area: req.body.area,
+                        // lastUpdate: new Timestamp()
+                    }
+                    var status;
+                    Contractor_Users_Collection.updateOne(myquery, { $set: newvalues }, function (err, res2) {
+                        if (err) {
+                            console.log(err.body + " ** Failed to update **");
+                            status = 'Failed';
+                        } else {
+                            console.log(result[0], "\n** Success to update **");
+                            status = 'Success';
+                        }
+                    });
+                    res.status(200).render("user", { user: result[0], status: status });
+                }
+            });
+        });
+
         router.get("/trackingWorkers", function (req, res) {
             res.status(200).render("trackingWorkers");
         });
@@ -241,10 +288,4 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
     .catch(error => console.error(error))
 module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
-console.log(`http://127.0.0.1:${app_port}/`);
-
-// sleep time expects milliseconds
-function sleep (time) {
-    return new Promise((resolve) => setTimeout(resolve, time));
-}
-
+console.log(`http://127.0.0.1:${app_port}`);
