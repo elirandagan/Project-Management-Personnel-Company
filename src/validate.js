@@ -12,7 +12,8 @@ let validateDic = {
 
 async function validateSignUp(data) {
     let returnValue
-    if (!/[^a-zA-Z]/.test(data.firstName)){
+    console.log("!/[^a-zA-Z]/.test(data.firstName", !/[^a-zA-Z]/.test(data.firstName))
+    if (/[^a-zA-Z]/.test(data.firstName)||/[^a-zA-Z]/.test(data.lastName)){
         //if(!validator.isAlpha(data.firstName) || !validator.isAlpha(data.lastName)) {
         returnValue = validateDic.nameFieldMostContainChars
     } else if (!isValidIsraeliID(data.ID)) {
@@ -22,6 +23,7 @@ async function validateSignUp(data) {
     } else {
         returnValue = validateDic.valid
     }
+
     return returnValue
 }
 

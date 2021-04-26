@@ -57,22 +57,22 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             if (validateLogin === "valid") {
                 //res.status(200).render("loaderLogin");
                 const returnValue = await mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity)
-                    console.log("routerreturnValue", returnValue)
-                    if ("validate" === returnValue) {
-                        validateUser = true
-                        console.log("validateUser = true")
-                        res.status(200).render("dashboard", {exist: 0});
-                        console.log("router Failed user - validate")
-                    } else if ("userNameNotExist" === returnValue) {
-                        console.log("router Failed user - userNameNotExist")
-                        res.status(200).render("login", {exist: 4});
-                    } else if ("wrongPassword" === returnValue) {
-                        console.log("router Failed user - wrongPassword")
-                        res.status(200).render("login", {exist: 5});
-                    } else {
-                        console.log("router Failed user - unexpectedToken")
-                        app.set("login")
-                    }
+                console.log("routerreturnValue", returnValue)
+                if ("validate" === returnValue) {
+                    validateUser = true
+                    console.log("validateUser = true")
+                    res.status(200).render("dashboard", {exist: 0});
+                    console.log("router Failed user - validate")
+                } else if ("userNameNotExist" === returnValue) {
+                    console.log("router Failed user - userNameNotExist")
+                    res.status(200).render("login", {exist: 4});
+                } else if ("wrongPassword" === returnValue) {
+                    console.log("router Failed user - wrongPassword")
+                    res.status(200).render("login", {exist: 5});
+                } else {
+                    console.log("router Failed user - unexpectedToken")
+                    app.set("login")
+                }
 
             } else {
                 res.status(200).render("login", {exist: validateLogin});
