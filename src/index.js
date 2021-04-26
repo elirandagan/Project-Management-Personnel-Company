@@ -68,26 +68,26 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                 case "valid":
                     console.log("insider Valid")
                     res.status(200).render("loaderLogin", {exist: 0});
-                    const loginAuthorize = await (mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity))
-                    console.log("login loginAuthorize",loginAuthorize)
-                        if("validate" === loginAuthorize){
-                            res.status(200).render("loaderLogin", {exist: 1});
-                            validateUser = true
-                            console.log("validateUser = true")
-                            res.status(200).render("dashboard", {exist: 0});
-                            console.log("router Failed user - validate")
-                        }else if("userNameNotExist" === loginAuthorize) {
-                            console.log("router Failed user - userNameNotExist")
-                            res.status(200).render("login", {exist: 4});
-                        }else if("wrongPassword" === loginAuthorize) {
-                            console.log("router Failed user - wrongPassword")
-                            res.status(200).render("login", {exist: 5});
-                        }else{
-                            console.log("router Failed user - unexpectedToken")
-                            res.status(200).render("login", {exist: 6});
-                        }
-
-
+                   mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity).then(async returnValue => {
+                       if (returnValue==="empty"){
+                            sleep(5000)}
+                       if("validate" === returnValue){
+                           res.status(200).render("loaderLogin", {exist: 1});
+                           validateUser = true
+                           console.log("validateUser = true")
+                           res.status(200).render("dashboard", {exist: 0});
+                           console.log("router Failed user - validate")
+                       }else if("userNameNotExist" === returnValue) {
+                           console.log("router Failed user - userNameNotExist")
+                           res.status(200).render("login", {exist: 4});
+                       }else if("wrongPassword" === returnValue) {
+                           console.log("router Failed user - wrongPassword")
+                           res.status(200).render("login", {exist: 5});
+                       }else{
+                           console.log("router Failed user - unexpectedToken")
+                           res.status(200).render("login", {exist: 6});
+                       }
+                   }).catch(err=>console.log(err))
             }
         })
 
@@ -242,3 +242,9 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
 console.log(`http://127.0.0.1:${app_port}/`);
+
+// sleep time expects milliseconds
+function sleep (time) {
+    return new Promise((resolve) => setTimeout(resolve, time));
+}
+
