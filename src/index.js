@@ -189,6 +189,52 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             })
         })
 
+        router.get("/user", function (req, res) {
+            // console.log(location.href, "*** the location href")
+            // console.log(location, "*** the locatiom obj")
+
+            console.log("user");
+            Contractor_Users_Collection.find({ ID: "308032473" }).toArray(function (err, result) {
+                if (err) {
+                    console.log("***this is an error\n ***", err.body);
+                } else {
+                    console.log(result[0]);
+                    res.status(200).render("user", { user: result[0], status: 'Success' });
+                }
+            });
+        });
+
+        router.post("/user", (req, res) => {
+            console.log("post in user - request", req.body);
+            Contractor_Users_Collection.find({ ID: "308032473" }).toArray(function (err, result) {
+                if (err) {
+                    console.log(err.body + " ** Failed to get **");
+                } else { //if user exists in db
+                    console.log(result[0], "\n** Success to get **");
+                    myquery = { ID: result[0]['ID'] };
+                    newvalues = {
+                        firstName: req.body.firstName,
+                        lastName: req.body.lastName,
+                        partOfCompany: req.body.partOfCompany,
+                        expertise: req.body.expertise,
+                        area: req.body.area,
+                        // lastUpdate: new Timestamp()
+                    }
+                    var status;
+                    Contractor_Users_Collection.updateOne(myquery, { $set: newvalues }, function (err, res2) {
+                        if (err) {
+                            console.log(err.body + " ** Failed to update **");
+                            status = 'Failed';
+                        } else {
+                            console.log(result[0], "\n** Success to update **");
+                            status = 'Success';
+                        }
+                    });
+                    res.status(200).render("user", { user: result[0], status: status });
+                }
+            });
+        });
+
         router.get("/trackingWorkers", function (req, res) {
             res.status(200).render("trackingWorkers");
         });
