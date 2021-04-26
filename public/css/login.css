@@ -1,4 +1,3 @@
-
 html {
     height: 100%;
   }
@@ -186,12 +185,12 @@ html {
   margin-right: 40px;
   padding-right: 25px;
   color: orange;
-  font-family: 'Zen Dots', cursive;
+  font-family: "Papyrus";
 }
 
 .signup {
   color: orange;
-  font-family: 'Zen Dots', cursive;
+  font-family: "Papyrus";
   padding-bottom: 20px;
 }
 
@@ -213,4 +212,11 @@ html {
   left: 70px;
 }
 
+.star-rating {
+  line-height:32px;
+  font-size:5em;
+}
 
+.checked{
+  color: orange;
+}
