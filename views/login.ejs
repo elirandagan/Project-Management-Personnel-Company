@@ -4,112 +4,116 @@
 <head>
     <title>Login Page</title>
     <link href="css/login.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
     <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
     <!-- <link rel="stylesheet" type="text/css" href="public/css/login.css" -->
 </head>
 
 <body>
-<div class="login-box" onkeydown="enter()">
+<div class="login-box">
     <div class="logo">
         <img src="https://i.ibb.co/4dfK1RZ/0587a81c-623f-4938-8932-291cbaab4e5b-200x200.png" alt="Logo"
              border="0"></a><br/><br/>
     </div>
     <h1 style="color:#3d3b38 ;text-align: center;">Contractors Management System</h1>
     <h2>Login Page</h2>
-    <form id="login-form">
+    <form id="login-form" action="/login" method="POST">
+
         <div id="radioBtnIdentity" class="user-box-checkbox">
             <label class="identityCheckBox" for="identity1">HR
-            <input type="radio" name="identity" id="identity1" value="HR"></label>
+                <input type="radio" name="identity" id="identity1" value="HR_Users"></label>
             <label class="identityCheckBox" for="identity2">Employer
-            <input type="radio" name="identity" id="identity2" value="Emp"></label>
+                <input type="radio" name="identity" id="identity2" value="Employer_Users"></label>
             <label class="identityCheckBox" for="identity3">Other
-            <input type="radio" name="identity" id="identity3" value="Other"></label>
+                <input type="radio" name="identity" id="identity3" value="Contractor_Users"></label>
 
         </div>
+        <br>
+        <br>
         <div class="user-box">
-            <input id="user" type="text" autocomplete="off" name="user" required="">
-            <label>Username</label>
+            <input id="user" type="text" autocomplete="off" name="userName" required="">
+            <label>User Name</label>
         </div>
         <div class="user-box">
-            <input id="pass" type="password" autocomplete="off" name="pass" required="">
+            <input id="pass" type="password" autocomplete="off" name="password" required="">
             <label>Password</label>
             <div style="display: flex;justify-content: center;">
-                <a id="login_btn" onclick="check()">
+                <a id="login_btn">
                     <span></span>
                     <span></span>
                     <span></span>
-                    Login
+                    <button class="hideBtn" type="submit" href="/login">Login</button>
                 </a>
             </div>
             <div class="signup">
                 <a id="A1" href="src/js/loginPage.js">first time here ? </a>
-                <a id="A2" href="src/js/loginPage.js">sign up</a>
+                <a id="A2" href="/signup">sign up</a>
             </div>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
             <script>
-                const loginForm = document.getElementById("login-form");
-                const loginButton = document.getElementById("login_btn");
+                $(document).ready(function () {
+                    // Javascript method's body can be found in assets/js/demos.js
+                    const exist = "<%= exist %>";
+                    console.log(exist)
+                    if (exist == 0) {
+                        console.log("DEFAULT")
 
-                this.enter = function () {
-                    if (event.keyCode == 13)
-                        loginButton.click()
-                }
-
-                this.check = async function () {
-                    const username = loginForm.user.value;
-                    const password = loginForm.pass.value;
-                    const radioBtnSelect = document.querySelector('input[name="identity"]:checked')
-                    let identity = radioBtnSelect ? radioBtnSelect.value : "empty" ;
-                    if ( identity==="empty") {
+                    }else if (exist=="invalidID") {
+                        swal({
+                            title: "User invalid length.\n",
+                            text: "User Name Most Contain More Then 2 character",
+                            icon: "warning",
+                        });
+                    } else if (exist=="invalidPasswordLength") {
+                        swal({
+                            title: "Password invalid length\n",
+                            text: "Password Most Contain More Then 6 character And less then 12",
+                            icon: "warning",
+                        });
+                    } else if (exist=="emptyIdentity") {
                         swal({
                             title: "identity field is empty\n",
                             text: "Please fill identity field",
                             icon: "warning",
                         });
-                    }else if ( password.length<6) {
-                        swal({
-                            title: "Password too short\n",
-                            text: "Password have to be more then 6 char",
-                            icon: "warning",
-                        });
-                    }else if ( username.length<1) {
-                        swal({
-                            title: "User name is required field.\n",
-                            text: "Enter user name",
-                            icon: "warning",
-                        });
-                    }else if(password=="123456" && username=="GLEM"){
-                        window.location = "/dashboard";
-                    } else {
-                        // swal({
-                        //     title: "Wrong Username Or Password",
-                        //     text: "TRY\n username: GLEM \n password: 123456",
-                        //     icon: "warning",
-                        // });
-                        const result = await fetch('/api/register',{
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: JSON.stringify({
-                                username,
-                                password
-                            })
-
-                        }).then(res => res.json())
-                        console.log(result)
                     }
-                }
+                    else if (exist==4) {
+                        swal({
+                            title: "User Name Not Exist\n",
+                            text: "The User Name doesnt Exist, please try again.",
+                            icon: "info",
+                        });
+                    } else if (exist == 5) {
+                        swal({
+                            title: "Wrong Password\n",
+                            text: "Password dont Match To User Name, please try again.",
+                            icon: "info",
+                        });
+                    } else if (exist == 6) {
+                        swal({
+                            title: "Sign Up\n",
+                            text: "invalid ID, please try again.",
+                            icon: "info",
+                        });
+                    } else if (exist == 7) {
+                        swal({
+                            title: "unexpected Token\n",
+                            text: "Unexpected Token, please try again.",
+                            icon: "info",
+                        });
+                    }
+                });
             </script>
-            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-
     </form>
 </div>
-<div style="position: absolute; bottom: 8px; left: 16px; font-size: 12px;color:#3d3b38;">
+<p style="position: absolute;  left: 40px; font-size: 12px; color:#3d3b38;">
     Copyright 2021 &copy; GLEM TECH LTD.
-</div>
+</p>
 
 </body>
 
-</body>
 
 </html>
