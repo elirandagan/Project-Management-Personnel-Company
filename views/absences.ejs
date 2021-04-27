@@ -43,10 +43,17 @@
 
         Tip 2: you can also add an image using data-image tag
     -->
-<<<<<<< HEAD
       <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
-          GLEM TECH
-        </a></div>
+          <div className="rating">
+            <h4>My Rate:</h4>
+            <span class="fa fa-star-o checked "></span>
+            <span class="fa fa-star-o checked"></span>
+            <span class="fa fa-star-o checked"></span>
+            <span class="fa fa-star orange"></span>
+            <span class="fa fa-star"></span>
+          </div>
+        </a>
+      </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
           <li class="nav-item">
@@ -111,82 +118,6 @@
           </li>
         </ul>
       </div>
-=======
-    <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
-      <div className="rating"><h4>My Rate:</h4>
-        <span class="fa fa-star-o checked "></span>
-        <span class="fa fa-star-o checked"></span>
-        <span class="fa fa-star-o checked"></span>
-        <span class="fa fa-star orange"></span>
-        <span class="fa fa-star"></span>
-      </div>
-    </a>
-    </div>
-        <div class="sidebar-wrapper">
-            <ul class="nav">
-              <li class="nav-item">
-                <a class="nav-link" href="./dashboard">
-                  <i class="material-icons">dashboard</i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./shifts">
-                  <i class="material-icons">content_paste</i>
-                  <p>Shifts</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./workHistory">
-                  <i class="material-icons">library_books</i>
-                  <p>Work History</p>
-                </a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="./absences">
-                  <i class="material-icons">content_paste</i>
-                  <p>Absences</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./user">
-                  <i class="material-icons">person</i>
-                  <p>User Profile</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./recruit">
-                  <i class="material-icons">person</i>
-                  <p>Recruit</p>
-                </a>
-              </li>
-             <li class="nav-item ">
-                <a class="nav-link" href="./trackingWorkers">
-                  <i class="material-icons">person</i>
-                  <p>Tracking Workers</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./statistics">
-                  <i class="material-icons">person</i>
-                  <p>Statistics</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./searchWorker">
-                  <i class="material-icons">person</i>
-                  <p>Search Worker</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./hiringHistory">
-                  <i class="material-icons">person</i>
-                  <p>Hiring History</p>
-                </a>
-              </li>
-            </ul>
-          </div>
->>>>>>> 2090c65bcb85b4e5ec7158545624a1f2b18c9c82
     </div>
     <div class="main-panel">
       <!-- Navbar -->
@@ -337,19 +268,23 @@
         let date = document.getElementById('date');
         date.innerHTML = '&copy; ' + x + date.innerHTML;
 
-        var start = new Date();
-        var dd = start.getDate();
-        var mm = start.getMonth() + 1; //January is 0!
-        var yyyy = start.getFullYear();
-        if (dd < 10) {
-          dd = '0' + dd
+        let today = new Date(),
+          day = today.getDate(),
+          month = today.getMonth() + 1, //January is 0
+          year = today.getFullYear();
+        if (day < 10) {
+          day = '0' + day
         }
-        if (mm < 10) {
-          mm = '0' + mm
+        if (month < 10) {
+          month = '0' + month
         }
+        today = year + '-' + month + '-' + day;
+        var maxDate = year + '-' + month + '-' + day;
 
-        start = yyyy + '-' + mm + '-' + dd;
         document.getElementById("start").setAttribute("min", today);
+        // document.getElementById("end").setAttribute("max", maxDate);
+        document.getElementById("end").setAttribute("min", today);
+        // document.getElementById("start").setAttribute("value", today);
       </script>
     </div>
   </div>
