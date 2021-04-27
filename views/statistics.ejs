@@ -187,15 +187,15 @@
           <div class="col-lg-12">
             <div class="card card-chart">
               <div class="card-header card-header">
-                <canvas id="monthlyEmpsChart"></canvas> 
+                <canvas id="expertiseChart"></canvas> 
               </div>
               <div class="card-body">
-                <h4 class="card-title">Email Subscriptions</h4>
-                <p class="card-category">Last Campaign Performance</p>
+                <h4 class="card-title"> By Expertise</h4>
+                <p class="card-category">271 hiring were made so far. </p>
               </div>
               <div class="card-footer">
                 <div class="stats">
-                  <i class="material-icons">access_time</i> campaign sent 2 days ago
+                  <i class="material-icons">access_time</i> <!--  -->last update was 4 days ago.
                 </div>
               </div>
             </div>
@@ -407,6 +407,60 @@
     });
   </script>
   <!-- Chart 3 -->
+    <script>
+    let expertiseChart = document.getElementById('expertiseChart').getContext('2d');
+    // Global Options
+    Chart.defaults.global.defaultFontSize = 14;
+    Chart.defaults.global.defaultFontColor = '#f2f2f2';
+
+    new Chart(expertiseChart, {
+      type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+      data: {
+        labels: ['A.C Technician','Carpenter','Electrician','Gardener','Painter','Plumber'],
+        datasets: [{
+          label: 'hired ',
+          data: [61,52,48,40,36,34],
+          backgroundColor:'#800080',
+          // backgroundColor: ['#800080'], //can be array
+          // borderWidth: 1,
+          // borderColor: '#fff',
+          hoverBorderWidth: 3,
+          hoverBorderColor: '#fff'
+        }]
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Number Of Workers Hired (By Expertise) - April 21`',
+          fontSize: 22
+        },
+        legend: {
+          display: true,
+          position: 'top',
+          labels: {
+            fontColor: '#fff'
+          }
+        },
+        tooltips: {
+          enabled: true
+        },
+        scales: {
+          // disables grid for x axis
+          xAxes: [{
+              gridLines: {
+                display: false
+              }
+          }],
+          // disables grid for y axis
+          yAxes: [{
+              gridLines: {
+                display: true
+              }
+          }]
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>
