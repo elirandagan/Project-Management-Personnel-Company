@@ -195,13 +195,13 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="bmd-label-floating">Start Your Leaving Period Here*</label>
-                    <input type="date" class="form-control" required id="start" name="start">
+                    <input type="date" class="form-control" required id="from" name="from">
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="bmd-label-floating">Finish Your Leaving Period Here*</label>
-                    <input type="date" class="form-control" required id="end" name="end">
+                    <input type="date" class="form-control" required id="to" name="to">
                   </div>
                 </div>
                 <div class="col-md-2"></div>
@@ -281,9 +281,9 @@
         today = year + '-' + month + '-' + day;
         var maxDate = year + '-' + month + '-' + day;
 
-        document.getElementById("start").setAttribute("min", today);
+        document.getElementById("from").setAttribute("min", today);
         // document.getElementById("end").setAttribute("max", maxDate);
-        document.getElementById("end").setAttribute("min", today);
+        document.getElementById("to").setAttribute("min", today);
         // document.getElementById("start").setAttribute("value", today);
       </script>
     </div>
@@ -293,6 +293,7 @@
   <!--   Core JS Files   -->
   <script src="js/core/jquery.min.js"></script>
   <script src="js/core/popper.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="js/core/bootstrap-material-design.min.js"></script>
   <script src="https://unpkg.com/default-passive-events"></script>
   <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
@@ -474,6 +475,16 @@
     $(document).ready(function () {
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
+      var arr = "<%= arr %>";
+      var succeed = "<%= succeed %>";
+      console.log("absences page say: "+succeed)
+      if(succeed == true){
+        swal({
+          title: "Adding Leaving Period\n",
+          text: "The leaving period was succeesfuly added to the system.",
+          icon: "success",
+        });
+      }
 
     });
   </script>

@@ -27,6 +27,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         const HR_Users_Collection = db.collection("HR_Users")
         const Contractor_Users_Collection = db.collection("Contractor_Users")
         const Employer_Users_Collection = db.collection("Employer_Users")
+        const Absences_Collection = db.collection("Absences")
 
         app.set("view engine", "ejs");
 
@@ -131,9 +132,20 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             res.status(200).render("shifts");
         });
 
+
+        /////// ABSENCES - START //////////
+
         router.get("/absences", function (req, res) {
-            res.status(200).render("absences");
+            res.status(200).render("absences",{arr: [], succeed: false});
         });
+
+        router.post("/absences", (req, res) => {
+            Absences_Collection.insertOne({ID : "208061580", from : req.body.from, to : req.body.to})
+            .then(result =>{
+                console.log("SUCCEED TO INSERT SHIFT FOR ID 208061580")
+                res.status(200).render("absences",{arr: [], succeed: true})
+            })
+        })
 
         router.get("/loaderLogin", function (req, res) {
             res.status(200).render("loaderLogin");
