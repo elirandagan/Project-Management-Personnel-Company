@@ -893,28 +893,41 @@
     });
   </script>
   <script>
-    $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
-      const identity = document.cookie.substr(9, document.cookie.length)
+    const identity = document.cookie.substr(9, document.cookie.length)
       var CW = document.getElementById("CW");
       var HR = document.getElementById("HR");
       var EMP = document.getElementById("EMP");
       console.log("IDENTITY: " + identity + " length: " + identity.length)
       if (identity.toString() == "Contractor_Users") {
         HR.style.display = "none";
+        document.getElementById("HR").style.display = "none";
         EMP.style.display = "none";
+        document.getElementById("EMP").style.display = "none";
+        console.log("HEYYYYYYYYYY")
       }
       else if (identity.toString() == "HR_Users") {
         CW.style.display = "none";
+        document.getElementById("CW").style.display = "none";
         EMP.style.display = "none";
+        document.getElementById("EMP").style.display = "none";
+        console.log("HEYYYYYYYYYY")
 
       }
       else if (identity.toString() == "Employer_Users"){
         HR.style.display = "none";
+        document.getElementById("HR").style.display = "none";
         CW.style.display = "none";
+        document.getElementById("CW").style.display = "none";
+        console.log("HEYYYYYYYYYY")
+        
       }
 
+
+
+    $(document).ready(function () {
+      // Javascript method's body can be found in assets/js/demos.js
+      md.initDashboardPageCharts();
+      
     });
   </script>
 
