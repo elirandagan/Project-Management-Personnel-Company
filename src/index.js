@@ -193,6 +193,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 console.log("result: " + result.length)
                 if (result.length != 0) {
                     console.log(req.body.ID + " 1 Failed")
+                    res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
                 } else {
                     Contractor_Users_Collection.find({ userName: req.body.userName }).toArray(function (err, result2) {
                         console.log("userName: " + req.body.userName)
