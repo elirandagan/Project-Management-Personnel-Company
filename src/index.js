@@ -164,30 +164,39 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         });
 
         router.post("/recruit", (req, res) => {
-            Contractor_Users_Collection.find({ID: req.body.ID}).toArray(function (err, result) {
-                console.log("ID: " + JSON.stringify(req.body.ID))
-                console.log("result: " + result.length)
-                if (result.length != 0) {
-                    res.status(200).render("recruit", {exist: 1, ID: req.body.ID});
-                    console.log(req.body.ID + " 1 Failed")
-                } else {
-                    Contractor_Users_Collection.find({userName: req.body.userName}).toArray(function (err, result2) {
-                        console.log("userName: " + req.body.userName)
-                        console.log("result: " + result2.length)
-                        if (result2.length != 0) {
-                            res.status(200).render("recruit", {exist: 1, ID: req.body.ID});
-                            console.log(result2[0] + "2 Failed")
-                        } else {
-                            console.log(res + " Succeed")
-                            Contractor_Users_Collection.insertOne(req.body)
-                                .then(result => {
-                                    res.status(200).render("recruit", {exist: 0, ID: req.body.ID});
-                                })
-                        }
-                    })
-                }
+            // eslint-disable-next-line no-undef
+            mongoDbFunction.inserToDb(identity.Contractor_Users, req.body).then(r =>{
+                const exist = r ? 0 : 1
+                res.status(200).render("recruit", {exist: exist, ID: req.body.ID});
             })
-        })
+
+
+        });
+        //
+        //
+        // Contractor_Users_Collection.find({ID: req.body.ID}).toArray(function (err, result) {
+        //         console.log("ID: " + JSON.stringify(req.body.ID))
+        //         console.log("result: " + result.length)
+        //         if (result.length != 0) {
+        //             console.log(req.body.ID + " 1 Failed")
+        //         } else {
+        //             Contractor_Users_Collection.find({userName: req.body.userName}).toArray(function (err, result2) {
+        //                 console.log("userName: " + req.body.userName)
+        //                 console.log("result: " + result2.length)
+        //                 if (result2.length != 0) {
+        //                     res.status(200).render("recruit", {exist: 1, ID: req.body.ID});
+        //                     console.log(result2[0] + "2 Failed")
+        //                 } else {
+        //                     console.log(res + " Succeed")
+        //                     Contractor_Users_Collection.insertOne(req.body)
+        //                         .then(result => {
+        //                             res.status(200).render("recruit", {exist: 0, ID: req.body.ID});
+        //                         })
+        //                 }
+        //             })
+        //         }
+        //     })
+        // })
 
         router.get("/user", function (req, res) {
             // console.log(location.href, "*** the location href")
