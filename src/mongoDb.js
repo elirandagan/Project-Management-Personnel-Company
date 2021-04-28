@@ -76,6 +76,7 @@ async function getIdentity(identityType) {
 
 
 async function loginAuth(userName, password, identityType) {
+    // eslint-disable-next-line no-unused-vars
     return MongoClient.connect(uri, {useUnifiedTopology: true}).then(async client => {
         let user = await (getIdentity(identityType))
         user = await user.find({userName: userName}).toArray()
