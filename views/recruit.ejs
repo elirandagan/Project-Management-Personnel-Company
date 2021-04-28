@@ -236,18 +236,18 @@
                 <div class="col-md-4">
                   <div class="form-group">
                     <label class="bmd-label-floating">Hourly Payment (₪)*</label>
-                    <input required type="number" min="0 " class="form-control" name="hourlyPay">
+                    <input required type="number" min="28" class="form-control" name="hourlyPay">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
                     <label class="bmd-label-floating">UserName*</label>
-                    <input required type="text" min=6 id="userName" class="form-control" name="userName">
+                    <input required title="מינימום 6 תווים" type="text" pattern=".{6,}" id="userName" class="form-control" name="userName">
                   </div>
                 </div>
                 <div class="col-md-6">
                   <div class="form-group">
-                    <input required type="password" min=6 id="password" name="password" class="form-control">
+                    <input required title="מינימום 6 תווים" type="password" pattern=".{6,}" id="password" name="password" class="form-control">
                     <label for="password" class="bmd-label-floating">Password*</label>
                     <span toggle="#password" id="eye" style="cursor: pointer;" class="mdi mdi-eye"
                       onclick="myFunction(this)">show</span>
@@ -316,7 +316,8 @@
         function Validate(){
           // TODO: Check validation of the inputs before sending them to server side
           var userName = document.getElementById("userName").innerHTML;
-          var userName = document.getElementById("userName").innerHTML;
+          var password = document.getElementById("password").innerHTML;
+
         }
 
 
