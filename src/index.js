@@ -5,7 +5,8 @@ const app = express();
 const router = express.Router();
 
 const mongoDbFunction = require("./mongoDb");
-const validateFunction = require("./validate")
+const validateFunction = require("./validate");
+const date = require("./date");
 
 //const bcrypt = require("bcrypt")
 
@@ -180,13 +181,13 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         });
 
         router.post("/recruit", (req, res) => {
-            // eslint-disable-next-line no-undef
+            let dateTime = date.getCurrentDate();
+            req.body.createdAt = dateTime;
+            console.log(req.body);
             mongoDbFunction.inserToDb(identity.Contractor_Users, req.body).then(r => {
                 const exist = r ? 0 : 1
                 res.status(200).render("recruit", {exist: exist, ID: req.body.ID});
             })
-
-
         });
         //
         //
