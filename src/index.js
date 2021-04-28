@@ -14,6 +14,7 @@ let identity = {HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Empl
 
 
 const MongoClient = require("mongodb").MongoClient;
+// eslint-disable-next-line no-unused-vars
 const {Timestamp} = require("bson");
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
@@ -26,7 +27,6 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         const HR_Users_Collection = db.collection("HR_Users")
         const Contractor_Users_Collection = db.collection("Contractor_Users")
-        const Employer_Users_Collection = db.collection("Employer_Users")
         const Absences_Collection = db.collection("Absences")
 
         app.set("view engine", "ejs");
@@ -142,8 +142,8 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         router.post("/absences", (req, res) => {
             Absences_Collection.insertOne({ID : "208061580", from : req.body.from, to : req.body.to})
             .then(result =>{
-                console.log("SUCCEED TO INSERT SHIFT FOR ID 208061580")
                 res.status(200).render("absences",{arr: [], succeed: true})
+                console.log("SUCCEED TO INSERT SHIFT FOR ID 208061580", result)
             })
         })
 
@@ -208,7 +208,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                     console.log("***this is an error\n ***", err.body);
                 } else {
                     console.log(result[0]);
-                    res.status(200).render("user", {user: result[0], status: 'Success'});
+                    res.status(200).render("user", {user: result[0], status: "Success"});
                 }
             });
         });
@@ -220,7 +220,9 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                     console.log(err.body + " ** Failed to get **");
                 } else { //if user exists in db
                     console.log(result[0], "\n** Success to get **");
-                    myquery = {ID: result[0]['ID']};
+                    // eslint-disable-next-line no-undef
+                    myquery = {ID: result[0]["ID"]};
+                    // eslint-disable-next-line no-undef
                     newvalues = {
                         firstName: req.body.firstName,
                         lastName: req.body.lastName,
@@ -230,13 +232,14 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                         // lastUpdate: new Timestamp()
                     }
                     var status;
+                    // eslint-disable-next-line no-undef,no-unused-vars
                     Contractor_Users_Collection.updateOne(myquery, {$set: newvalues}, function (err, res2) {
                         if (err) {
                             console.log(err.body + " ** Failed to update **");
-                            status = 'Failed';
+                            status = "Failed";
                         } else {
                             console.log(result[0], "\n** Success to update **");
-                            status = 'Success';
+                            status = "Success";
                         }
                     });
                     res.status(200).render("user", {user: result[0], status: status});

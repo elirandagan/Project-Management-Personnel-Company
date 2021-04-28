@@ -17,8 +17,7 @@ let validateLoginReturnValue
 async function existKey(ID, uN, identityType) {
     return MongoClient.connect(uri, {useUnifiedTopology: true})
         .then(async client => {
-            console.log("existKeyFunction")
-            const db = client.db("GLEM-TECH")
+            console.log(client +"existKeyFunction")
             let user = await (getIdentity(identityType))
             user.find({ID: ID}).toArray(function (err, result) {
                 if (result.length !== 0) {
@@ -40,7 +39,7 @@ async function existKey(ID, uN, identityType) {
 async function insertToDb(identityType, data) {
     return MongoClient.connect(uri, {useUnifiedTopology: true})
         .then(async client => {
-            console.log("insertToDb connect mongo")
+            console.log(client + "insertToDb connect mongo")
             if (data.password.length < 6 || await (existKey(data.ID, data.userName, identityType))) {
                 console.log("insertToDbReturnValue = false")
                 insertToDbReturnValue = false
@@ -48,8 +47,7 @@ async function insertToDb(identityType, data) {
                 console.log("insertToDbReturnValue = true")
                 insertToDbReturnValue = true;
                 let user = await (getIdentity(identityType))
-                user.insertOne(data).then(res => {
-                }).catch(error => console.log("error not insert"))
+                user.insertOne(data).then().catch(error => console.log(error +"error not insert"))
             }
             console.log("return insertToDbReturnValue", insertToDbReturnValue)
             return insertToDbReturnValue
