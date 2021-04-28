@@ -312,15 +312,6 @@
             x.type = "password";
           }
         }
-
-        function Validate(){
-          // TODO: Check validation of the inputs before sending them to server side
-          var userName = document.getElementById("userName").innerHTML;
-          var password = document.getElementById("password").innerHTML;
-
-        }
-
-
       </script>
     </div>
 
@@ -516,6 +507,7 @@
       md.initDashboardPageCharts();
       var exist = "<%= exist %>";
       var ID = "<%= ID %>";
+      console.log("Exist : " +exist)
       if (exist == 0) {
         swal({
           title: "Adding Worker\n",
