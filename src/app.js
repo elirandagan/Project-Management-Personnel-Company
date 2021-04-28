@@ -2,7 +2,6 @@
 const express = require("express");
 const app = express();
 const ejs = require("ejs");
-var fs = require("fs");
 const port = 8000;
 
 // Render index.ejs file

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign up Page</title>
+    <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <style>
+        html, body {
+            min-height: 100%;
+        }
+        body, div, form, input, select, p {
+            padding: 0;
+            margin: 0;
+            outline: none;
+            font-family: Roboto, Arial, sans-serif;
+            font-size: 16px;
+            color: #eee;
+        }
+        body {
+            background-size: cover;
+            background: linear-gradient(#f9c5d1, #9795ef);
+        }
+        h1, h2 {
+            text-transform: uppercase;
+            font-weight: 400;
+        }
+        h2 {
+            margin: 0 0 0 8px;
+        }
+        .main-block {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            padding: 25px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+        .left-part, form {
+            padding: 25px;
+        }
+        .left-part {
+            text-align: center;
+        }
+        .fa-graduation-cap {
+            font-size: 72px;
+        }
+        form {
+            background: rgba(0, 0, 0, 0.7);
+        }
+        .title {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .info {
+
+            display: flex;
+            flex-direction: column;
+        }
+        input, select {
+            padding: 5px;
+            margin-bottom: 30px;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #eee;
+        }
+        input::placeholder {
+            color: #eee;
+        }
+        option:focus {
+            border: none;
+        }
+        option {
+            background: black;
+            border: none;
+        }
+        .checkbox input {
+            margin: 0 10px 0 0;
+            vertical-align: middle;
+        }
+        .checkbox a {
+            color: #26a9e0;
+        }
+        .checkbox a:hover {
+            color: #85d6de;
+        }
+        .btn-item, button {
+            padding: 10px 5px;
+            margin-top: 20px;
+            border-radius: 5px;
+            border: none;
+            background: #26a9e0;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 400;
+            color: #fff;
+        }
+        .btn-item {
+            display: inline-block;
+            margin: 20px 5px 0;
+        }
+        button {
+            width: 100%;
+        }
+        button:hover, .btn-item:hover {
+            background: #9795ef;
+        }
+        @media (min-width: 568px) {
+            html, body {
+                height: 100%;
+            }
+            .main-block {
+                flex-direction: column ;
+                height: calc(100% - 50px);
+                width: auto;
+            }
+            .left-part, form {
+                flex: 1;
+                height: auto;
+            }
+        }
+        .title{
+            padding: 45px;
+            margin: auto;
+            font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div class="main-block">
+    <a href="/login">Back to Login</a>
+
+    <form action="/signup" method="POST">
+        <div class="title">
+            <i class="fas fa-pencil-alt"></i>
+            <h2 class="H2-register">Register here</h2>
+        </div>
+        <div class="info">
+            <input id="userName"type="text" name="userName" placeholder="User name" required name="userName">
+            <input type="password" name="password" placeholder="Password" required name="password">
+            <input id="ID" type="text" name="ID" placeholder="ID" required name="ID">
+            <input id="fname" type="text" name="firstName" placeholder="First name" required name="firstName">
+            <input id="lname" type="text" name="lastName" placeholder="Last name" required name="LastName">
+            <input id="partOfComp"type="text" name="partOfComp" placeholder="Part of company" required name="partOfCompany">
+        </div>
+        <div class="checkbox">
+            <input required name="checkbox"  type="checkbox" name="checkbox"><span>I agree to the <a href="/privacyPolicy">Privacy Poalicy for GLEM Tech</a></span>
+        </div>
+        <br>
+        <br>
+        <button type="submit" href="/signup">Submit</button>
+
+    </form>
+
+
+</div>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Javascript method's body can be found in assets/js/demos.js
+        const exist = "<%= exist %>";
+        console.log(exist)
+        if (exist == 0) {
+            console.log("DEFAULT")
+
+        }
+        else if (exist == 1) {
+            swal({
+                title: "Sign Up\n",
+                text: "The User Name Or ID are Already Exist, please try again.",
+                icon: "info",
+            });
+        }else if (exist == 2) {
+            swal({
+                title: "Sign Up\n",
+                text: "The First name and Last name most contain chars only, please try again.",
+                icon: "info",
+            });
+        }
+        else if (exist == 3) {
+            swal({
+                title: "Sign Up\n",
+                text: "invalid ID, please try again.",
+                icon: "info",
+            });
+        }else if (exist == 4) {
+            swal({
+                title: "Sign Up\n",
+                text: "invalid password length, please try again.",
+                icon: "info",
+            });
+        }else if (exist == 5) {
+            swal({
+                title: "Adding Worker\n",
+                text:  "added succecfully.",
+                icon: "success",
+            });
+        }
+    });
+</script>
+</body>
+</html>
