@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const app_port = process.env.PORT || 3000;
 const app = express();
 const router = express.Router();
+// const Cookie = require("js-cookie")
 
 const mongoDbFunction = require("./mongoDb");
 const validateFunction = require("./validate")
@@ -62,6 +63,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 if ("validate" === returnValue) {
                     validateUser = true
                     console.log("validateUser = true")
+
+                    ///////// COOKIE /////////////
+                    // Cookie.set('userInfo', JSON.stringify(req.body.identity));
+                    res.cookie('userInfo', req.body.identity, { maxAge: 900000, httpOnly: false});
+                    
                     res.status(200).render("dashboard", { exist: 0 });
                     console.log("router Failed user - validate")
                 } else if ("userNameNotExist" === returnValue) {
