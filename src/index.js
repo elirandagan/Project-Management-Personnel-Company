@@ -3,8 +3,8 @@ const bodyParser = require("body-parser");
 const app_port = process.env.PORT || 3000;
 const app = express();
 const router = express.Router();
-const mongoDbFunction = require("./mongoDb");
 
+const mongoDbFunction = require("./mongoDb");
 const validateFunction = require("./validate")
 
 //const bcrypt = require("bcrypt")
@@ -115,40 +115,56 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         });
 
         router.get("/privacyPolicy", function (req, res) {
-            res.status(200).render("privacyPolicy");
+            if (validateUser) {
+                res.status(200).render("privacyPolicy");
+
+            }
+
         });
 
 
         router.get("/template", function (req, res) {
-            res.status(200).render("template");
+            if (validateUser) {
+                res.status(200).render("template");
+            }
         });
 
 
         router.get("/workHistory", function (req, res) {
-            res.status(200).render("workHistory");
+            if (validateUser) {
+                res.status(200).render("workHistory");
+            }
         });
 
         router.get("/shifts", function (req, res) {
-            res.status(200).render("shifts");
+            if (validateUser) {
+                res.status(200).render("shifts");
+            }
         });
 
 
         /////// ABSENCES - START //////////
 
         router.get("/absences", function (req, res) {
-            res.status(200).render("absences",{arr: [], succeed: false});
+            if (validateUser) {
+                res.status(200).render("absences", {arr: [], succeed: false});
+            }
         });
 
         router.post("/absences", (req, res) => {
-            Absences_Collection.insertOne({ID : "208061580", from : req.body.from, to : req.body.to})
-            .then(result =>{
-                res.status(200).render("absences",{arr: [], succeed: true})
-                console.log("SUCCEED TO INSERT SHIFT FOR ID 208061580", result)
-            })
+            if (validateUser) {
+                Absences_Collection.insertOne({ID: "208061580", from: req.body.from, to: req.body.to})
+                    .then(result => {
+                        res.status(200).render("absences", {arr: [], succeed: true})
+                        console.log("SUCCEED TO INSERT SHIFT FOR ID 208061580", result)
+                    })
+            }
         })
 
         router.get("/loaderLogin", function (req, res) {
-            res.status(200).render("loaderLogin");
+            if (validateUser) {
+                res.status(200).render("loaderLogin");
+            }
         });
 
         router.get("/recruit", function (req, res) {
@@ -165,7 +181,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         router.post("/recruit", (req, res) => {
             // eslint-disable-next-line no-undef
-            mongoDbFunction.inserToDb(identity.Contractor_Users, req.body).then(r =>{
+            mongoDbFunction.inserToDb(identity.Contractor_Users, req.body).then(r => {
                 const exist = r ? 0 : 1
                 res.status(200).render("recruit", {exist: exist, ID: req.body.ID});
             })
