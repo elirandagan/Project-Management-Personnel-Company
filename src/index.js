@@ -18,6 +18,7 @@ let identity = { HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Emp
 const MongoClient = require("mongodb").MongoClient;
 // eslint-disable-next-line no-unused-vars
 const { Timestamp } = require("bson");
+const { query } = require("express");
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, { useUnifiedTopology: true })
@@ -29,6 +30,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         const HR_Users_Collection = db.collection("HR_Users")
         const Contractor_Users_Collection = db.collection("Contractor_Users")
+        const Employer_Users_Collection = db.collection("Employer_Users")
         const Absences_Collection = db.collection("Absences")
 
         app.set("view engine", "ejs");
@@ -207,14 +209,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         console.log("result: " + result2.length)
                         if (result2.length != 0) {
                             res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
-                            console.log(result2[0] + "2 Failed")
+                            console.log(result2[0] + "2 Faileds")
                         } else {
                             console.log(res + " Succeed")
-                            req.body.createAt = date.getCurrentDate();
-                            console.log('*****');
-                            console.log(date.getCurrentDate());
-                            console.log(req.body);
-                            console.log('*****');
+                            req.body.createAt = new Date(date.getCurrentDate());
                             Contractor_Users_Collection.insertOne(req.body)
                                 .then(result => {
                                     res.status(200).render("recruit", { exist: 0, ID: req.body.ID });
@@ -277,12 +275,20 @@ router.post("/user", (req, res) => {
     });
 });
 
-router.get("/trackingWorkers", function (req, res) {
-    res.status(200).render("trackingWorkers");
+router.get("/statistics", function (req, res) {
+    
+    const query = { DateAdded: { $gt: ISODate(date.getFirstDateOfMonth()), $lt: ISODate(date.getLastDateOfMonth())} };
+    const projection = {};
+    Employer_Users_Collection.find(query,projection).toArray(function(err,result) {
+        if (err) throw err;
+        console.log(result);
+    });
+    res.status(200).render("statistics",{daysInMonth: date.getDaysInMonth(), });
 });
 
-router.get("/statistics", function (req, res) {
-    res.status(200).render("statistics");
+
+router.get("/trackingWorkers", function (req, res) {
+    res.status(200).render("trackingWorkers");
 });
 
 router.get("/searchWorker", function (req, res) {
