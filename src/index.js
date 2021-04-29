@@ -210,6 +210,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             console.log(result2[0] + "2 Failed")
                         } else {
                             console.log(res + " Succeed")
+                            req.body.createAt = date.getCurrentDate();
+                            console.log('*****');
+                            console.log(date.getCurrentDate());
+                            console.log(req.body);
+                            console.log('*****');
                             Contractor_Users_Collection.insertOne(req.body)
                                 .then(result => {
                                     res.status(200).render("recruit", { exist: 0, ID: req.body.ID });
