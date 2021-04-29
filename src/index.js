@@ -213,6 +213,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         } else {
                             console.log(res + " Succeed")
                             req.body.createAt = new Date(date.getCurrentDate());
+                            console.log('*****');
+                            console.log(date.getCurrentDate());
+                            console.log(req.body);
+                            console.log('*****');
                             Contractor_Users_Collection.insertOne(req.body)
                                 .then(result => {
                                     res.status(200).render("recruit", { exist: 0, ID: req.body.ID });
@@ -277,7 +281,7 @@ router.post("/user", (req, res) => {
 
 router.get("/statistics", function (req, res) {
     
-    const query = { DateAdded: { $gt: ISODate(date.getFirstDateOfMonth()), $lt: ISODate(date.getLastDateOfMonth())} };
+    const query = { createAt: { $gt: ISODate(date.getFirstDateOfMonth()), $lt: ISODate(date.getLastDateOfMonth())} };
     const projection = {};
     Employer_Users_Collection.find(query,projection).toArray(function(err,result) {
         if (err) throw err;
