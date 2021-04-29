@@ -312,15 +312,6 @@
             x.type = "password";
           }
         }
-
-        function Validate(){
-          // TODO: Check validation of the inputs before sending them to server side
-          var userName = document.getElementById("userName").innerHTML;
-          var password = document.getElementById("password").innerHTML;
-
-        }
-
-
       </script>
     </div>
 
@@ -339,7 +330,7 @@
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!--  Google Maps Plugin    -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+  <!-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> -->
   <!-- Chartist JS -->
   <script src="js/plugins/chartist.min.js"></script>
   <!--  Notifications Plugin    -->
@@ -516,6 +507,7 @@
       md.initDashboardPageCharts();
       var exist = "<%= exist %>";
       var ID = "<%= ID %>";
+      console.log("Exist : " +exist)
       if (exist == 0) {
         swal({
           title: "Adding Worker\n",
