@@ -14,19 +14,16 @@ function getCurrentDate() {
 }
 
 function getFirstDateOfMonth() {
-  let month = today.getUTCMonth() + 1;
-  let year = today.getUTCFullYear();
-  firstday = '01' + '-' + month + '-' + year;
-  console.log('*** getFirstDateOfMonth() = ' + firstday + ' ****');
-  return firstday;
+  firstdate = new Date(today.getFullYear(), today.getMonth(), 1);
+  // console.log('*** getFirstDateOfMonth() = ' + firstdate + ' ****');
+  return firstdate;
 }
 
 function getLastDateOfMonth() {
-  let month = today.getUTCMonth() + 1;
-  let year = today.getUTCFullYear();
-  lastDay =  (getDaysInMonth())+ '-' + month + '-' + year;
-  console.log('*** getLastDateOfMonth() = ' + lastDay+'');
-  return lastDay;
+  lastDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  // console.log('%%%' + new Date(today.getFullYear(), today.getMonth() + 1, 0) +'%%%%');
+  // console.log('*** getLastDateOfMonth() = ' + lastDate + '');
+  return lastDate;
 }
 
 function getDaysInMonth() {

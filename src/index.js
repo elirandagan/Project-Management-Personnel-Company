@@ -8,6 +8,7 @@ const router = express.Router();
 const mongoDbFunction = require("./mongoDb");
 const validateFunction = require("./validate");
 const date = require("./date");
+const stats = require("./js/stats");
 
 //const bcrypt = require("bcrypt")
 
@@ -212,9 +213,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             console.log(result2[0] + "2 Faileds")
                         } else {
                             console.log(res + " Succeed")
-                            req.body.createAt = new Date(date.getCurrentDate());
+                            // req.body.createAt = new Date(date.getCurrentDate());
+                            req.body.createAt = new Date();
                             console.log('*****');
-                            console.log(date.getCurrentDate());
+                            console.log('new date = ',new Date());
                             console.log(req.body);
                             console.log('*****');
                             Contractor_Users_Collection.insertOne(req.body)
@@ -280,15 +282,26 @@ router.post("/user", (req, res) => {
 });
 
 router.get("/statistics", function (req, res) {
-    
-    const query = { createAt: { $gt: ISODate(date.getFirstDateOfMonth()), $lt: ISODate(date.getLastDateOfMonth())} };
-    const projection = {};
-    Employer_Users_Collection.find(query,projection).toArray(function(err,result) {
+    let signedUpArr = []
+    const query = { createAt: { $gt:date.getFirstDateOfMonth(), $lt:date.getLastDateOfMonth()} };
+    // const query = { createAt: new Date() };
+    // const projection = {}; //can be added to find()
+    // console.log(date.getFirstDateOfMonth());
+    // console.log(date.getLastDateOfMonth());
+    Contractor_Users_Collection.find(query).toArray(function(err,result) {
         if (err) throw err;
-        console.log(result);
+        if (Object.keys(result).length === 0){
+            console.log("empty");
+            signedUpArr = new Array(date.getDaysInMonth).fill(undefined);
+        } else {
+            signedUpArr = result
+        }
     });
-    res.status(200).render("statistics",{daysInMonth: date.getDaysInMonth(), });
-});
+    res.status(200).render("statistics", { daysInMonth: date.getDaysInMonth()});
+    // res.status(200).render("statistics", { daysInMonth: date.getDaysInMonth(), signedUps: stats.getSignedUps(signedUpArr)});
+}); //todo - create function in stats.js to count the number of signups per day and return the array of counts
+    // that fits the amount of days in this month. 
+    // dispaly the array in chart1 in statistics.ejs instead of dataset.
 
 
 router.get("/trackingWorkers", function (req, res) {

@@ -1,9 +1,13 @@
-async function monthlySignedupChart() {
+// async function monthlySignedupChart() {
   
-};
-async function monthlyHiredChart() {
+// };
+// async function monthlyHiredChart() {
   
-};
-async function monthlyExpertiseChart() {
+// };
+// async function monthlyExpertiseChart() {
   
+// };
+
+function getSignedUps() { 
+  return [];
 };
