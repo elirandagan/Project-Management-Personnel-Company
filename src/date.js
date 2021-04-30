@@ -1,17 +1,17 @@
 
-let currentDate;
+// let currentDate;
 let daysInMonth;
-var firstday;
+var firstdate;
 let today = new Date();
 
-function getCurrentDate() {
-  let day = today.getUTCDate();
-  let month = today.getUTCMonth() + 1;
-  let year = today.getUTCFullYear();
-  currentDate = day + '-' + month + '-' + year;
-  console.log('*** getCurrentDate() = ' + currentDate + ' ****');
-  return currentDate;
-}
+// function getCurrentDate() {
+//   let day = today.getUTCDate();
+//   let month = today.getUTCMonth() + 1;
+//   let year = today.getUTCFullYear();
+//   currentDate = day + '-' + month + '-' + year;
+//   // console.log('*** getCurrentDate() = ' + currentDate + ' ****');
+//   return currentDate;
+// }
 
 function getFirstDateOfMonth() {
   firstdate = new Date(today.getFullYear(), today.getMonth(), 1);
@@ -27,15 +27,14 @@ function getLastDateOfMonth() {
 }
 
 function getDaysInMonth() {
-  var dt = new Date();
-  var month = dt.getMonth() + 1;
-  var year = dt.getFullYear();
+  var month = today.getMonth() + 1;
+  var year = today.getFullYear();
   daysInMonth = new Date(year, month, 0).getDate();
-  console.log('*** getDaysInMonth() = ' + daysInMonth + '');
+  // console.log('*** getDaysInMonth() = ' + daysInMonth + '');
   return daysInMonth;
 }
 
-exports.getCurrentDate = getCurrentDate;
+// exports.getCurrentDate = getCurrentDate;
 exports.getFirstDateOfMonth = getFirstDateOfMonth;
 exports.getLastDateOfMonth = getLastDateOfMonth;
 exports.getDaysInMonth = getDaysInMonth;
