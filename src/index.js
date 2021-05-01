@@ -20,6 +20,7 @@ const MongoClient = require("mongodb").MongoClient;
 // eslint-disable-next-line no-unused-vars
 const { Timestamp } = require("bson");
 const { query } = require("express");
+const { json } = require("body-parser");
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, { useUnifiedTopology: true })
@@ -214,10 +215,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             console.log(res + " Succeed")
                             // req.body.createAt = new Date(date.getCurrentDate());
                             req.body.createAt = new Date();
-                            console.log('*****');
-                            console.log('new date = ', new Date());
-                            console.log(req.body);
-                            console.log('*****');
                             Contractor_Users_Collection.insertOne(req.body)
                                 .then(result => {
                                     res.status(200).render("recruit", { exist: 0, ID: req.body.ID });
@@ -281,9 +278,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/statistics", (req, res) => {
-            let signedUps = [];
+            let signedUps = new Array();
 
-            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: date.getLastDateOfMonth() } };
+            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
             const projection = { createAt: 1, _id: 0 }; //can be added to find()
             Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
                 if (err) throw err;
@@ -295,8 +292,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                     for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
                         nextDate = new Date(d.getDate() + 1)
-                        if (d <= result[i]['createAt'] <= nextDate){
-                            day = result[i]['createAt'].getDate()-1;
+                        if (d <= result[i]['createAt'] <= nextDate) {
+                            day = result[i]['createAt'].getDate() - 1;
                             ++signedUps[day];
                         }
                     }
@@ -304,13 +301,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 console.log('^&^&^&^&');
                 console.log('in index.js');
                 console.log(signedUps);
+                console.log(signedUps.length);
+                console.log(typeof signedUps.length);
                 console.log('^&^&^&^&');
             });
 
-            res.status(200).render("statistics", {
-                daysInMonth: date.getDaysInMonth(),
-                signedUps: signedUps
-            });
+            res.status(200).render("statistics", { daysInMonth: date.getDaysInMonth() });
         });
 
 
