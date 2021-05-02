@@ -179,18 +179,44 @@ html {
   padding-top: 5px;
   padding-bottom: 20px;
 }
+
 .identityCheckBox{
+  margin-left: 2em;
+  margin-right: 40px;
+  padding-right: 25px;
   color: orange;
-  font-family: "Papyrus";
+  font-family: 'Zen Dots', cursive;
 }
 
 .signup {
   color: orange;
-  font-family: "Papyrus";
+  font-family: 'Zen Dots', cursive;
   padding-bottom: 20px;
+}
+
+.hideBtn {
+  background-color: Transparent;
+  background-repeat:no-repeat;
+  border: none;
+  cursor:pointer;
+  overflow: hidden;
+  outline:none;
+  font-family: 'Zen Dots', cursive;
+  font-size: x-large;
+  color: orange;
+
+
 }
 
 #A2{
   left: 70px;
 }
 
+.star-rating {
+  line-height:32px;
+  font-size:5em;
+}
+
+.checked{
+  color: orange;
+}

@@ -1,5 +1,6 @@
-const profileBtn = document.getElementById("profile_btn");
+
 function changeColor(){
+  var profileBtn = document.getElementById("profile_btn");
   profileBtn.style.backgroundColor = "Red";
 }
 
