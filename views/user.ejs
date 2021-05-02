@@ -320,7 +320,6 @@
         </div>
       </footer>
       <script>
-
 const identity = document.cookie.substr(9, document.cookie.length)
       console.log("IDENTITY: " + identity + " length: " + identity.length)
       if (identity.toString() == "Contractor_Users") {
@@ -347,7 +346,6 @@ const identity = document.cookie.substr(9, document.cookie.length)
         document.getElementById("trackingWorkers").style.display = "none";
         document.getElementById("statistics").style.display = "none";
       }
-
         const x = new Date().getFullYear();
         let date = document.getElementById('date');
         date.innerHTML = '&copy; ' + x + date.innerHTML;
@@ -358,7 +356,6 @@ const identity = document.cookie.substr(9, document.cookie.length)
   </div>
   <script> // show or hide password
     function myFunction(e) {
-
       var x = document.getElementById("password");
       var y = document.getElementById("eye");
       if (x.type === "password") {

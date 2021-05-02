@@ -14,6 +14,36 @@ html {
     height: 180px;
   }
 
+  .card {
+    /* Add shadows to create the "card" effect */
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    border-radius: 35px;
+    transition: 0.3s;
+    width: 350px;
+    height: inherit;
+    position: fixed;
+    right: 25px;
+    top: 25px;
+    
+  }
+
+  /* On mouse-over, add a deeper shadow */
+  .card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  }
+
+  /* Add some padding inside the card container */
+  .container {
+    padding: 2px 16px;
+    border-style: solid;
+    border-width: thin;
+    border-radius: 35px;
+    border-color: orange;
+  }
+  .container h4{
+    font-size: larger;
+  }
+
   .login-box {
     position: absolute;
     top: 50%;
@@ -208,6 +238,7 @@ html {
 
 }
 
+
 #A2{
   left: 70px;
 }
@@ -220,3 +251,4 @@ html {
 .checked{
   color: orange;
 }
+
