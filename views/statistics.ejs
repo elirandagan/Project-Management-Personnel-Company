@@ -7,7 +7,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <title>
-    Statistics
+    Glem-Tech
   </title>
   <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
     name='viewport' />
@@ -34,68 +34,68 @@
           GLEM TECH
         </a></div>
         <div class="sidebar-wrapper">
-            <ul class="nav">
-              <li class="nav-item">
-                <a class="nav-link" href="./dashboard">
-                  <i class="material-icons">dashboard</i>
-                  <p>Dashboard</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./shifts">
-                  <i class="material-icons">content_paste</i>
-                  <p>Shifts</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./workHistory">
-                  <i class="material-icons">library_books</i>
-                  <p>Work History</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./absences">
-                  <i class="material-icons">content_paste</i>
-                  <p>Absences</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./user">
-                  <i class="material-icons">person</i>
-                  <p>User Profile</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./recruit">
-                  <i class="material-icons">person</i>
-                  <p>Recruit</p>
-                </a>
-              </li>
-             <li class="nav-item ">
-                <a class="nav-link" href="./trackingWorkers">
-                  <i class="material-icons">person</i>
-                  <p>Tracking Workers</p>
-                </a>
-              </li>
-              <li class="nav-item active">
-                <a class="nav-link" href="./statistics">
-                  <i class="material-icons">person</i>
-                  <p>Statistics</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./searchWorker">
-                  <i class="material-icons">person</i>
-                  <p>Search Worker</p>
-                </a>
-              </li>
-              <li class="nav-item ">
-                <a class="nav-link" href="./hiringHistory">
-                  <i class="material-icons">person</i>
-                  <p>Hiring History</p>
-                </a>
-              </li>
-            </ul>
+          <ul class="nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="./dashboard">
+                <i class="material-icons">dashboard</i>
+                <p>Dashboard</p>
+              </a>
+            </li>
+            <li class="nav-item" id="shifts">
+              <a class="nav-link" href="./shifts">
+                <i class="material-icons">content_paste</i>
+                <p>Shifts</p>
+              </a>
+            </li>
+            <li class="nav-item " id="workHistory">
+              <a class="nav-link" href="./workHistory">
+                <i class="material-icons">library_books</i>
+                <p>Work History</p>
+              </a>
+            </li>
+            <li class="nav-item " id="absences">
+              <a class="nav-link" href="./absences">
+                <i class="material-icons">content_paste</i>
+                <p>Absences</p>
+              </a>
+            </li>
+            <li class="nav-item " id="userProfile">
+              <a class="nav-link" href="./user">
+                <i class="material-icons">person</i>
+                <p>User Profile</p>
+              </a>
+            </li>
+            <li class="nav-item " id="recruit">
+              <a class="nav-link" href="./recruit">
+                <i class="material-icons">person</i>
+                <p>Recruit</p>
+              </a>
+            </li>
+            <li class="nav-item " id="trackingWorkers">
+              <a class="nav-link" href="./trackingWorkers">
+                <i class="material-icons">person</i>
+                <p>Tracking Workers</p>
+              </a>
+            </li>
+            <li class="nav-item " id="statistics">
+              <a class="nav-link" href="./statistics">
+                <i class="material-icons">person</i>
+                <p>Statistics</p>
+              </a>
+            </li>
+            <li class="nav-item " id="searchWorker">
+              <a class="nav-link" href="./searchWorker">
+                <i class="material-icons">person</i>
+                <p>Search Worker</p>
+              </a>
+            </li>
+            <li class="nav-item " id="hiringHistory">
+              <a class="nav-link" href="./hiringHistory">
+                <i class="material-icons">person</i>
+                <p>Hiring History</p>
+              </a>
+            </li>
+          </ul>
           </div>
     </div>
     <div class="main-panel">
@@ -158,7 +158,7 @@
                 </p>
               </div>
               <div class="card-footer">
-                <div class="stats">
+                <div class="stats" id="stats">
                   <i class="material-icons">access_time</i> last signup was 4 minutes ago
                 </div>
               </div>
@@ -235,6 +235,34 @@
         </div>
       </footer>
       <script>
+
+const identity = document.cookie.substr(9, document.cookie.length)
+      console.log("IDENTITY: " + identity + " length: " + identity.length)
+      if (identity.toString() == "Contractor_Users") {
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity.toString() == "HR_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity.toString() == "Employer_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+      }
+
         const x = new Date().getFullYear();
         let date = document.getElementById('date');
         date.innerHTML = '&copy; ' + x + date.innerHTML;
@@ -261,8 +289,19 @@
   <script src="js/material-dashboard.js?v=2.1.0"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="demo/demo.js"></script>
+  <script src="/src/date.js"></script>
   <!-- Chart 1 -->
   <script>
+    function arrayOfDays() {
+      var days = '<%- daysInMonth  %>';
+      var daysArr = [];
+      for ( i = 1; i <= days ; i++ ) {
+        daysArr.push(i < 10 ? ("0" + i.toString()) : i.toString());
+      }
+      return daysArr;
+    }
+
+
     let signedUpEmpsChart = document.getElementById('signedUpEmpsChart').getContext('2d');
     // Global Options
     Chart.defaults.global.defaultFontSize = 14;
@@ -270,19 +309,14 @@
     new Chart(signedUpEmpsChart, {
       type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
       data: {
-        labels: ['01','02','03','04','05','06','07',
-                '08','09','10','11','12','13',
-                '14','15','16','17','18', '19','20',
-                '21','22','23','24', '25','26', '27',
-                '28', '29','30'],
-        datasets: [{
+        labels: arrayOfDays(),
+       datasets: [{
           label: 'New Employers',
-          data: [0,1,2,3,4,5,6,6,
-                7,8,9,12,10,15,17,
-                20,24,22,18,23,20,
-                22,30,34,32,28,36,24,40,48
-          ],
-          //backgroundColor:'green',
+          data: [0,4,2,3,6,5,6,8,7,12,
+                9,15,12,17,18,20,24,22,
+                18,23,20,26,32,36,34,40,
+                36,48,52,61,70]
+                ,
           backgroundColor: [
           '#863a92'
           ],
@@ -295,7 +329,7 @@
       options: {
         title: {
           display: true,
-          text: 'Number Of New Signed Up Employers - April 21`',
+          text: 'Number Of New Signed Up Employers - May 21`',
           fontSize: 22
         },
         legend: {
@@ -348,13 +382,13 @@
                 '08','09','10','11','12','13',
                 '14','15','16','17','18', '19','20',
                 '21','22','23','24', '25','26', '27',
-                '28', '29','30'],
+                '28', '29','30','31'],
         datasets: [{
           label: 'Booked',
           data: [0,4,2,3,6,5,6,8,
                 7,12,9,15,12,17,18,
                 20,24,22,18,23,20,
-                26,32,36,34,40,36,48,52,61
+                26,32,36,34,40,36,48,52,61,70
           ],
           //backgroundColor:'green',
           backgroundColor: [
@@ -369,7 +403,7 @@
       options: {
         title: {
           display: true,
-          text: 'Number Of Workers Hired - April 21`',
+          text: 'Number Of Workers Hired - May 21`',
           fontSize: 22
         },
         legend: {
@@ -433,7 +467,7 @@
       options: {
         title: {
           display: true,
-          text: 'Number Of Workers Hired (By Expertise) - April 21`',
+          text: 'Number Of Workers Hired (By Expertise) - May 21`',
           fontSize: 22
         },
         legend: {

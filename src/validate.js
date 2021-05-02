@@ -56,7 +56,7 @@ function validateLogin(data) {
         returnValue = validateDic.valid
     }
     console.log(returnValue)
-    return returnValue
+    return returnValue;
 }
 
 exports.validateSignUp = validateSignUp;
