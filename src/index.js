@@ -34,6 +34,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         const Contractor_Users_Collection = db.collection("Contractor_Users")
         const Employer_Users_Collection = db.collection("Employer_Users")
         const Absences_Collection = db.collection("Absences")
+        const Shifts_Collection = db.collection("Shifts")
 
         app.set("view engine", "ejs");
 
@@ -277,36 +278,44 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             });
         });
 
-        router.get("/statistics", (req, res) => {
-            let signedUps = new Array();
+        router.get("/statistics", async (req, res) => {
+            const query1 = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
+            const projection1 = { createAt: 1, _id: 0 }; //can be added to find()
 
-            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
-            const projection = { createAt: 1, _id: 0 }; //can be added to find()
-            Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
-                if (err) throw err;
-                else if (Object.keys(result).length === 0) {
-                    console.log("empty");
-                    signedUps = new Array(date.getDaysInMonth).fill(undefined);
-                } else {
-                    signedUps = new Array(date.getDaysInMonth()).fill(0); //create array of zeros
+            const signedUps = await Contractor_Users_Collection.find(query1, projection1);
+            const recruitments = await Shifts_Collection.find(query1, projection1);
 
-                    for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
-                        nextDate = new Date(d.getDate() + 1)
-                        if (d <= result[i]['createAt'] <= nextDate) {
-                            day = result[i]['createAt'].getDate() - 1;
-                            ++signedUps[day];
-                        }
-                    }
-                }
-                console.log('^&^&^&^&');
-                console.log('in index.js');
-                console.log(signedUps);
-                console.log(signedUps.length);
-                console.log(typeof signedUps.length);
-                console.log('^&^&^&^&');
-            });
+            res.status(200).render("statistics", { signedUps: signedUps, recruitments: recruitments });
+            // const query3 = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
+            // const projection3 = { createAt: 1, _id: 0 }; //can be added to find()
+            // const signedUps = await Contractor_Users_Collection.find(query3, projection3);
+            // const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
+            // const projection = { createAt: 1, _id: 0 }; //can be added to find()
+            // var signedUps = new Array();
+            // Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
+            //     if (err) throw err;
+            //     else if (Object.keys(result).length === 0) {
+            //         console.log("empty");
+            //         signedUps = new Array(date.getDaysInMonth).fill(0);
+            //     } else {
+            //         signedUps = new Array(date.getDaysInMonth()).fill(0); //create array of zeros
+            //         console.log(result);
+            //         for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
+            //             nextDate = new Date(d.getDate() + 1)
+            //             if (d <= result[i]['createAt'] <= nextDate) {
+            //                 day = result[i]['createAt'].getDate() - 1;
+            //                 ++signedUps[day];
+            //             }
+            //         }
+            //     }
+            //     console.log('^&^&^&^&');
+            //     console.log('in index.js');
+            //     console.log(signedUps);
+            //     console.log('^&^&^&^&');
+            //     res.status(200).render("statistics", { signedUps: signedUps, });
+            // });
 
-            res.status(200).render("statistics", { daysInMonth: date.getDaysInMonth() });
+
         });
 
 
