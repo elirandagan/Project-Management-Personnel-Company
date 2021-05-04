@@ -228,7 +228,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         // });
 
-
         router.get("/user", function (req, res) {
             // console.log(location.href, "*** the location href")
             // console.log(location, "*** the locatiom obj")
@@ -278,46 +277,62 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             });
         });
 
-        router.get("/statistics", async (req, res) => {
-            const query1 = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
-            const projection1 = { createAt: 1, _id: 0 }; //can be added to find()
+        function getSignUps() {
+            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
+            const projection = { createAt: 1, _id: 0 }; //can be added to find()
 
-            const signedUps = await Contractor_Users_Collection.find(query1, projection1);
-            const recruitments = await Shifts_Collection.find(query1, projection1);
+            Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
+                if (err) throw err;
 
-            res.status(200).render("statistics", { signedUps: signedUps, recruitments: recruitments });
-            // const query3 = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
-            // const projection3 = { createAt: 1, _id: 0 }; //can be added to find()
-            // const signedUps = await Contractor_Users_Collection.find(query3, projection3);
-            // const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
-            // const projection = { createAt: 1, _id: 0 }; //can be added to find()
-            // var signedUps = new Array();
-            // Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
-            //     if (err) throw err;
-            //     else if (Object.keys(result).length === 0) {
-            //         console.log("empty");
-            //         signedUps = new Array(date.getDaysInMonth).fill(0);
-            //     } else {
-            //         signedUps = new Array(date.getDaysInMonth()).fill(0); //create array of zeros
-            //         console.log(result);
-            //         for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
-            //             nextDate = new Date(d.getDate() + 1)
-            //             if (d <= result[i]['createAt'] <= nextDate) {
-            //                 day = result[i]['createAt'].getDate() - 1;
-            //                 ++signedUps[day];
-            //             }
-            //         }
-            //     }
-            //     console.log('^&^&^&^&');
-            //     console.log('in index.js');
-            //     console.log(signedUps);
-            //     console.log('^&^&^&^&');
-            //     res.status(200).render("statistics", { signedUps: signedUps, });
-            // });
+                signUps = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
+                // manipulte data to create array that the index indicates the day of month
+                // the value indicates the amount of signups per that day of the month
+                for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
+                    nextDate = new Date(d.getDate() + 1);
+                    if (d <= result[i]['createAt'] <= nextDate) {
+                        day = result[i]['createAt'].getDate() - 1;
+                        ++signUps[day];
+                    }
+                }
+            })
+            return signUps;
+        };
 
+        function getRecruitments() {
+            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
+            const projection = { createAt: 1, _id: 0 }; //can be added to find()
+
+            Shifts_Collection.find(query).project(projection).toArray(function (err, result) {
+                if (err) throw err;
+
+                reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
+
+                // manipulte data to create array that the index indicates the day of month
+                // the value indicates the amount of recruitments per that day of the month
+                for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
+                    nextDate = new Date(d.getDate() + 1);
+                    if (d <= result[i]['createAt'] <= nextDate) {
+                        day = result[i]['createAt'].getDate() - 1;
+                        ++reqs[day];
+                    }
+                }
+            })
+            return reqs;
+        };
+
+        router.get("/statistics", (req, res) => {
+            const signUps = getSignUps();
+            console.log('*****');
+            console.log('signUps :' + signUps);
+            console.log('*****');
+
+            const recruitments = getRecruitments();
+            console.log('*****');
+            console.log('recruitments :' + recruitments);
+            console.log('*****');
+            res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments });
         });
-
 
         router.get("/trackingWorkers", function (req, res) {
             res.status(200).render("trackingWorkers");
