@@ -66,13 +66,25 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 if ("validate" === returnValue) {
                     validateUser = true
                     console.log("validateUser = true")
+                    var coll = await mongoDbFunction.getIdentity(req.body.identity)
+                    coll.find({ userName: req.body.userName }).toArray(function (err, result) {
+                        if (result) {
+                            console.log(result[0])
+                            ///////// COOKIE /////////////
+                            // Cookie.set('userInfo', JSON.stringify(req.body.identity));
+                            res.cookie("userInfo", {result}, { maxAge: 900000, httpOnly: false });
 
-                    ///////// COOKIE /////////////
-                    // Cookie.set('userInfo', JSON.stringify(req.body.identity));
-                    res.cookie("userInfo", req.body.identity, { maxAge: 900000, httpOnly: false });
 
-                    res.status(200).render("dashboard", { exist: 0 });
-                    console.log("router Failed user - validate")
+                            res.status(200).render("dashboard", { exist: 0 });
+                            console.log("router Failed user - validate")
+                        }
+
+                        else {
+                            console.log(err)
+                        }
+                    })
+
+
                 } else if ("userNameNotExist" === returnValue) {
                     console.log("router Failed user - userNameNotExist")
                     res.status(200).render("login", { exist: 4 });
@@ -125,12 +137,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/privacyPolicy", function (req, res) {
             console.log("router get privacy")
-                res.status(200).render("privacyPolicy");
+            res.status(200).render("privacyPolicy");
         });
 
         router.post("/privacyPolicy", function (req, res) {
             console.log("router POST privacy")
-                res.status(200).render("privacyPolicy");
+            res.status(200).render("privacyPolicy");
         });
 
 
