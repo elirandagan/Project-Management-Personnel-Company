@@ -8,18 +8,11 @@ const router = express.Router();
 const mongoDbFunction = require("./mongoDb");
 const validateFunction = require("./validate");
 const date = require("./date");
-// const stats = require("./js/stats");
-
-//const bcrypt = require("bcrypt")
 
 let validateUser = false
-let identity = { HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Employer_Users: "Employer_Users" }
-
+const identity = { HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Employer_Users: "Employer_Users" }
 
 const MongoClient = require("mongodb").MongoClient;
-const { Timestamp } = require("bson");
-const { query } = require("express");
-const { json } = require("body-parser");
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, { useUnifiedTopology: true })
@@ -57,15 +50,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/firstTimeHere", function (req, res) {
-            console.log("firstTimeHere GET")
             res.status(200).render("firstTimeHere", {exist : 0 , userName:"empty" , password:"empty"} );
         });
 
         router.post("/firstTimeHere", function (req, res) {
-            console.log("firstTimeHere POST")
-            console.log("req.body.ID" + req.body.ID)
             Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result){
-                console.log("#########################################################################################" + result)
                 if(result.length>0){
                     console.log("FIND")
                     res.status(200).render("firstTimeHere",{exist : "validID" , userName:result[0].userName , password:result[0].password});
@@ -79,28 +68,21 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.post("/login", async (req, res) => {
             const validateLogin = await validateFunction.validateLogin(req.body)
-            console.log("validateLogin : ", validateLogin)
             if (validateLogin === "valid") {
                 //res.status(200).render("loaderLogin");
                 const returnValue = await mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity)
-                console.log("routerReturnValue", returnValue)
                 if ("validate" === returnValue) {
                     validateUser = true
-                    console.log("validateUser = true")
                     ///////// COOKIE /////////////
                     // Cookie.set('userInfo', JSON.stringify(req.body.identity));
                     res.cookie("userInfo", req.body.identity, { maxAge: 900000, httpOnly: false });
 
                     res.status(200).render("dashboard", { exist: 0 });
-                    console.log("router Failed user - validate")
                 } else if ("userNameNotExist" === returnValue) {
-                    console.log("router Failed user - userNameNotExist")
                     res.status(200).render("login", { exist: 4 });
                 } else if ("wrongPassword" === returnValue) {
-                    console.log("router Failed user - wrongPassword")
                     res.status(200).render("login", { exist: 5 });
                 } else {
-                    console.log("router Failed user - unexpectedToken")
                     app.set("login")
                 }
 
@@ -110,33 +92,26 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         })
 
         router.get("/signup", function (req, res) {
-            console.log("signupGet")
             res.status(200).render("signup", { exist: 0 });
         });
 
         router.post("/signup", async (req, res) => {
             const validateSignUp = await validateFunction.validateSignUp(req.body)
-            console.log(validateSignUp)
             switch (validateSignUp) {
                 case "nameFieldMostContainChars":
                     res.status(200).render("signup", { exist: 2 });
-                    console.log("router Failed user - nameFieldMostContainChars")
                     break;
                 case "invalidID":
                     res.status(200).render("signup", { exist: 3 });
-                    console.log("router Failed user - invalidID")
                     break;
                 case "invalidPasswordLength":
                     res.status(200).render("signup", { exist: 4 });
-                    console.log("router Failed user - invalidPasswordLength")
                     break;
                 case "valid":
                     if (await (mongoDbFunction.inserToDb(identity.Employer_Users, req.body))) {
                         res.status(200).render("login", { exist: 5 });
-                        console.log("router build user")
                     } else {
                         res.status(200).render("signup", { exist: 1 });
-                        console.log("router Failed user - exist id or user name")
                     }
                     break;
 
@@ -144,12 +119,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/privacyPolicy", function (req, res) {
-            console.log("router get privacy")
                 res.status(200).render("privacyPolicy");
         });
 
         router.post("/privacyPolicy", function (req, res) {
-            console.log("router POST privacy")
                 res.status(200).render("privacyPolicy");
         });
 
