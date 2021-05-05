@@ -126,11 +126,13 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/privacyPolicy", function (req, res) {
-            if (validateUser) {
+            console.log("router get privacy")
                 res.status(200).render("privacyPolicy");
+        });
 
-            }
-
+        router.post("/privacyPolicy", function (req, res) {
+            console.log("router POST privacy")
+                res.status(200).render("privacyPolicy");
         });
 
 
