@@ -56,17 +56,37 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         });
 
+        router.get("/firstTimeHere", function (req, res) {
+            console.log("firstTimeHere GET")
+            res.status(200).render("firstTimeHere", {exist : 0 , userName:"empty" , password:"empty"} );
+        });
+
+        router.post("/firstTimeHere", function (req, res) {
+            console.log("firstTimeHere POST")
+            console.log("req.body.ID" + req.body.ID)
+            Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result){
+                console.log("#########################################################################################" + result)
+                if(result.length>0){
+                    console.log("FIND")
+                    res.status(200).render("firstTimeHere",{exist : "validID" , userName:result[0].userName , password:result[0].password});
+                }else{
+                    console.log("CANT FIND")
+                    res.status(200).render("firstTimeHere",{exist : "invalidID" , userName:"" , password:""});
+                }
+            })
+        });
+
+
         router.post("/login", async (req, res) => {
             const validateLogin = await validateFunction.validateLogin(req.body)
             console.log("validateLogin : ", validateLogin)
             if (validateLogin === "valid") {
                 //res.status(200).render("loaderLogin");
                 const returnValue = await mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity)
-                console.log("routerreturnValue", returnValue)
+                console.log("routerReturnValue", returnValue)
                 if ("validate" === returnValue) {
                     validateUser = true
                     console.log("validateUser = true")
-
                     ///////// COOKIE /////////////
                     // Cookie.set('userInfo', JSON.stringify(req.body.identity));
                     res.cookie("userInfo", req.body.identity, { maxAge: 900000, httpOnly: false });
