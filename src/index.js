@@ -17,7 +17,6 @@ let identity = { HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Emp
 
 
 const MongoClient = require("mongodb").MongoClient;
-// eslint-disable-next-line no-unused-vars
 const { Timestamp } = require("bson");
 const { query } = require("express");
 const { json } = require("body-parser");
@@ -32,7 +31,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         const HR_Users_Collection = db.collection("HR_Users")
         const Contractor_Users_Collection = db.collection("Contractor_Users")
-        const Employer_Users_Collection = db.collection("Employer_Users")
         const Absences_Collection = db.collection("Absences")
         const Shifts_Collection = db.collection("Shifts")
 
@@ -71,7 +69,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                     ///////// COOKIE /////////////
                     // Cookie.set('userInfo', JSON.stringify(req.body.identity));
-                    res.cookie('userInfo', req.body.identity, { maxAge: 900000, httpOnly: false });
+                    res.cookie("userInfo", req.body.identity, { maxAge: 900000, httpOnly: false });
 
                     res.status(200).render("dashboard", { exist: 0 });
                     console.log("router Failed user - validate")
@@ -292,14 +290,14 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 // the value indicates the amount of signups per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
                     nextDate = new Date(d.getDate() + 1);
-                    if (d <= result[i]['createAt'] <= nextDate) {
-                        day = result[i]['createAt'].getDate() - 1;
+                    if (d <= result[i]["createAt"] <= nextDate) {
+                        day = result[i]["createAt"].getDate() - 1;
                         ++signUps[day];
                     }
                 }
             })
             return signUps;
-        };
+        }
 
         function getRecruitments() {
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
@@ -314,25 +312,25 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 // the value indicates the amount of recruitments per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
                     nextDate = new Date(d.getDate() + 1);
-                    if (d <= result[i]['createAt'] <= nextDate) {
-                        day = result[i]['createAt'].getDate() - 1;
+                    if (d <= result[i]["createAt"] <= nextDate) {
+                        day = result[i]["createAt"].getDate() - 1;
                         ++reqs[day];
                     }
                 }
             })
             return reqs;
-        };
+        }
 
         router.get("/statistics", (req, res) => {
             const signUps = getSignUps();
-            console.log('*****');
-            console.log('signUps :' + signUps);
-            console.log('*****');
+            console.log("*****");
+            console.log("signUps :" + signUps);
+            console.log("*****");
 
             const recruitments = getRecruitments();
-            console.log('*****');
-            console.log('recruitments :' + recruitments);
-            console.log('*****');
+            console.log("*****");
+            console.log("recruitments :" + recruitments);
+            console.log("*****");
             res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments });
         });
 
