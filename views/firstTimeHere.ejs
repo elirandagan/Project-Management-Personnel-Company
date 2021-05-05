@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>First Time Here Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Zen+Dots&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="css/login.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="card">
+        <div class="container">
+            <h4><strong>Want to test us?</strong></h4>
+            <p>
+                If its your first time in our system and
+                you get recruit by HR you can pull
+                your password over here after typing
+                your ID
+                <br><br>
+                ID :  <strong>208271734</strong>
+            </p>
+        </div>
+    </div>
+<div class="login-box">
+    <div class="logo">
+        <img src="https://i.ibb.co/4dfK1RZ/0587a81c-623f-4938-8932-291cbaab4e5b-200x200.png" alt="Logo"
+             border="0"></a><br/><br/>
+    </div>
+    <h1 style="color:#3d3b38 ;text-align: center;">Contractors Management System</h1>
+    <h2>First Time Here</h2>
+    <br>
+    <br>
+    <form id="login-form" action="/firstTimeHere" method="POST">
+        <div class="user-box">
+            <input id="pass" type="text" autocomplete="off" name="ID" required="">
+            <label>ID number</label>
+            <div style="display: flex;justify-content: center;">
+                <a id="login_btn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <button class="hideBtn" type="submit" href="/firstTimeHere">Submit</button>
+                </a>
+            </div>
+            <div class="signup">
+                <a id="A1" href="/login">Back to Login</a>
+                <a id="A2" href="/signup">sign up</a>
+            </div>
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+            <script>
+                $(document).ready(function () {
+                    // Javascript method's body can be found in assets/js/demos.js
+                    const exist = "<%= exist %>";
+                    const userName ="<%= userName %>";
+                    const password ="<%= password %>";
+                    console.log(exist)
+                    if (exist == 0) {
+                        console.log("DEFAULT")
+
+                    }else if (exist=="invalidID") {
+                        swal({
+                            title: "Wrong ID.\n",
+                            text: "cannot find this ID in our DB",
+                            icon: "warning",
+                        });
+                    }else if (exist=="validID") {
+                        swal({
+                            title: "Account details.\n",
+                            text: "User Name : " + userName+ "\nPassword : " + password,
+                            icon: "success",
+                        });
+                    }
+                });
+            </script>
+
+            <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+            <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    </form>
+</div>
+<p style="position: absolute;  left: 40px; font-size: 12px; color:#3d3b38;">
+    Copyright 2021 &copy; GLEM TECH LTD.
+</p>
+
+</body>
+
+
+</html>
