@@ -21,28 +21,7 @@
   <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <link href="css/user.css" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <!-- <script>
-    $(document).ready(function () {
-      console.log("user.ejs is ready");
-      md.initDashboardPageCharts();
-      var user = '<%= user %>';
-      var status = "<%= status %>";
-      if (status == 'Success') {
-        swal({
-          title: "status\n",
-          text: "Success",
-          icon: "success",
-        });
-      }
-      else if (status == 'Failed') {
-        swal({
-          title: "status\n",
-          text: "Success",
-          icon: "info",
-        });
-      }
-    });
-  </script> -->
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
 
 <body class="dark-edition">
@@ -274,7 +253,7 @@
                     <div class="row">
                       <div class="col-md-12">
                         <div class="form-group">
-                          <label>About Me</label>     
+                          <label>About Me</label>
                           <div class="form-group">
                             <label class="bmd-label-floating"> I don't like to brag, but...</label>
                             <textarea class="form-control" maxlength="200" rows="1"></textarea>
@@ -317,8 +296,10 @@
           </div>
         </div>
       </footer>
-      <script>
-const identity = document.cookie.substr(9, document.cookie.length)
+      </div>
+    </div>
+    <script>
+      const identity = document.cookie.substr(9, document.cookie.length)
       console.log("IDENTITY: " + identity + " length: " + identity.length)
       if (identity.toString() == "Contractor_Users") {
         document.getElementById("recruit").style.display = "none";
@@ -347,29 +328,32 @@ const identity = document.cookie.substr(9, document.cookie.length)
         const x = new Date().getFullYear();
         let date = document.getElementById('date');
         date.innerHTML = '&copy; ' + x + date.innerHTML;
-      </script>
-    </div>
-  </div>
-    </div>
-  </div>
-  <script> // show or hide password
-    function myFunction(e) {
-      var x = document.getElementById("password");
-      var y = document.getElementById("eye");
-      if (x.type === "password") {
-          e.classList.add('mdi-eye')
-          y.innerHTML="Hide"
-          e.classList.remove('mdi-eye-off')
-          x.type = "text";
-      } else {
-          e.classList.add('mdi-eye-off')
-          y.innerHTML="Show"
-          e.classList.remove('mdi-eye')
-          x.type = "password";
-      }
-    }
-  </script>
-  
+    </script>
+    <script>
+      $(document).ready(function () {
+        const status = "<%= status %>";
+        console.log(status)
 
+        if (status == "Success") {
+          console.log("Success")
+          swal({
+            title: "User invalid length.\n",
+            text: "User Name Most Contain More Then 2 character",
+            icon: "success"
+          });
+          
+        }
+        else if (status=="Failed") {
+          console.log("Failed")
+          swal({
+            title: "Failed\n",
+            text: "",
+            icon: "warning"
+          });
+        }
+        else {
+        }
+      })
+    </script>
   </body>
 </html>

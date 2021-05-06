@@ -133,13 +133,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         });
 
-
         router.get("/template", function (req, res) {
             if (validateUser) {
                 res.status(200).render("template");
             }
         });
-
 
         router.get("/workHistory", function (req, res) {
             if (validateUser) {
@@ -152,9 +150,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 res.status(200).render("shifts");
             }
         });
-
-
-        /////// ABSENCES - START //////////
 
         router.get("/absences", function (req, res) {
             if (validateUser) {
@@ -238,7 +233,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     console.log("***this is an error\n ***", err.body);
                 } else {
                     console.log(result[0]);
-                    res.status(200).render("user", { user: result[0], status: "Success" });
+                    res.status(200).render("user", { user: result[0], status: "init" });
                 }
             });
         });
@@ -276,16 +271,14 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 }
             });
         });
-
+        
         function getSignUps() {
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
             const projection = { createAt: 1, _id: 0 }; //can be added to find()
+            var signUps = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
             Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
                 if (err) throw err;
-
-                signUps = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
-
                 // manipulte data to create array that the index indicates the day of month
                 // the value indicates the amount of signups per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
@@ -295,19 +288,23 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         ++signUps[day];
                     }
                 }
+                console.log('*****');
+                console.log('signUps inside find : ' + signUps);
+                console.log('*****');
             })
+            console.log('*****');
+            console.log('signUps outside find : ' + signUps);
+            console.log('*****');
             return signUps;
         };
 
         function getRecruitments() {
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
             const projection = { createAt: 1, _id: 0 }; //can be added to find()
+            let reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
             Shifts_Collection.find(query).project(projection).toArray(function (err, result) {
                 if (err) throw err;
-
-                reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
-
                 // manipulte data to create array that the index indicates the day of month
                 // the value indicates the amount of recruitments per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
@@ -317,8 +314,39 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         ++reqs[day];
                     }
                 }
+
             })
             return reqs;
+        };
+
+        function getExpertises() {
+            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
+            const projection = { expertise: 1, _id: 0 }; //can be added to find()
+            let experts = new Array(6).fill(0); //create empty array that the index indicates the expeertises 
+
+            Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
+                if (err) throw err;
+                //{'Technician','Carpenter','Electrician','Gardener','Painter','Plumber'} 
+                console.log('*****');
+                console.log(result.length);
+                console.log('*****');
+                for (let i = 0; i < result.length; i++) {
+                    if (result[i].expertise == 'Technician')
+                        ++experts[0];
+                    else if (result[i].expertise == 'Carpenter')
+                        ++experts[1];
+                    else if (result[i].expertise == 'Electrician')
+                        ++experts[2];
+                    else if (result[i].expertise == 'Gardener')
+                        ++experts[3];
+                    else if (result[i].expertise == 'Painter')
+                        ++experts[4];
+                    else {
+                        ++experts[5];
+                    }
+                }
+            })
+            return experts;
         };
 
         router.get("/statistics", (req, res) => {
@@ -331,7 +359,13 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log('*****');
             console.log('recruitments :' + recruitments);
             console.log('*****');
-            res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments });
+
+            const expertises = getExpertises();
+            console.log('*****');
+            console.log('expertises :' + expertises);
+            console.log('*****');
+
+            res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments, expertises: expertises });
         });
 
         router.get("/trackingWorkers", function (req, res) {
@@ -344,10 +378,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/hiringHistory", function (req, res) {
             res.status(200).render("hiringHistory");
-        });
-
-        router.get("/user", function (req, res) {
-            res.status(200).render("user");
         });
 
         router.get("/dashboard", function (req, res) {

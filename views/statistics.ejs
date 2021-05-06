@@ -293,7 +293,7 @@ const identity = document.cookie.substr(9, document.cookie.length)
   <!-- Chart 1 -->
   <script>
     var signUps = '<%= signUps %>'.split(',');
-    
+    // var nonZeroVal = signUps.filter(function(x) { return x !== 0; }).pop();
     function arrayOfDays() {
       var days = signUps.length;
       var daysArr = [];
@@ -336,14 +336,6 @@ const identity = document.cookie.substr(9, document.cookie.length)
             fontColor: '#000'
           }
         },
-        // layout: {
-        //   padding: {
-        //     left: 50,
-        //     right: 0,
-        //     bottom: 0,
-        //     top: 0
-        //   }
-        // },
         tooltips: {
           enabled: true
         },
@@ -359,7 +351,13 @@ const identity = document.cookie.substr(9, document.cookie.length)
               gridLines: {
                 display: true,
                 color: "#2b3655"
-              }
+              },
+              ticks: {
+                beginAtZero: true,
+                precision: 0,
+                min:0,
+                // max: Math.max(...signUps)+Math.max(...signUps)/2,
+            }
           }]
         }
       }
@@ -413,14 +411,6 @@ const identity = document.cookie.substr(9, document.cookie.length)
             fontColor: '#000'
           }
         },
-        // layout: {
-        //   padding: {
-        //     left: 50,
-        //     right: 0,
-        //     bottom: 0,
-        //     top: 0
-        //   }
-        // },
         tooltips: {
           enabled: true
         },
@@ -436,7 +426,11 @@ const identity = document.cookie.substr(9, document.cookie.length)
               gridLines: {
                 display: true,
                 color: "#2b3655"
-              }
+              },
+              ticks: {
+                beginAtZero: true,
+                precision: 0
+            }
           }]
         }
       }
@@ -444,6 +438,8 @@ const identity = document.cookie.substr(9, document.cookie.length)
   </script>
   <!-- Chart 3 -->
     <script>
+    var expertises = '<%= expertises %>'.split(',');
+
     let expertiseChart = document.getElementById('expertiseChart').getContext('2d');
     // Global Options
     Chart.defaults.global.defaultFontSize = 14;
@@ -455,7 +451,7 @@ const identity = document.cookie.substr(9, document.cookie.length)
         labels: ['A.C Technician','Carpenter','Electrician','Gardener','Painter','Plumber'],
         datasets: [{
           label: 'hired ',
-          data: [61,52,48,40,36,34],
+          data: expertises,
           backgroundColor:'#AD4F6B',
           // backgroundColor: ['#800080'], //can be array
           // borderWidth: 1,
@@ -492,7 +488,11 @@ const identity = document.cookie.substr(9, document.cookie.length)
               gridLines: {
                 display: true,
                 color: "#2b3655"
-              }
+              },
+              ticks: {
+                beginAtZero: true,
+                precision: 0
+            }
           }]
         }
       }
