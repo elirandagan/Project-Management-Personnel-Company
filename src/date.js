@@ -14,13 +14,13 @@ let today = new Date();
 // }
 
 function getFirstDateOfMonth() {
-  firstdate = new Date(today.getFullYear(), today.getMonth(), 1);
+  var firstdate = new Date(today.getFullYear(), today.getMonth(), 1);
   // console.log('*** getFirstDateOfMonth() = ' + firstdate + ' ****');
   return firstdate;
 }
 
 function getLastDateOfMonth() {
-  lastDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
+  var lastDate = new Date(today.getFullYear(), today.getMonth() + 1, 1);
   // console.log('%%%' + new Date(today.getFullYear(), today.getMonth() + 1, 0) +'%%%%');
   // console.log('*** getLastDateOfMonth() = ' + lastDate + '');
   return lastDate;

@@ -17,9 +17,9 @@ let identity = { HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Emp
 
 
 const MongoClient = require("mongodb").MongoClient;
-const { Timestamp } = require("bson");
-const { query } = require("express");
-const { json } = require("body-parser");
+// const { Timestamp } = require("bson");
+// const { query } = require("express");
+// const { json } = require("body-parser");
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, { useUnifiedTopology: true })
@@ -236,6 +236,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             req.body.createAt = new Date();
                             Contractor_Users_Collection.insertOne(req.body)
                                 .then(result => {
+                                    console.log(result)
                                     res.status(200).render("recruit", { exist: 0, ID: req.body.ID });
                                 })
                         }
@@ -302,14 +303,14 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
                 if (err) throw err;
 
-                signUps = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
+                var signUps = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
                 // manipulte data to create array that the index indicates the day of month
                 // the value indicates the amount of signups per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
-                    nextDate = new Date(d.getDate() + 1);
+                    var nextDate = new Date(d.getDate() + 1);
                     if (d <= result[i]["createAt"] <= nextDate) {
-                        day = result[i]["createAt"].getDate() - 1;
+                        var day = result[i]["createAt"].getDate() - 1;
                         ++signUps[day];
                     }
                 }
@@ -324,14 +325,14 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             Shifts_Collection.find(query).project(projection).toArray(function (err, result) {
                 if (err) throw err;
 
-                reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
+                var reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
                 // manipulte data to create array that the index indicates the day of month
                 // the value indicates the amount of recruitments per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
-                    nextDate = new Date(d.getDate() + 1);
+                    var nextDate = new Date(d.getDate() + 1);
                     if (d <= result[i]["createAt"] <= nextDate) {
-                        day = result[i]["createAt"].getDate() - 1;
+                        var day = result[i]["createAt"].getDate() - 1;
                         ++reqs[day];
                     }
                 }
