@@ -87,30 +87,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 if ("validate" === returnValue) {
                     validateUser = true
                     console.log("validateUser = true")
-<<<<<<< HEAD
-                    var coll = await mongoDbFunction.getIdentity(req.body.identity)
-                    coll.find({ userName: req.body.userName }).toArray(function (err, result) {
-                        if (result) {
-                            console.log(result[0])
-                            ///////// COOKIE /////////////
-                            // Cookie.set('userInfo', JSON.stringify(req.body.identity));
-                            res.cookie("userInfo", {result}, { maxAge: 900000, httpOnly: false });
-
-
-                            res.status(200).render("dashboard", { exist: 0 });
-                            console.log("router Failed user - validate")
-                        }
-
-                        else {
-                            console.log(err)
-                        }
-                    })
-
-=======
                     ///////// COOKIE /////////////
                     // Cookie.set('userInfo', JSON.stringify(req.body.identity));
                     res.cookie("userInfo", req.body.identity, { maxAge: 900000, httpOnly: false });
->>>>>>> 59fcaf4dc6b3a423b089bbc18fa88a673bdc3983
 
                 } else if ("userNameNotExist" === returnValue) {
                     console.log("router Failed user - userNameNotExist")
