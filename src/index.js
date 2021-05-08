@@ -314,8 +314,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         ++signUps[day];
                     }
                 }
+                return signUps;
             })
-            return signUps;
+            
         }
 
         function getRecruitments() {
@@ -336,8 +337,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         ++reqs[day];
                     }
                 }
+                return reqs;
             })
-            return reqs;
+            
         }
 
         router.get("/statistics", (req, res) => {

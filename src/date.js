@@ -1,7 +1,7 @@
 
 // let currentDate;
 let daysInMonth;
-var firstdate;
+// var firstdate;
 let today = new Date();
 
 // function getCurrentDate() {
