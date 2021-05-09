@@ -276,35 +276,34 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
             const projection = { createAt: 1, _id: 0 }; //can be added to find()
             var signUps = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
-
-            Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
-                if (err) throw err;
+            try {
+                let result = Contractor_Users_Collection.find(query).project(projection)
+                result = await result.toArray()
                 // manipulte data to create array that the index indicates the day of month
                 // the value indicates the amount of signups per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
+                    console.log(signUps);
                     nextDate = new Date(d.getDate() + 1);
                     if (d <= result[i]['createAt'] <= nextDate) {
                         day = result[i]['createAt'].getDate() - 1;
                         ++signUps[day];
                     }
                 }
-                console.log('*****');
-                console.log('signUps inside find : ' + signUps);
-                console.log('*****');
-            })
-            console.log('*****');
-            console.log('signUps outside find : ' + signUps);
-            console.log('*****');
-            return signUps;
+                return signUps;
+            } catch (error) {
+                console.error(error)
+                throw error
+            }
         };
 
         async function getRecruitments() {
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
             const projection = { createAt: 1, _id: 0 }; //can be added to find()
-            let reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
+            var reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
-            Shifts_Collection.find(query).project(projection).toArray(function (err, result) {
-                if (err) throw err;
+            try {
+                let result = Shifts_Collection.find(query).project(projection)
+                result = await result.toArray()
                 // manipulte data to create array that the index indicates the day of month
                 // the value indicates the amount of recruitments per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
@@ -314,9 +313,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         ++reqs[day];
                     }
                 }
-
-            })
-            return reqs;
+                return reqs;
+            } catch (error) {
+                console.error(error)
+                throw error
+            }
         };
 
         async function getExpertises() {
@@ -324,8 +325,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             const projection = { expertise: 1, _id: 0 }; //can be added to find()
             experts = new Array(6).fill(0); //create empty array that the index indicates the expeertises 
 
-            Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
-                if (err) throw err;
+            try {
+                let result = Contractor_Users_Collection.find(query).project(projection)
+                result = await result.toArray()
+
+
                 //{'Technician','Carpenter','Electrician','Gardener','Painter','Plumber'} 
                 console.log('*****');
                 console.log(result.length);
@@ -345,11 +349,15 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         ++experts[5];
                     }
                 }
-            })
+
+            } catch (error) {
+                console.error(error)
+                throw error
+            }
             return experts;
         };
 
-        router.get("/statistics",async (req, res) => {
+        router.get("/statistics", async (req, res) => {
             const signUps = await getSignUps();
             console.log('*****');
             console.log('signUps :' + signUps);
