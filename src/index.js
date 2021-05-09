@@ -85,7 +85,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 } else {
                     app.set("login")
                 }
-
             } else {
                 res.status(200).render("login", { exist: validateLogin });
             }
