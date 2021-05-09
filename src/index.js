@@ -329,7 +329,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 let result = Contractor_Users_Collection.find(query).project(projection)
                 result = await result.toArray()
 
-
                 //{'Technician','Carpenter','Electrician','Gardener','Painter','Plumber'} 
                 console.log('*****');
                 console.log(result.length);
