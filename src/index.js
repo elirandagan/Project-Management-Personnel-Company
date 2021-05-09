@@ -94,7 +94,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     console.log('*****');
                     res.cookie("user", user, { maxAge: 900000, httpOnly: false });
                     res.cookie("identity", req.body.identity, { maxAge: 900000, httpOnly: false });
-                    res.status(200).render("dashboard", { exist: "" });
+                    res.status(200).render("dashboard", { exist: "invalidID" });
 
                 } else if ("userNameNotExist" === returnValue) {
                     // console.log("router Failed user - userNameNotExist")
@@ -240,13 +240,14 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         router.get("/user", (req, res) => {
             console.log('******');
             console.log("in user router");
-            console.log(req.cookies["userInfo"]);
+            console.log(req.cookies.user);
+            console.log(req.cookies.identity);
             console.log('******');
-            res.status(200).render("user", { userInfo: req.cookies["userInfo"], status: "init" });
+            res.status(200).render("user", { status: "init" });
         });
 
         router.post("/user", (req, res) => {
-            query = { _id: req.cookies["userInfo"]["user"]["_id"] }
+            query = { _id: req.cookies.user.ID }
             // eslint-disable-next-line no-undef
             newvalues = {
                 firstName: req.body.firstName,
@@ -267,7 +268,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     status = "Success";
                 }
             });
-            res.status(200).render("user", { userInfo: req.cookies["userInfo"], status: status });
+            res.status(200).render("user", { status: status });
         });
 
         async function getSignUps() {

@@ -119,7 +119,7 @@
               </div>
             </form>
             <ul class="navbar-nav">
-              <!-- <li class="nav-item dropdown">
+              <li class="nav-item dropdown">
                 <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">notifications</i>
@@ -135,7 +135,7 @@
                   <a class="dropdown-item" href="javascript:void(0)">Another Notification</a>
                   <a class="dropdown-item" href="javascript:void(0)">Another One</a>
                 </div>
-              </li> -->
+              </li>
               <li class="nav-item dropdown">
                 <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
@@ -166,14 +166,14 @@
                   </a>
                 </div>
                 <div class="card-body">
-                  <h3 class="card-category">user["expertise"]</h3>
-                  <h4 class="card-title"> user["firstName"] user["lastName"] </h4>
+                  <h3 class="card-category user-expertise"></h3>
+                  <h4 class="card-title user-fullname"></h4>
                   <p class="card-description">
                   <h5>
-                    User Name : user["userName"]</br>
-                    Part of Company : user["partOfCompany"]</br>
-                    Hourly Payment : user["hourlyPay"]₪</br>
-                    Area : user["area"]</br>
+                    User Name : <span id="user-name"></span> </br>
+                    Part of Company : <span id="user-company"></span></br>
+                    Hourly Payment : <span id="user-pay"></span>₪</br>
+                    Area : <span id="user-area"></span></br>
                   </h5>
                   </p>
                   <a href="#pablo" class="btn btn-primary btn-round">Change Image</a>
@@ -186,9 +186,9 @@
                   <h4 class="card-title">About Me</h4>
                 </div>
                 <div class="card-body">
-                  <h6 class="card-category">user["expertise"]</h6>
+                  <h6 class="card-category user-expertise"></h6>
                   <br />
-                  <h4 class="card-title">user["firstName"] user["lastName"]</h4>
+                  <h4 class="card-title user-fullname"></h4>
                   <br /><br />
                   <p class="card-description">
                     personal description here
@@ -298,55 +298,59 @@
     </div>
   </div>
   <script>
-    const identity = "<%= decodeURI(userInfo['identity']) %>"
-    const user = decodeURI("<%= userInfo['user'] %>")
-
-    if (user) {
-      console.log("USER : ", user.length)
-      console.log("USER TYPE : ", typeof user)
-      alert(user)
-    } else
-      console.log("USER undefined");
-
-    if (identity)
-      console.log("IDENTITY : " + identity + " length: " + identity.length)
-    else
-      console.log("IDENTITY undefined");
-
-    if (identity.toString() == "Contractor_Users") {
-      document.getElementById("recruit").style.display = "none";
-      document.getElementById("trackingWorkers").style.display = "none";
-      document.getElementById("statistics").style.display = "none";
-      document.getElementById("searchWorker").style.display = "none";
-      document.getElementById("hiringHistory").style.display = "none";
-    }
-    else if (identity.toString() == "HR_Users") {
-      document.getElementById("shifts").style.display = "none";
-      document.getElementById("workHistory").style.display = "none";
-      document.getElementById("absences").style.display = "none";
-      document.getElementById("userProfile").style.display = "none";
-      document.getElementById("searchWorker").style.display = "none";
-      document.getElementById("hiringHistory").style.display = "none";
-    }
-    else if (identity.toString() == "Employer_Users") {
-      document.getElementById("shifts").style.display = "none";
-      document.getElementById("workHistory").style.display = "none";
-      document.getElementById("absences").style.display = "none";
-      document.getElementById("userProfile").style.display = "none";
-      document.getElementById("recruit").style.display = "none";
-      document.getElementById("trackingWorkers").style.display = "none";
-      document.getElementById("statistics").style.display = "none";
-    }
-    const x = new Date().getFullYear();
-    let date = document.getElementById('date');
-    date.innerHTML = '&copy; ' + x + date.innerHTML;
-  </script>
-  <script>
     $(document).ready(function () {
+      const user = getCookie("user")
+      const identity = getCookie("identity")
       const status = "<%= status %>";
+      console.log(user.expertise);
+      console.log(identity);
       console.log(status)
 
-      if (status == "Success") {
+      document.getElementById("user-name").innerHTML = user.userName;
+      document.getElementById("user-company").innerHTML = user.partOfCompany;
+      document.getElementById("user-area").innerHTML = user.area;
+      document.getElementById("user-pay").innerHTML = user.hourlyPay;
+
+      var elements = document.querySelectorAll(".user-fullname");
+      elements.forEach(function (elem) {
+        elem.innerHTML = user.FirstName + " " + user.LastName;
+      });
+
+      var elements = document.querySelectorAll(".user-expertise");
+        elements.forEach(function (elem) {
+        elem.innerHTML = user.expertise;
+      });
+
+      if (identity === "Contractor_Users") {
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity === "HR_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity === "Employer_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+      }
+
+      const x = new Date().getFullYear();
+      let date = document.getElementById('date');
+      date.innerHTML = '&copy; ' + x + date.innerHTML;
+
+      if (status === "Success") {
         console.log("Success")
         swal({
           title: "User invalid length.\n",
@@ -355,7 +359,7 @@
         });
 
       }
-      else if (status == "Failed") {
+      else if (status === "Failed") {
         console.log("Failed")
         swal({
           title: "Failed\n",
@@ -363,9 +367,25 @@
           icon: "warning"
         });
       }
-      else {
-      }
     })
+  </script>
+  <script>
+    function getCookie(name) {
+      const value = "; " + document.cookie;
+      const parts = value.split("; " + name + "=");
+      if (parts.length == 2) {
+        const vlu = parts.pop().split(";").shift();
+        const decode_vlu = decodeURIComponent(vlu);
+        const replace_vlu = decode_vlu.replace(/[+]/, ' ');
+        const temp = replace_vlu.split(',')
+        if (temp.length > 1)
+          return JSON.parse(replace_vlu.replace("j:", ""));
+        else
+          return replace_vlu
+      }
+      else
+        return '';
+    }
   </script>
 </body>
 

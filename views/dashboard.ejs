@@ -656,29 +656,24 @@
   <script src="demo/demo.js"></script>
   <script>
     $(document).ready(function () {
+      "<% - include('../src/cookieBaker.js') %>"
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
       try {
-
         const user = getCookie("user")
+        const identity = getCookie("identity")
         console.log(user);
-        // const data = document.cookie.split(';')
-        // console.log(data);
-        // const user = decodeURIComponent(data[0].split('=')[1])
-        // console.log(user);
-        // const identity = data[1].split('=')[1]
-        
-        const identity = "HR_Users"
+        console.log(identity);
 
         console.log("IDENTITY: " + identity + " length: " + identity.length)
-        if (identity.toString() === "Contractor_Users") {
+        if (identity === "Contractor_Users") {
           document.getElementById("recruit").style.display = "none";
           document.getElementById("trackingWorkers").style.display = "none";
           document.getElementById("statistics").style.display = "none";
           document.getElementById("searchWorker").style.display = "none";
           document.getElementById("hiringHistory").style.display = "none";
         }
-        else if (identity.toString() === "HR_Users") {
+        else if (identity === "HR_Users") {
           document.getElementById("shifts").style.display = "none";
           document.getElementById("workHistory").style.display = "none";
           document.getElementById("absences").style.display = "none";
@@ -686,7 +681,7 @@
           document.getElementById("searchWorker").style.display = "none";
           document.getElementById("hiringHistory").style.display = "none";
         }
-        else if (identity.toString() === "Employer_Users") {
+        else if (identity === "Employer_Users") {
           document.getElementById("shifts").style.display = "none";
           document.getElementById("workHistory").style.display = "none";
           document.getElementById("absences").style.display = "none";
@@ -698,9 +693,26 @@
       } catch (error) {
         console.error(error)
       }
-    });
+    })
   </script>
-  <script src="/src/cookieBaker.js"></script>
+  <script>
+    function getCookie(name) {
+      const value = "; " + document.cookie;
+      const parts = value.split("; " + name + "=");
+      if (parts.length == 2) {
+        const vlu = parts.pop().split(";").shift();
+        const decode_vlu = decodeURIComponent(vlu);
+        const replace_vlu = decode_vlu.replace(/[+]/, ' ');
+        const temp = replace_vlu.split(',')
+        if (temp.length > 1)
+          return JSON.parse(replace_vlu.replace("j:", ""));
+        else
+          return replace_vlu
+      }
+      else
+        return '';
+    }
+  </script>
 </body>
 
 </html>
