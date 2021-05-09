@@ -43,7 +43,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/login", function (req, res) {
             console.log('*****');
-            console.log('Cookies: ', req.cookies["userInfo"]["user"])
+            console.log('Cookies: ', req.cookies)
             console.log('*****');
             res.status(200).render("login", { exist: 0 });
 
@@ -88,19 +88,20 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                     const user = await mongoDbFunction.findOneByIdentity(req.body.userName, req.body.password, req.body.identity)
                     // console.log("user", user);
-                    const userInfo = { identity: req.body.identity, user: user }
+                    // const userInfo = { identity: req.body.identity, user: user['ID']}
                     console.log('*****');
-                    console.log("userInfo", userInfo);
+                    console.log("user", user);
                     console.log('*****');
-                    res.cookie("userInfo", userInfo, { maxAge: 900000, httpOnly: false });
-                    res.status(200).render("dashboard", { userInfo: req.cookies["userInfo"], exist: 4 });
+                    res.cookie("user", user, { maxAge: 900000, httpOnly: false });
+                    res.cookie("identity", req.body.identity, { maxAge: 900000, httpOnly: false });
+                    res.status(200).render("dashboard", { exist: "" });
 
                 } else if ("userNameNotExist" === returnValue) {
                     // console.log("router Failed user - userNameNotExist")
-                    res.status(200).render("login", { exist: 4 });
+                    res.status(200).render("login", { exist: "userNameNotExist" });
                 } else if ("wrongPassword" === returnValue) {
                     // console.log("router Failed user - wrongPassword")
-                    res.status(200).render("login", { exist: 5 });
+                    res.status(200).render("login", { exist: "wrongPassword" });
                 } else {
                     // console.log("router Failed user - unexpectedToken")
                     app.set("login")
