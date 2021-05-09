@@ -2,8 +2,8 @@ const MongoClient = require("mongodb").MongoClient;
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 
-let existKeyReturnValue = true
-let insertToDbReturnValue = true
+let existKeyReturnValue
+let insertToDbReturnValue
 let validateLoginReturn = {
     empty: "empty",
     valid: "validate",
@@ -116,4 +116,5 @@ async function loginAuth(userName, password, identityType) {
 exports.existKey = existKey;
 exports.inserToDb = insertToDb;
 exports.loginAuth = loginAuth;
+exports.getIdentity = getIdentity;
 //exports.pullFromDb = pullFromDbById;

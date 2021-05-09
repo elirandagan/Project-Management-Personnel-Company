@@ -17,10 +17,9 @@ let identity = { HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Emp
 
 
 const MongoClient = require("mongodb").MongoClient;
-// eslint-disable-next-line no-unused-vars
-const { Timestamp } = require("bson");
-const { query } = require("express");
-const { json } = require("body-parser");
+// const { Timestamp } = require("bson");
+// const { query } = require("express");
+// const { json } = require("body-parser");
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, { useUnifiedTopology: true })
@@ -32,7 +31,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         const HR_Users_Collection = db.collection("HR_Users")
         const Contractor_Users_Collection = db.collection("Contractor_Users")
-        const Employer_Users_Collection = db.collection("Employer_Users")
         const Absences_Collection = db.collection("Absences")
         const Shifts_Collection = db.collection("Shifts")
 
@@ -58,23 +56,42 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         });
 
+        router.get("/firstTimeHere", function (req, res) {
+            console.log("firstTimeHere GET")
+            res.status(200).render("firstTimeHere", {exist : 0 , userName:"empty" , password:"empty"} );
+        });
+
+        router.post("/firstTimeHere", function (req, res) {
+            console.log("firstTimeHere POST")
+            console.log("req.body.ID" + req.body.ID)
+            Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result){
+                console.log("#########################################################################################" + result)
+                if(result.length>0){
+                    console.log("FIND")
+                    res.status(200).render("firstTimeHere",{exist : "validID" , userName:result[0].userName , password:result[0].password});
+                }else{
+                    console.log("CANT FIND")
+                    res.status(200).render("firstTimeHere",{exist : "invalidID" , userName:"" , password:""});
+                }
+            })
+        });
+
+
         router.post("/login", async (req, res) => {
             const validateLogin = await validateFunction.validateLogin(req.body)
             console.log("validateLogin : ", validateLogin)
             if (validateLogin === "valid") {
                 //res.status(200).render("loaderLogin");
                 const returnValue = await mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity)
-                console.log("routerreturnValue", returnValue)
+                console.log("routerReturnValue", returnValue)
                 if ("validate" === returnValue) {
                     validateUser = true
                     console.log("validateUser = true")
-
                     ///////// COOKIE /////////////
                     // Cookie.set('userInfo', JSON.stringify(req.body.identity));
-                    res.cookie('userInfo', req.body.identity, { maxAge: 900000, httpOnly: false });
+                    res.cookie("userInfo", req.body.identity, { maxAge: 900000, httpOnly: false });
+                    res.status(200).render("dashboard", { exist: 4 });
 
-                    res.status(200).render("dashboard", { exist: 0 });
-                    console.log("router Failed user - validate")
                 } else if ("userNameNotExist" === returnValue) {
                     console.log("router Failed user - userNameNotExist")
                     res.status(200).render("login", { exist: 4 });
@@ -126,11 +143,13 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/privacyPolicy", function (req, res) {
-            if (validateUser) {
-                res.status(200).render("privacyPolicy");
+            console.log("router get privacy")
+            res.status(200).render("privacyPolicy");
+        });
 
-            }
-
+        router.post("/privacyPolicy", function (req, res) {
+            console.log("router POST privacy")
+            res.status(200).render("privacyPolicy");
         });
 
         router.get("/template", function (req, res) {
@@ -213,6 +232,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             req.body.createAt = new Date();
                             Contractor_Users_Collection.insertOne(req.body)
                                 .then(result => {
+                                    console.log(result)
                                     res.status(200).render("recruit", { exist: 0, ID: req.body.ID });
                                 })
                         }
@@ -307,9 +327,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 // manipulte data to create array that the index indicates the day of month
                 // the value indicates the amount of recruitments per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
-                    nextDate = new Date(d.getDate() + 1);
-                    if (d <= result[i]['createAt'] <= nextDate) {
-                        day = result[i]['createAt'].getDate() - 1;
+                    var nextDate = new Date(d.getDate() + 1);
+                    if (d <= result[i]["createAt"] <= nextDate) {
+                        var day = result[i]["createAt"].getDate() - 1;
                         ++reqs[day];
                     }
                 }
@@ -390,28 +410,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         router.get("/dashboard", function (req, res) {
             validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
         });
-
-
-        //DB Actions
-
-
-        // HOW TO "POST" TO COLLECTION
-        // router.post('/user', (req, res) => {
-        //   UsersCollection.insertOne(req.body)
-        //     .then(result => {
-        //       // console.log(req.body)
-        //       console.log(result)
-        //       res.redirect('/dashboard')
-        //     })
-        //     .catch(error => console.error(error))
-        // })
-
-        // app.get('/', (req, res) => {
-        //   const cursor = db.collection('Users').find().toArray()
-        //   console.log(cursor)
-        //   // console.log('succed')
-        //   //
-        // })
 
         //add the router
         app.use("/", router);
