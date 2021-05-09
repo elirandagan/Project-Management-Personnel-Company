@@ -117,5 +117,4 @@ exports.existKey = existKey;
 exports.inserToDb = insertToDb;
 exports.loginAuth = loginAuth;
 exports.getIdentity = getIdentity;
-
 //exports.pullFromDb = pullFromDbById;
