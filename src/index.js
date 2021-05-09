@@ -90,6 +90,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     ///////// COOKIE /////////////
                     // Cookie.set('userInfo', JSON.stringify(req.body.identity));
                     res.cookie("userInfo", req.body.identity, { maxAge: 900000, httpOnly: false });
+                    res.status(200).render("dashboard", { exist: 4 });
 
                 } else if ("userNameNotExist" === returnValue) {
                     console.log("router Failed user - userNameNotExist")
