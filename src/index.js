@@ -8,18 +8,13 @@ const router = express.Router();
 const mongoDbFunction = require("./mongoDb");
 const validateFunction = require("./validate");
 const date = require("./date");
-// const stats = require("./js/stats");
-
-//const bcrypt = require("bcrypt")
 
 let validateUser = false
 let identity = { HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Employer_Users: "Employer_Users" }
 
 
 const MongoClient = require("mongodb").MongoClient;
-// const { Timestamp } = require("bson");
-// const { query } = require("express");
-// const { json } = require("body-parser");
+
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
 MongoClient.connect(uri, { useUnifiedTopology: true })
@@ -81,7 +76,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             const validateLogin = await validateFunction.validateLogin(req.body)
             console.log("validateLogin : ", validateLogin)
             if (validateLogin === "valid") {
-                //res.status(200).render("loaderLogin");
                 const returnValue = await mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity)
                 console.log("routerReturnValue", returnValue)
                 if ("validate" === returnValue) {
