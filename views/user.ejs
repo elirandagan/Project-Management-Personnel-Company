@@ -167,14 +167,14 @@
                   </a>
                 </div>
                 <div class="card-body">
-                  <h3 class="card-category"><%=user["expertise"]%></h3>
-                  <h4 class="card-title"> <%=user["firstName"]%> <%=user["lastName"]%> </h4>
+                  <h3 class="card-category">user["expertise"]</h3>
+                  <h4 class="card-title"> user["firstName"] user["lastName"] </h4>
                   <p class="card-description">
                     <h5>
-                      User Name : <%=user["userName"]%></br>
-                      Part of Company : <%=user["partOfCompany"]%></br>
-                      Hourly Payment : <%=user["hourlyPay"]%>₪</br>
-                      Area : <%=user["area"]%></br>
+                      User Name : user["userName"]</br>
+                      Part of Company : user["partOfCompany"]</br>
+                      Hourly Payment : user["hourlyPay"]₪</br>
+                      Area : user["area"]</br>
                     </h5>
                   </p>
                   <a href="#pablo" class="btn btn-primary btn-round">Change Image</a>
@@ -187,9 +187,9 @@
                   <h4 class="card-title">About Me</h4>
                 </div>
                 <div class="card-body">
-                  <h6 class="card-category"><%=user["expertise"]%></h6>
+                  <h6 class="card-category">user["expertise"]</h6>
                   <br/>
-                  <h4 class="card-title"><%= user["firstName"] %> <%= user["lastName"] %></h4>
+                  <h4 class="card-title">user["firstName"]  user["lastName"]</h4>
                   <br/><br/>
                   <p class="card-description">
                     personal description here
@@ -299,8 +299,19 @@
       </div>
     </div>
     <script>
-      const identity = document.cookie.substr(9, document.cookie.length)
-      console.log("IDENTITY: " + identity + " length: " + identity.length)
+      const identity = decodeURI("<%= userInfo['identity']%>")
+      const user = decodeURI("<%= userInfo['user']%>")
+      if(user){
+        console.log("USER : ",user)
+        alert(user)
+      } else
+        console.log("USER undefined");
+
+      if(identity)
+        console.log("IDENTITY : " + identity + " length: " + identity.length)
+      else
+        console.log("IDENTITY undefined");
+
       if (identity.toString() == "Contractor_Users") {
         document.getElementById("recruit").style.display = "none";
         document.getElementById("trackingWorkers").style.display = "none";
@@ -318,9 +329,7 @@
       }
       else if (identity.toString() == "Employer_Users") {
         document.getElementById("shifts").style.display = "none";
-         סבהי
-         .document.getElementById("workHistory").style.display = "none";+9
-        .0
+        document.getElementById("workHistory").style.display = "none";
         document.getElementById("absences").style.display = "none";
         document.getElementById("userProfile").style.display = "none";
         document.getElementById("recruit").style.display = "none";

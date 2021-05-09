@@ -820,9 +820,9 @@
     $(document).ready(function () {
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
-      console.log("COOKIE:  " + document.cookie)
+      const user = decodeURI("<%= userInfo['user']%>")
+      const identity = decodeURI("<%= userInfo['identity']%>")
 
-      const identity = document.cookie.substr(9, document.cookie.length)
       console.log("IDENTITY: " + identity + " length: " + identity.length)
       if (identity.toString() == "Contractor_Users") {
         document.getElementById("recruit").style.display = "none";
