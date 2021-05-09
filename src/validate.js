@@ -12,7 +12,7 @@ let validateDic = {
 
 async function validateSignUp(data) {
     let returnValue
-    console.log("!/[^a-zA-Z]/.test(data.firstName", !/[^a-zA-Z]/.test(data.firstName))
+    // console.log("!/[^a-zA-Z]/.test(data.firstName", !/[^a-zA-Z]/.test(data.firstName))
     if (/[^a-zA-Z]/.test(data.firstName)||/[^a-zA-Z]/.test(data.lastName)){
         //if(!validator.isAlpha(data.firstName) || !validator.isAlpha(data.lastName)) {
         returnValue = validateDic.nameFieldMostContainChars
@@ -44,8 +44,8 @@ function isValidIsraeliID(id) {
 
 function validateLogin(data) {
     let returnValue
-    console.log(data)
-    console.log("Data.identity : " , data.identity)
+    // console.log(data)
+    // console.log("Data.identity : " , data.identity)
     if ((typeof data.identity==="undefined")) {
         returnValue = validateDic.emptyIdentity
     } else if (data.userName.length<2) {
@@ -55,7 +55,7 @@ function validateLogin(data) {
     } else {
         returnValue = validateDic.valid
     }
-    console.log(returnValue)
+    // console.log(returnValue)
     return returnValue;
 }
 

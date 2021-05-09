@@ -16,7 +16,7 @@
     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
   <!-- CSS Files -->
-<link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
+  <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="demo/demo.css" rel="stylesheet" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.0/Chart.min.js"></script>
@@ -25,78 +25,73 @@
 <body class="dark-edition">
   <div class="wrapper ">
     <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-2.jpg">
-      <!--
-        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
-
-        Tip 2: you can also add an image using data-image tag
-    -->
       <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
           GLEM TECH
         </a></div>
-        <div class="sidebar-wrapper">
-          <ul class="nav">
-            <li class="nav-item">
-              <a class="nav-link" href="./dashboard">
-                <i class="material-icons">dashboard</i>
-                <p>Dashboard</p>
-              </a>
-            </li>
-            <li class="nav-item" id="shifts">
-              <a class="nav-link" href="./shifts">
-                <i class="material-icons">content_paste</i>
-                <p>Shifts</p>
-              </a>
-            </li>
-            <li class="nav-item " id="workHistory">
-              <a class="nav-link" href="./workHistory">
-                <i class="material-icons">library_books</i>
-                <p>Work History</p>
-              </a>
-            </li>
-            <li class="nav-item " id="absences">
-              <a class="nav-link" href="./absences">
-                <i class="material-icons">content_paste</i>
-                <p>Absences</p>
-              </a>
-            </li>
-            <li class="nav-item " id="userProfile">
-              <a class="nav-link" href="./user">
-                <i class="material-icons">person</i>
-                <p>User Profile</p>
-              </a>
-            </li>
-            <li class="nav-item " id="recruit">
-              <a class="nav-link" href="./recruit">
-                <i class="material-icons">person</i>
-                <p>Recruit</p>
-              </a>
-            </li>
-            <li class="nav-item " id="trackingWorkers">
-              <a class="nav-link" href="./trackingWorkers">
-                <i class="material-icons">person</i>
-                <p>Tracking Workers</p>
-              </a>
-            </li>
-            <li class="nav-item active" id="statistics">
-              <a class="nav-link" href="./statistics">
-                <i class="material-icons">person</i>
-                <p>Statistics</p>
-              </a>
-            </li>
-            <li class="nav-item " id="searchWorker">
-              <a class="nav-link" href="./searchWorker">
-                <i class="material-icons">person</i>
-                <p>Search Worker</p>
-              </a>
-            </li>
-            <li class="nav-item " id="hiringHistory">
-              <a class="nav-link" href="./hiringHistory">
-                <i class="material-icons">person</i>
-                <p>Hiring History</p>
-              </a>
-            </li>
-          </ul>
-          </div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="./dashboard">
+              <i class="material-icons">dashboard</i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item" id="shifts">
+            <a class="nav-link" href="./shifts">
+              <i class="material-icons">content_paste</i>
+              <p>Shifts</p>
+            </a>
+          </li>
+          <li class="nav-item " id="workHistory">
+            <a class="nav-link" href="./workHistory">
+              <i class="material-icons">library_books</i>
+              <p>Work History</p>
+            </a>
+          </li>
+          <li class="nav-item " id="absences">
+            <a class="nav-link" href="./absences">
+              <i class="material-icons">content_paste</i>
+              <p>Absences</p>
+            </a>
+          </li>
+          <li class="nav-item " id="userProfile">
+            <a class="nav-link" href="./user">
+              <i class="material-icons">person</i>
+              <p>User Profile</p>
+            </a>
+          </li>
+          <li class="nav-item " id="recruit">
+            <a class="nav-link" href="./recruit">
+              <i class="material-icons">person</i>
+              <p>Recruit</p>
+            </a>
+          </li>
+          <li class="nav-item " id="trackingWorkers">
+            <a class="nav-link" href="./trackingWorkers">
+              <i class="material-icons">person</i>
+              <p>Tracking Workers</p>
+            </a>
+          </li>
+          <li class="nav-item active" id="statistics">
+            <a class="nav-link" href="./statistics">
+              <i class="material-icons">person</i>
+              <p>Statistics</p>
+            </a>
+          </li>
+          <li class="nav-item " id="searchWorker">
+            <a class="nav-link" href="./searchWorker">
+              <i class="material-icons">person</i>
+              <p>Search Worker</p>
+            </a>
+          </li>
+          <li class="nav-item " id="hiringHistory">
+            <a class="nav-link" href="./hiringHistory">
+              <i class="material-icons">person</i>
+              <p>Hiring History</p>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="main-panel">
       <!-- Navbar -->
@@ -133,7 +128,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item fa fa-sign-out" href="\" id="logout_btn">
-                    <span style="margin-left: 6px;"> Logout </span> 
+                    <span style="margin-left: 6px;"> Logout </span>
                   </a>
                 </div>
               </li>
@@ -154,7 +149,8 @@
               <div class="card-body">
                 <h4 class="card-title">Signed Up Employers</h4>
                 <p class="card-category">
-                  <span class="text-success"><i class="fa fa-long-arrow-up"></i> 12% </span> Total increase from last month.
+                  <span class="text-success"><i class="fa fa-long-arrow-up"></i> 12% </span> Total increase from last
+                  month.
                 </p>
               </div>
               <div class="card-footer">
@@ -173,7 +169,8 @@
               <div class="card-body">
                 <h4 class="card-title">Booked Workers</h4>
                 <p class="card-category">
-                  <span class="text-success"><i class="fa fa-long-arrow-up"></i> 32% </span> Total increase from last month.
+                  <span class="text-success"><i class="fa fa-long-arrow-up"></i> 32% </span> Total increase from last
+                  month.
                 </p>
               </div>
               <div class="card-footer">
@@ -187,7 +184,7 @@
           <div class="col-lg-12">
             <div class="card card-chart">
               <div class="card-header card-header">
-                <canvas id="expertiseChart"></canvas> 
+                <canvas id="expertiseChart"></canvas>
               </div>
               <div class="card-body">
                 <h4 class="card-title"> By Expertise</h4>
@@ -236,32 +233,32 @@
       </footer>
       <script>
 
-const identity = document.cookie.substr(9, document.cookie.length)
-      console.log("IDENTITY: " + identity + " length: " + identity.length)
-      if (identity.toString() == "Contractor_Users") {
-        document.getElementById("recruit").style.display = "none";
-        document.getElementById("trackingWorkers").style.display = "none";
-        document.getElementById("statistics").style.display = "none";
-        document.getElementById("searchWorker").style.display = "none";
-        document.getElementById("hiringHistory").style.display = "none";
-      }
-      else if (identity.toString() == "HR_Users") {
-        document.getElementById("shifts").style.display = "none";
-        document.getElementById("workHistory").style.display = "none";
-        document.getElementById("absences").style.display = "none";
-        document.getElementById("userProfile").style.display = "none";
-        document.getElementById("searchWorker").style.display = "none";
-        document.getElementById("hiringHistory").style.display = "none";
-      }
-      else if (identity.toString() == "Employer_Users") {
-        document.getElementById("shifts").style.display = "none";
-        document.getElementById("workHistory").style.display = "none";
-        document.getElementById("absences").style.display = "none";
-        document.getElementById("userProfile").style.display = "none";
-        document.getElementById("recruit").style.display = "none";
-        document.getElementById("trackingWorkers").style.display = "none";
-        document.getElementById("statistics").style.display = "none";
-      }
+        const identity = document.cookie.substr(9, document.cookie.length)
+        console.log("IDENTITY: " + identity + " length: " + identity.length)
+        if (identity.toString() == "Contractor_Users") {
+          document.getElementById("recruit").style.display = "none";
+          document.getElementById("trackingWorkers").style.display = "none";
+          document.getElementById("statistics").style.display = "none";
+          document.getElementById("searchWorker").style.display = "none";
+          document.getElementById("hiringHistory").style.display = "none";
+        }
+        else if (identity.toString() == "HR_Users") {
+          document.getElementById("shifts").style.display = "none";
+          document.getElementById("workHistory").style.display = "none";
+          document.getElementById("absences").style.display = "none";
+          document.getElementById("userProfile").style.display = "none";
+          document.getElementById("searchWorker").style.display = "none";
+          document.getElementById("hiringHistory").style.display = "none";
+        }
+        else if (identity.toString() == "Employer_Users") {
+          document.getElementById("shifts").style.display = "none";
+          document.getElementById("workHistory").style.display = "none";
+          document.getElementById("absences").style.display = "none";
+          document.getElementById("userProfile").style.display = "none";
+          document.getElementById("recruit").style.display = "none";
+          document.getElementById("trackingWorkers").style.display = "none";
+          document.getElementById("statistics").style.display = "none";
+        }
 
         const x = new Date().getFullYear();
         let date = document.getElementById('date');
@@ -269,7 +266,7 @@ const identity = document.cookie.substr(9, document.cookie.length)
       </script>
     </div>
   </div>
-  
+
   </div>
   <!--   Core JS Files   -->
   <script src="js/core/jquery.min.js"></script>
@@ -297,12 +294,12 @@ const identity = document.cookie.substr(9, document.cookie.length)
     function arrayOfDays() {
       var days = signUps.length;
       var daysArr = [];
-      for ( i = 1; i <= days ; i++ ) {
+      for (i = 1; i <= days; i++) {
         daysArr.push(i < 10 ? ("0" + i.toString()) : i.toString());
       }
       return daysArr;
     }
-    
+
     let signedUpEmpsChart = document.getElementById('signedUpEmpsChart').getContext('2d');
     // Global Options
     Chart.defaults.global.defaultFontSize = 14;
@@ -311,11 +308,11 @@ const identity = document.cookie.substr(9, document.cookie.length)
       type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
       data: {
         labels: arrayOfDays(),
-       datasets: [{
+        datasets: [{
           label: 'New Employers',
           data: signUps,
           backgroundColor: [
-          '#863a92'
+            '#863a92'
           ],
           borderWidth: 1,
           borderColor: '#777',
@@ -342,21 +339,21 @@ const identity = document.cookie.substr(9, document.cookie.length)
         scales: {
           // disables grid for x axis
           xAxes: [{
-              gridLines: {
-                display: false
-              }
+            gridLines: {
+              display: false
+            }
           }],
           // disables grid for y axis
           yAxes: [{
-              gridLines: {
-                display: true,
-                color: "#2b3655"
-              },
-              ticks: {
-                beginAtZero: true,
-                precision: 0,
-                min:0,
-                // max: Math.max(...signUps)+Math.max(...signUps)/2,
+            gridLines: {
+              display: true,
+              color: "#2b3655"
+            },
+            ticks: {
+              beginAtZero: true,
+              precision: 0,
+              min: 0,
+              // max: Math.max(...signUps)+Math.max(...signUps)/2,
             }
           }]
         }
@@ -370,7 +367,7 @@ const identity = document.cookie.substr(9, document.cookie.length)
     function arrayOfDays() {
       var days = signUps.length;
       var daysArr = [];
-      for ( i = 1; i <= days ; i++ ) {
+      for (i = 1; i <= days; i++) {
         daysArr.push(i < 10 ? ("0" + i.toString()) : i.toString());
       }
       return daysArr;
@@ -390,7 +387,7 @@ const identity = document.cookie.substr(9, document.cookie.length)
           data: recruitments,
           //backgroundColor:'green',
           backgroundColor: [
-          '#7e7bea'
+            '#7e7bea'
           ],
           borderWidth: 1,
           borderColor: '#777',
@@ -417,19 +414,19 @@ const identity = document.cookie.substr(9, document.cookie.length)
         scales: {
           // disables grid for x axis
           xAxes: [{
-              gridLines: {
-                display: false
-              }
+            gridLines: {
+              display: false
+            }
           }],
           // disables grid for y axis
           yAxes: [{
-              gridLines: {
-                display: true,
-                color: "#2b3655"
-              },
-              ticks: {
-                beginAtZero: true,
-                precision: 0
+            gridLines: {
+              display: true,
+              color: "#2b3655"
+            },
+            ticks: {
+              beginAtZero: true,
+              precision: 0
             }
           }]
         }
@@ -437,7 +434,7 @@ const identity = document.cookie.substr(9, document.cookie.length)
     });
   </script>
   <!-- Chart 3 -->
-    <script>
+  <script>
     var expertises = '<%= expertises %>'.split(',');
 
     let expertiseChart = document.getElementById('expertiseChart').getContext('2d');
@@ -448,11 +445,11 @@ const identity = document.cookie.substr(9, document.cookie.length)
     new Chart(expertiseChart, {
       type: 'bar', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
       data: {
-        labels: ['A.C Technician','Carpenter','Electrician','Gardener','Painter','Plumber'],
+        labels: ['A.C Technician', 'Carpenter', 'Electrician', 'Gardener', 'Painter', 'Plumber'],
         datasets: [{
           label: 'hired ',
           data: expertises,
-          backgroundColor:'#AD4F6B',
+          backgroundColor: '#AD4F6B',
           // backgroundColor: ['#800080'], //can be array
           // borderWidth: 1,
           // borderColor: '#fff',
@@ -479,19 +476,19 @@ const identity = document.cookie.substr(9, document.cookie.length)
         scales: {
           // disables grid for x axis
           xAxes: [{
-              gridLines: {
-                display: false
-              }
+            gridLines: {
+              display: false
+            }
           }],
           // disables grid for y axis
           yAxes: [{
-              gridLines: {
-                display: true,
-                color: "#2b3655"
-              },
-              ticks: {
-                beginAtZero: true,
-                precision: 0
+            gridLines: {
+              display: true,
+              color: "#2b3655"
+            },
+            ticks: {
+              beginAtZero: true,
+              precision: 0
             }
           }]
         }
