@@ -271,8 +271,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 }
             });
         });
-        
-        function getSignUps() {
+
+        async function getSignUps() {
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
             const projection = { createAt: 1, _id: 0 }; //can be added to find()
             var signUps = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
@@ -298,7 +298,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             return signUps;
         };
 
-        function getRecruitments() {
+        async function getRecruitments() {
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
             const projection = { createAt: 1, _id: 0 }; //can be added to find()
             let reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
@@ -319,10 +319,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             return reqs;
         };
 
-        function getExpertises() {
+        async function getExpertises() {
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
             const projection = { expertise: 1, _id: 0 }; //can be added to find()
-            let experts = new Array(6).fill(0); //create empty array that the index indicates the expeertises 
+            experts = new Array(6).fill(0); //create empty array that the index indicates the expeertises 
 
             Contractor_Users_Collection.find(query).project(projection).toArray(function (err, result) {
                 if (err) throw err;
@@ -349,18 +349,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             return experts;
         };
 
-        router.get("/statistics", (req, res) => {
-            const signUps = getSignUps();
+        router.get("/statistics",async (req, res) => {
+            const signUps = await getSignUps();
             console.log('*****');
             console.log('signUps :' + signUps);
             console.log('*****');
 
-            const recruitments = getRecruitments();
+            const recruitments = await getRecruitments();
             console.log('*****');
             console.log('recruitments :' + recruitments);
             console.log('*****');
 
-            const expertises = getExpertises();
+            const expertises = await getExpertises();
             console.log('*****');
             console.log('expertises :' + expertises);
             console.log('*****');
