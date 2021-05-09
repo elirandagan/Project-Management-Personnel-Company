@@ -302,7 +302,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 // manipulte data to create array that the index indicates the day of month
                 // the value indicates the amount of signups per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
-                    console.log(signUps);
                     nextDate = new Date(d.getDate() + 1);
                     if (d <= result[i]['createAt'] <= nextDate) {
                         day = result[i]['createAt'].getDate() - 1;
