@@ -65,7 +65,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log("firstTimeHere POST")
             console.log("req.body.ID" + req.body.ID)
             Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result){
-                console.log("#########################################################################################" + result)
+                console.log("######################" + result)
                 if(result.length>0){
                     console.log("FIND")
                     res.status(200).render("firstTimeHere",{exist : "validID" , userName:result[0].userName , password:result[0].password});
@@ -194,7 +194,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/recruit", function (req, res) {
             console.log("recruit")
-            HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err, result) {
+            HR_Users_Collection.find({ firstName: "Lior"  }).toArray(function (err, result) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -205,13 +205,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.post("/recruit", (req, res) => {
-            // eslint-disable-next-line no-undef
-            // mongoDbFunction.inserToDb(identity.Contractor_Users, req.body).then(r => {
-            //     const exist = r ? 0 : 1
-            //     console.log("Server Exist answer: " + exist)
-            //     res.status(200).render("recruit", {exist: exist, ID: req.body.ID});
-            // })
-            //
 
             Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result) {
                 console.log("ID: " + JSON.stringify(req.body.ID))
@@ -228,7 +221,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             console.log(result2[0] + "2 Faileds")
                         } else {
                             console.log(res + " Succeed")
-                            // req.body.createAt = new Date(date.getCurrentDate());
                             req.body.createAt = new Date();
                             Contractor_Users_Collection.insertOne(req.body)
                                 .then(result => {
@@ -240,8 +232,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 }
             })
         })
-
-        // });
 
         router.get("/user", function (req, res) {
             // console.log(location.href, "*** the location href")
