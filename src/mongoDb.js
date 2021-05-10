@@ -16,7 +16,7 @@ let validateLoginReturnValue
 //check if the id or the username (SK) are already exist in the DB - return TRUE for exist
 async function existKey(ID, uN, identityType) {
     return MongoClient.connect(uri, { useUnifiedTopology: true })
-        .then(async client => {
+        .then(async () => {
             // console.log(client + "existKeyFunction")
             let user = await (getIdentity(identityType))
             user.find({ ID: ID }).toArray(function (err, result) {
@@ -97,7 +97,7 @@ async function loginAuth(userName, password, identityType) {
 
 async function findOneByIdentity(userName, password, identityType) {
     let user = await (getIdentity(identityType))
-    query = { userName, password }
+    const query = { userName, password }
     try {
         let result = await user.findOne(query)
         if (result) {
@@ -111,7 +111,7 @@ async function findOneByIdentity(userName, password, identityType) {
         console.error(error)
         throw error
     }
-};
+}
 
 
 exports.existKey = existKey;

@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const app_port = process.env.PORT || 3000;
 const app = express();
 const router = express.Router();
-const CookieParser = require('cookie-parser');
+const CookieParser = require("cookie-parser");
 
 const mongoDbFunction = require("./mongoDb");
 const validateFunction = require("./validate");
@@ -42,9 +42,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/login", function (req, res) {
-            console.log('*****');
-            console.log('Cookies: ', req.cookies)
-            console.log('*****');
+            console.log("*****");
+            console.log("Cookies: ", req.cookies)
+            console.log("*****");
             res.status(200).render("login", { exist: 0 });
 
         });
@@ -89,9 +89,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     const user = await mongoDbFunction.findOneByIdentity(req.body.userName, req.body.password, req.body.identity)
                     // console.log("user", user);
                     // const userInfo = { identity: req.body.identity, user: user['ID']}
-                    console.log('*****');
+                    console.log("*****");
                     console.log("user", user);
-                    console.log('*****');
+                    console.log("*****");
                     res.cookie("user", user, { maxAge: 900000, httpOnly: false });
                     res.cookie("identity", req.body.identity, { maxAge: 900000, httpOnly: false });
                     res.status(200).render("dashboard", { exist: "invalidID" });
@@ -238,18 +238,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         })
 
         router.get("/user", (req, res) => {
-            console.log('******');
+            console.log("******");
             console.log("in user router");
             console.log(req.cookies.user);
             console.log(req.cookies.identity);
-            console.log('******');
+            console.log("******");
             res.status(200).render("user", { status: "init" });
         });
 
         router.post("/user", (req, res) => {
-            query = { _id: req.cookies.user.ID }
+            const query = { _id: req.cookies.user.ID }
             // eslint-disable-next-line no-undef
-            newvalues = {
+            const newvalues = {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 partOfCompany: req.body.partOfCompany,
@@ -264,7 +264,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     console.log(err.body + " ** Failed to update **");
                     status = "Failed";
                 } else {
-                    console.log(result[0], "\n** Success to update **");
+                    console.log("\n** Success to update **");
                     status = "Success";
                 }
             });
@@ -281,9 +281,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 // manipulte data to create array that the index indicates the day of month
                 // the value indicates the amount of signups per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
-                    nextDate = new Date(d.getDate() + 1);
-                    if (d <= result[i]['createAt'] <= nextDate) {
-                        day = result[i]['createAt'].getDate() - 1;
+                    let nextDate = new Date(d.getDate() + 1);
+                    if (d <= result[i]["createAt"] <= nextDate) {
+                        let day = result[i]["createAt"].getDate() - 1;
                         ++signUps[day];
                     }
                 }
@@ -292,7 +292,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 console.error(error)
                 throw error
             }
-        };
+        }
 
         async function getRecruitments() {
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
@@ -316,31 +316,31 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 console.error(error)
                 throw error
             }
-        };
+        }
 
         async function getExpertises() {
             const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
             const projection = { expertise: 1, _id: 0 }; //can be added to find()
-            experts = new Array(6).fill(0); //create empty array that the index indicates the expeertises 
+            let experts = new Array(6).fill(0); //create empty array that the index indicates the expeertises 
 
             try {
                 let result = Contractor_Users_Collection.find(query).project(projection)
                 result = await result.toArray()
 
                 //{'Technician','Carpenter','Electrician','Gardener','Painter','Plumber'} 
-                console.log('*****');
+                console.log("*****");
                 console.log(result.length);
-                console.log('*****');
+                console.log("*****");
                 for (let i = 0; i < result.length; i++) {
-                    if (result[i].expertise == 'Technician')
+                    if (result[i].expertise == "Technician")
                         ++experts[0];
-                    else if (result[i].expertise == 'Carpenter')
+                    else if (result[i].expertise == "Carpenter")
                         ++experts[1];
-                    else if (result[i].expertise == 'Electrician')
+                    else if (result[i].expertise == "Electrician")
                         ++experts[2];
-                    else if (result[i].expertise == 'Gardener')
+                    else if (result[i].expertise == "Gardener")
                         ++experts[3];
-                    else if (result[i].expertise == 'Painter')
+                    else if (result[i].expertise == "Painter")
                         ++experts[4];
                     else {
                         ++experts[5];
@@ -352,23 +352,23 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 throw error
             }
             return experts;
-        };
+        }
 
         router.get("/statistics", async (req, res) => {
             const signUps = await getSignUps();
-            console.log('*****');
-            console.log('signUps :' + signUps);
-            console.log('*****');
+            console.log("*****");
+            console.log("signUps :" + signUps);
+            console.log("*****");
 
             const recruitments = await getRecruitments();
-            console.log('*****');
-            console.log('recruitments :' + recruitments);
-            console.log('*****');
+            console.log("*****");
+            console.log("recruitments :" + recruitments);
+            console.log("*****");
 
             const expertises = await getExpertises();
-            console.log('*****');
-            console.log('expertises :' + expertises);
-            console.log('*****');
+            console.log("*****");
+            console.log("expertises :" + expertises);
+            console.log("*****");
 
             res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments, expertises: expertises });
         });
