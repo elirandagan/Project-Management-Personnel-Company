@@ -382,7 +382,16 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/hiringHistory", function (req, res) {
-            res.status(200).render("hiringHistory");
+            console.log("router get")
+            Shifts_Collection.find().toArray().then((schema)=>{
+                console.log("schema : " + JSON.stringify(schema))
+                schema ? res.status(200).render("hiringHistory", {args:schema}) : console.error("shifts empty")
+            })
+        });
+
+        router.post("/hiringHistory", function (req, res) {
+            console.log("router post")
+            res.status(200).render("hiringHistory",{arguments:"router post"});
         });
 
         router.get("/dashboard", function (req, res) {

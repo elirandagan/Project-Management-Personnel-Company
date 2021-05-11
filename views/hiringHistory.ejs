@@ -19,190 +19,27 @@
   <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="demo/demo.css" rel="stylesheet" />
+    <style>
+        th, td {
+            border: 1px solid;
+        }
+        th {
+            font-weight : bold;
+        }
+        #container{
+            margin: auto;
+            width: 50%;
+            border: 3px;
+            padding: 10px;
+        }
+    </style>
 </head>
 
 <body class="dark-edition">
   <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-2.jpg">
-      <!--
-        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+      <div id="container"></div>
 
-        Tip 2: you can also add an image using data-image tag
-    -->
-      <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
-          GLEM TECH
-        </a></div>
-        <div class="sidebar-wrapper">
-          <ul class="nav">
-            <li class="nav-item ">
-              <a class="nav-link" href="./dashboard">
-                <i class="material-icons">dashboard</i>
-                <p>Dashboard</p>
-              </a>
-            </li>
-            <li class="nav-item" id="shifts">
-              <a class="nav-link" href="./shifts">
-                <i class="material-icons">content_paste</i>
-                <p>Shifts</p>
-              </a>
-            </li>
-            <li class="nav-item " id="workHistory">
-              <a class="nav-link" href="./workHistory">
-                <i class="material-icons">library_books</i>
-                <p>Work History</p>
-              </a>
-            </li>
-            <li class="nav-item " id="absences">
-              <a class="nav-link" href="./absences">
-                <i class="material-icons">content_paste</i>
-                <p>Absences</p>
-              </a>
-            </li>
-            <li class="nav-item " id="userProfile">
-              <a class="nav-link" href="./user">
-                <i class="material-icons">person</i>
-                <p>User Profile</p>
-              </a>
-            </li>
-            <li class="nav-item " id="recruit">
-              <a class="nav-link" href="./recruit">
-                <i class="material-icons">person</i>
-                <p>Recruit</p>
-              </a>
-            </li>
-            <li class="nav-item " id="trackingWorkers">
-              <a class="nav-link" href="./trackingWorkers">
-                <i class="material-icons">person</i>
-                <p>Tracking Workers</p>
-              </a>
-            </li>
-            <li class="nav-item " id="statistics">
-              <a class="nav-link" href="./statistics">
-                <i class="material-icons">person</i>
-                <p>Statistics</p>
-              </a>
-            </li>
-            <li class="nav-item " id="searchWorker">
-              <a class="nav-link" href="./searchWorker">
-                <i class="material-icons">person</i>
-                <p>Search Worker</p>
-              </a>
-            </li>
-            <li class="nav-item active" id="hiringHistory">
-              <a class="nav-link" href="./hiringHistory">
-                <i class="material-icons">person</i>
-                <p>Hiring History</p>
-              </a>
-            </li>
-          </ul>
-          </div>
-    </div>
-    <div class="main-panel">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
-        <div class="container-fluid">
-          <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:void(0)">Hiring History</a>
-          </div>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
-            aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-end">
-            <form class="navbar-form">
-              <div class="input-group no-border">
-                <input type="text" value="" class="form-control" placeholder="Search...">
-                <button type="submit" class="btn btn-default btn-round btn-just-icon">
-                  <i class="material-icons">search</i>
-                  <div class="ripple-container"></div>
-                </button>
-              </div>
-            </form>
-            <ul class="navbar-nav">
-
-              <!-- <li class="nav-item dropdown">
-                <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">notifications</i>
-                  <span class="notification">5</span>
-                  <p class="d-lg-none d-md-block">
-                    Some Actions
-                  </p>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="javascript:void(0)">Mike John responded to your email</a>
-                  <a class="dropdown-item" href="javascript:void(0)">You have 5 new tasks</a>
-                  <a class="dropdown-item" href="javascript:void(0)">You're now friend with Andrew</a>
-                  <a class="dropdown-item" href="javascript:void(0)">Another Notification</a>
-                  <a class="dropdown-item" href="javascript:void(0)">Another One</a>
-                </div>
-              </li> -->
-              <li class="nav-item dropdown">
-                <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">person</i>
-                  <p class="d-lg-none d-md-block">
-                    Account
-                  </p>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item fa fa-sign-out" href="\" id="logout_btn">
-                    <span style="margin-left: 6px;"> Logout </span> 
-                  </a>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End Navbar -->
-      <div class="content">
-      </div>
-      <footer class="footer">
-        <div class="container-fluid">
-          <nav class="float-left">
-            <ul>
-              <li>
-                <a href="https://www.creative-tim.com">
-                  GLEM TECH
-                </a>
-              </li>
-              <li>
-                <a href="https://creative-tim.com/presentation">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="http://blog.creative-tim.com">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="https://www.creative-tim.com/license">
-                  Licenses
-                </a>
-              </li>
-            </ul>
-          </nav>
-          <div class="copyright float-right" id="date">
-            , made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">GLEM TECH</a> for a better web.
-          </div>
-        </div>
-      </footer>
-      <script>
-        const x = new Date().getFullYear();
-        let date = document.getElementById('date');
-        date.innerHTML = '&copy; ' + x + date.innerHTML;
-      </script>
-    </div>
-  </div>
-  
-  </div>
-  <!--   Core JS Files   -->
+      <!--   Core JS Files   -->
   <script src="js/core/jquery.min.js"></script>
   <script src="js/core/popper.min.js"></script>
   <script src="js/core/bootstrap-material-design.min.js"></script>
@@ -382,7 +219,8 @@
       });
     });
   </script>
-  <script>
+
+      <script>
           const identity = document.cookie.substr(9, document.cookie.length)
       console.log("IDENTITY: " + identity + " length: " + identity.length)
       if (identity.toString() == "Contractor_Users") {
@@ -414,6 +252,69 @@
       md.initDashboardPageCharts();
     });
   </script>
+
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      const args = <%- JSON.stringify(args) %>;
+      if(args){
+
+        console.log("arguments : ", args);
+
+          var data = args;
+
+          var _table_ = document.createElement('table'),
+              _tr_ = document.createElement('tr'),
+              _th_ = document.createElement('th'),
+              _td_ = document.createElement('td');
+
+// Builds the HTML Table out of myList json data from Ivy restful service.
+          function buildHtmlTable(arr) {
+              var table = _table_.cloneNode(false),
+                  columns = addAllColumnHeaders(arr, table);
+              for (var i = 0, maxi = arr.length; i < maxi; ++i) {
+                  var tr = _tr_.cloneNode(false);
+                  for (var j = 0, maxj = columns.length; j < maxj; ++j) {
+                      var td = _td_.cloneNode(false);
+                      cellValue = arr[i][columns[j]];
+                      td.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+                      tr.appendChild(td);
+                  }
+                  table.appendChild(tr);
+              }
+              return table;
+          }
+
+
+// Adds a header row to the table and returns the set of columns.
+// Need to do union of keys from all records as some records may not contain
+// all records
+          function addAllColumnHeaders(arr, table) {
+              var columnSet = [],
+                  tr = _tr_.cloneNode(false);
+              for (var i = 0, l = arr.length; i < l; i++) {
+                  for (var key in arr[i]) {
+                      if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key) === -1) {
+                          columnSet.push(key);
+                          var th = _th_.cloneNode(false);
+                          th.appendChild(document.createTextNode(key));
+                          tr.appendChild(th);
+                      }
+                  }
+              }
+              table.appendChild(tr);
+              return columnSet;
+          }
+          document.getElementById('container').appendChild(buildHtmlTable(args));
+      }else{
+        console.log("EEROR ACCRUED")
+      }
+    });
+
+  </script>
+
 </body>
 
 </html>
