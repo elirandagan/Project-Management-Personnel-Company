@@ -32,70 +32,70 @@
       <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
           GLEM TECH
         </a></div>
-        <div class="sidebar-wrapper">
-          <ul class="nav">
-            <li class="nav-item">
-              <a class="nav-link" href="./dashboard">
-                <i class="material-icons">dashboard</i>
-                <p>Dashboard</p>
-              </a>
-            </li>
-            <li class="nav-item" id="shifts">
-              <a class="nav-link" href="./shifts">
-                <i class="material-icons">content_paste</i>
-                <p>Shifts</p>
-              </a>
-            </li>
-            <li class="nav-item " id="workHistory">
-              <a class="nav-link" href="./workHistory">
-                <i class="material-icons">library_books</i>
-                <p>Work History</p>
-              </a>
-            </li>
-            <li class="nav-item " id="absences">
-              <a class="nav-link" href="./absences">
-                <i class="material-icons">content_paste</i>
-                <p>Absences</p>
-              </a>
-            </li>
-            <li class="nav-item " id="userProfile">
-              <a class="nav-link" href="./user">
-                <i class="material-icons">person</i>
-                <p>User Profile</p>
-              </a>
-            </li>
-            <li class="nav-item " id="recruit">
-              <a class="nav-link" href="./recruit">
-                <i class="material-icons">person</i>
-                <p>Recruit</p>
-              </a>
-            </li>
-            <li class="nav-item active" id="trackingWorkers">
-              <a class="nav-link" href="./trackingWorkers">
-                <i class="material-icons">person</i>
-                <p>Tracking Workers</p>
-              </a>
-            </li>
-            <li class="nav-item " id="statistics">
-              <a class="nav-link" href="./statistics">
-                <i class="material-icons">person</i>
-                <p>Statistics</p>
-              </a>
-            </li>
-            <li class="nav-item " id="searchWorker">
-              <a class="nav-link" href="./searchWorker">
-                <i class="material-icons">person</i>
-                <p>Search Worker</p>
-              </a>
-            </li>
-            <li class="nav-item " id="hiringHistory">
-              <a class="nav-link" href="./hiringHistory">
-                <i class="material-icons">person</i>
-                <p>Hiring History</p>
-              </a>
-            </li>
-          </ul>
-          </div>
+      <div class="sidebar-wrapper">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="./dashboard">
+              <i class="material-icons">dashboard</i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-item" id="shifts">
+            <a class="nav-link" href="./shifts">
+              <i class="material-icons">content_paste</i>
+              <p>Shifts</p>
+            </a>
+          </li>
+          <li class="nav-item " id="workHistory">
+            <a class="nav-link" href="./workHistory">
+              <i class="material-icons">library_books</i>
+              <p>Work History</p>
+            </a>
+          </li>
+          <li class="nav-item " id="absences">
+            <a class="nav-link" href="./absences">
+              <i class="material-icons">content_paste</i>
+              <p>Absences</p>
+            </a>
+          </li>
+          <li class="nav-item " id="userProfile">
+            <a class="nav-link" href="./user">
+              <i class="material-icons">person</i>
+              <p>User Profile</p>
+            </a>
+          </li>
+          <li class="nav-item " id="recruit">
+            <a class="nav-link" href="./recruit">
+              <i class="material-icons">person</i>
+              <p>Recruit</p>
+            </a>
+          </li>
+          <li class="nav-item active" id="trackingWorkers">
+            <a class="nav-link" href="./trackingWorkers">
+              <i class="material-icons">person</i>
+              <p>Tracking Workers</p>
+            </a>
+          </li>
+          <li class="nav-item " id="statistics">
+            <a class="nav-link" href="./statistics">
+              <i class="material-icons">person</i>
+              <p>Statistics</p>
+            </a>
+          </li>
+          <li class="nav-item " id="searchWorker">
+            <a class="nav-link" href="./searchWorker">
+              <i class="material-icons">person</i>
+              <p>Search Worker</p>
+            </a>
+          </li>
+          <li class="nav-item " id="hiringHistory">
+            <a class="nav-link" href="./hiringHistory">
+              <i class="material-icons">person</i>
+              <p>Hiring History</p>
+            </a>
+          </li>
+        </ul>
+      </div>
     </div>
     <div class="main-panel">
       <!-- Navbar -->
@@ -150,7 +150,7 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
                   <a class="dropdown-item fa fa-sign-out" href="\" id="logout_btn">
-                    <span style="margin-left: 6px;"> Logout </span> 
+                    <span style="margin-left: 6px;"> Logout </span>
                   </a>
                 </div>
               </li>
@@ -200,7 +200,7 @@
       </script>
     </div>
   </div>
-  
+
   </div>
   <!--   Core JS Files   -->
   <script src="js/core/jquery.min.js"></script>
@@ -383,39 +383,56 @@
     });
   </script>
   <script>
-
-const identity = document.cookie.substr(9, document.cookie.length)
-      console.log("IDENTITY: " + identity + " length: " + identity.length)
-      if (identity.toString() == "Contractor_Users") {
-        document.getElementById("recruit").style.display = "none";
-        document.getElementById("trackingWorkers").style.display = "none";
-        document.getElementById("statistics").style.display = "none";
-        document.getElementById("searchWorker").style.display = "none";
-        document.getElementById("hiringHistory").style.display = "none";
-      }
-      else if (identity.toString() == "HR_Users") {
-        document.getElementById("shifts").style.display = "none";
-        document.getElementById("workHistory").style.display = "none";
-        document.getElementById("absences").style.display = "none";
-        document.getElementById("userProfile").style.display = "none";
-        document.getElementById("searchWorker").style.display = "none";
-        document.getElementById("hiringHistory").style.display = "none";
-      }
-      else if (identity.toString() == "Employer_Users") {
-        document.getElementById("shifts").style.display = "none";
-        document.getElementById("workHistory").style.display = "none";
-        document.getElementById("absences").style.display = "none";
-        document.getElementById("userProfile").style.display = "none";
-        document.getElementById("recruit").style.display = "none";
-        document.getElementById("trackingWorkers").style.display = "none";
-        document.getElementById("statistics").style.display = "none";
-      }
-
     $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
+      const user = getCookie("user")
+      const identity = getCookie("identity")
+      console.log(user.expertise);
+      console.log(identity);
 
-    });
+      console.log("IDENTITY: " + identity + " length: " + identity.length)
+      if (identity === "Contractor_Users") {
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity === "HR_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity === "Employer_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+      }
+    })
+  </script>
+  <script>
+      function getCookie(name) {
+        const value = "; " + document.cookie;
+        const parts = value.split("; " + name + "=");
+        if (parts.length == 2) {
+          const vlu = parts.pop().split(";").shift();
+          const decode_vlu = decodeURIComponent(vlu);
+          const replace_vlu = decode_vlu.replace(/[+]/, ' ');
+          const temp = replace_vlu.split(',')
+          if (temp.length > 1)
+            return JSON.parse(replace_vlu.replace("j:", ""));
+          else
+            return replace_vlu
+        }
+        else
+          return '';
+      }
   </script>
 </body>
 
