@@ -89,9 +89,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     const user = await mongoDbFunction.findOneByIdentity(req.body.userName, req.body.password, req.body.identity)
                     // console.log("user", user);
                     // const userInfo = { identity: req.body.identity, user: user['ID']}
-                    console.log("*****");
-                    console.log("user", user);
-                    console.log("*****");
+                    // console.log("*****");
+                    // console.log("user", user);
+                    // console.log("*****");
                     res.cookie("user", user, { maxAge: 900000, httpOnly: false });
                     res.cookie("identity", req.body.identity, { maxAge: 900000, httpOnly: false });
                     res.status(200).render("dashboard", { exist: "invalidID" });
@@ -370,11 +370,35 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log("expertises :" + expertises);
             console.log("*****");
 
+
             res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments, expertises: expertises });
         });
 
         router.get("/trackingWorkers", function (req, res) {
-            res.status(200).render("trackingWorkers");
+            res.status(200).render("trackingWorkers", { status: "init", worker: "" });
+        });
+
+        router.post("/trackingWorkers", async (req, res) => {
+            console.log('********');
+            console.log(" in trackingWorkers post ");
+            console.log("ID", req.body["id-text"]);
+            console.log('********');
+
+            try {
+                let result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
+                result = await result;
+                console.log('*****');
+                console.log(result);
+                console.log('*****');
+                if (!result)
+                    res.status(200).render("trackingWorkers", { status: "Not Found", worker: req.body["id-text"] });
+                else
+                    res.status(200).render("trackingWorkers", { status: "Success", worker: result });
+
+            } catch (error) {
+                console.error(error)
+                throw error
+            }
         });
 
         router.get("/searchWorker", function (req, res) {
