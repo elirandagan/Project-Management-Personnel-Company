@@ -295,8 +295,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         }
 
         async function getRecruitments() {
-            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
-            const projection = { createAt: 1, _id: 0 }; //can be added to find()
+            const query = { startWork: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
+            const projection = { startWork: 1, _id: 0 }; //can be added to find()
             var reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
             try {
@@ -306,8 +306,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 // the value indicates the amount of recruitments per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
                     var nextDate = new Date(d.getDate() + 1);
-                    if (d <= result[i]["createAt"] <= nextDate) {
-                        var day = result[i]["createAt"].getDate() - 1;
+                    if (d <= result[i]["startWork"] <= nextDate) {
+                        var day = result[i]["startWork"].getDate() - 1;
                         ++reqs[day];
                     }
                 }
