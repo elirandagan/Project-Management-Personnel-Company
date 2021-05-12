@@ -2,318 +2,389 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <link rel="GLEM-touch-icon" sizes="76x76" href="img/Logo.png">
-  <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>
-    Glem-Tech
-  </title>
-  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
-    name='viewport' />
-  <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css"
-    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-  <!-- CSS Files -->
-  <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
-  <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link href="demo/demo.css" rel="stylesheet" />
+    <meta charset="utf-8"/>
+    <link rel="GLEM-touch-icon" sizes="76x76" href="img/Logo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>
+        Glem-Tech
+    </title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+          name='viewport'/>
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css"
+          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <!-- CSS Files -->
+    <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="demo/demo.css" rel="stylesheet"/>
     <style>
         th, td {
-            border: 1px solid;
+            border: 1px solid white;
+            font-size: 20px;
+            text-align: center;
+            padding: 5px;
         }
+
         th {
-            font-weight : bold;
+            font-weight: bold;
+            color: white;
         }
-        #container{
+
+        td {
+            color: whitesmoke;
+        }
+
+        #container {
             margin: auto;
             width: 50%;
             border: 3px;
             padding: 10px;
         }
+
+        .checked {
+            color: orange;
+        }
     </style>
 </head>
 
 <body class="dark-edition">
-  <div class="wrapper ">
-      <div id="container"></div>
+<div class="wrapper ">
+    <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-2.jpg">
+        <!--
+          Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
-      <!--   Core JS Files   -->
-  <script src="js/core/jquery.min.js"></script>
-  <script src="js/core/popper.min.js"></script>
-  <script src="js/core/bootstrap-material-design.min.js"></script>
-  <script src="https://unpkg.com/default-passive-events"></script>
-  <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
-  <!-- Place this tag in your head or just before your close body tag. -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!--  Google Maps Plugin    -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-  <!-- Chartist JS -->
-  <script src="js/plugins/chartist.min.js"></script>
-  <!--  Notifications Plugin    -->
-  <script src="js/plugins/bootstrap-notify.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="js/material-dashboard.js?v=2.1.0"></script>
-  <!-- Material Dashboard DEMO methods, don't include it in your project! -->
-  <script src="demo/demo.js"></script>
-  <script>
-    $(document).ready(function () {
-      $().ready(function () {
-        $sidebar = $('.sidebar');
-
-        $sidebar_img_container = $sidebar.find('.sidebar-background');
-
-        $full_page = $('.full-page');
-
-        $sidebar_responsive = $('body > .navbar-collapse');
-
-        window_width = $(window).width();
-
-        $('.fixed-plugin a').click(function (event) {
-          // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
-          if ($(this).hasClass('switch-trigger')) {
-            if (event.stopPropagation) {
-              event.stopPropagation();
-            } else if (window.event) {
-              window.event.cancelBubble = true;
-            }
-          }
-        });
-
-        $('.fixed-plugin .active-color span').click(function () {
-          $full_page_background = $('.full-page-background');
-
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
-
-          var new_color = $(this).data('color');
-
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-color', new_color);
-          }
-
-          if ($full_page.length != 0) {
-            $full_page.attr('filter-color', new_color);
-          }
-
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.attr('data-color', new_color);
-          }
-        });
-
-        $('.fixed-plugin .background-color .badge').click(function () {
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
-
-          var new_color = $(this).data('background-color');
-
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-background-color', new_color);
-          }
-        });
-
-        $('.fixed-plugin .img-holder').click(function () {
-          $full_page_background = $('.full-page-background');
-
-          $(this).parent('li').siblings().removeClass('active');
-          $(this).parent('li').addClass('active');
+          Tip 2: you can also add an image using data-image tag
+      -->
+        <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
+                GLEM TECH
+            </a></div>
+        <div class="sidebar-wrapper">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="./dashboard">
+                        <i class="material-icons">dashboard</i>
+                        <p>Dashboard</p>
+                    </a>
+                </li>
+                <li class="nav-item " id="searchWorker">
+                    <a class="nav-link" href="./searchWorker">
+                        <i class="material-icons">person</i>
+                        <p>Search Worker</p>
+                    </a>
+                </li>
+                <li class="nav-item " id="hiringHistory">
+                    <a class="nav-link" href="./hiringHistory">
+                        <i class="material-icons">person</i>
+                        <p>Hiring History</p>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
 
 
-          var new_image = $(this).find("img").attr('src');
+    <div id="container"></div>
 
-          if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            $sidebar_img_container.fadeOut('fast', function () {
-              $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-              $sidebar_img_container.fadeIn('fast');
+    <!--   Core JS Files   -->
+    <script src="js/core/jquery.min.js"></script>
+    <script src="js/core/popper.min.js"></script>
+    <script src="js/core/bootstrap-material-design.min.js"></script>
+    <script src="https://unpkg.com/default-passive-events"></script>
+    <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--  Google Maps Plugin    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+    <!-- Chartist JS -->
+    <script src="js/plugins/chartist.min.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="js/plugins/bootstrap-notify.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="js/material-dashboard.js?v=2.1.0"></script>
+    <!-- Material Dashboard DEMO methods, don't include it in your project! -->
+    <script src="demo/demo.js"></script>
+    <script>
+        $(document).ready(function () {
+            $().ready(function () {
+                $sidebar = $('.sidebar');
+
+                $sidebar_img_container = $sidebar.find('.sidebar-background');
+
+                $full_page = $('.full-page');
+
+                $sidebar_responsive = $('body > .navbar-collapse');
+
+                window_width = $(window).width();
+
+                $('.fixed-plugin a').click(function (event) {
+                    // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
+                    if ($(this).hasClass('switch-trigger')) {
+                        if (event.stopPropagation) {
+                            event.stopPropagation();
+                        } else if (window.event) {
+                            window.event.cancelBubble = true;
+                        }
+                    }
+                });
+
+                $('.fixed-plugin .active-color span').click(function () {
+                    $full_page_background = $('.full-page-background');
+
+                    $(this).siblings().removeClass('active');
+                    $(this).addClass('active');
+
+                    var new_color = $(this).data('color');
+
+                    if ($sidebar.length != 0) {
+                        $sidebar.attr('data-color', new_color);
+                    }
+
+                    if ($full_page.length != 0) {
+                        $full_page.attr('filter-color', new_color);
+                    }
+
+                    if ($sidebar_responsive.length != 0) {
+                        $sidebar_responsive.attr('data-color', new_color);
+                    }
+                });
+
+                $('.fixed-plugin .background-color .badge').click(function () {
+                    $(this).siblings().removeClass('active');
+                    $(this).addClass('active');
+
+                    var new_color = $(this).data('background-color');
+
+                    if ($sidebar.length != 0) {
+                        $sidebar.attr('data-background-color', new_color);
+                    }
+                });
+
+                $('.fixed-plugin .img-holder').click(function () {
+                    $full_page_background = $('.full-page-background');
+
+                    $(this).parent('li').siblings().removeClass('active');
+                    $(this).parent('li').addClass('active');
+
+
+                    var new_image = $(this).find("img").attr('src');
+
+                    if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+                        $sidebar_img_container.fadeOut('fast', function () {
+                            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+                            $sidebar_img_container.fadeIn('fast');
+                        });
+                    }
+
+                    if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+                        var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+                        $full_page_background.fadeOut('fast', function () {
+                            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+                            $full_page_background.fadeIn('fast');
+                        });
+                    }
+
+                    if ($('.switch-sidebar-image input:checked').length == 0) {
+                        var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
+                        var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+
+                        $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+                        $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+                    }
+
+                    if ($sidebar_responsive.length != 0) {
+                        $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
+                    }
+                });
+
+                $('.switch-sidebar-image input').change(function () {
+                    $full_page_background = $('.full-page-background');
+
+                    $input = $(this);
+
+                    if ($input.is(':checked')) {
+                        if ($sidebar_img_container.length != 0) {
+                            $sidebar_img_container.fadeIn('fast');
+                            $sidebar.attr('data-image', '#');
+                        }
+
+                        if ($full_page_background.length != 0) {
+                            $full_page_background.fadeIn('fast');
+                            $full_page.attr('data-image', '#');
+                        }
+
+                        background_image = true;
+                    } else {
+                        if ($sidebar_img_container.length != 0) {
+                            $sidebar.removeAttr('data-image');
+                            $sidebar_img_container.fadeOut('fast');
+                        }
+
+                        if ($full_page_background.length != 0) {
+                            $full_page.removeAttr('data-image', '#');
+                            $full_page_background.fadeOut('fast');
+                        }
+
+                        background_image = false;
+                    }
+                });
+
+                $('.switch-sidebar-mini input').change(function () {
+                    $body = $('body');
+
+                    $input = $(this);
+
+                    if (md.misc.sidebar_mini_active == true) {
+                        $('body').removeClass('sidebar-mini');
+                        md.misc.sidebar_mini_active = false;
+
+                        $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+
+                    } else {
+
+                        $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
+
+                        setTimeout(function () {
+                            $('body').addClass('sidebar-mini');
+
+                            md.misc.sidebar_mini_active = true;
+                        }, 300);
+                    }
+
+                    // we simulate the window Resize so the charts will get updated in realtime.
+                    var simulateWindowResize = setInterval(function () {
+                        window.dispatchEvent(new Event('resize'));
+                    }, 180);
+
+                    // we stop the simulation of Window Resize after the animations are completed
+                    setTimeout(function () {
+                        clearInterval(simulateWindowResize);
+                    }, 1000);
+
+                });
             });
-          }
-
-          if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $full_page_background.fadeOut('fast', function () {
-              $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-              $full_page_background.fadeIn('fast');
-            });
-          }
-
-          if ($('.switch-sidebar-image input:checked').length == 0) {
-            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-          }
-
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
-          }
         });
+    </script>
 
-        $('.switch-sidebar-image input').change(function () {
-          $full_page_background = $('.full-page-background');
-
-          $input = $(this);
-
-          if ($input.is(':checked')) {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar_img_container.fadeIn('fast');
-              $sidebar.attr('data-image', '#');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page_background.fadeIn('fast');
-              $full_page.attr('data-image', '#');
-            }
-
-            background_image = true;
-          } else {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar.removeAttr('data-image');
-              $sidebar_img_container.fadeOut('fast');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page.removeAttr('data-image', '#');
-              $full_page_background.fadeOut('fast');
-            }
-
-            background_image = false;
-          }
+    <script>
+        const identity = document.cookie.substr(9, document.cookie.length)
+        console.log("IDENTITY: " + identity + " length: " + identity.length)
+        if (identity.toString() == "Contractor_Users") {
+            document.getElementById("recruit").style.display = "none";
+            document.getElementById("trackingWorkers").style.display = "none";
+            document.getElementById("statistics").style.display = "none";
+            document.getElementById("searchWorker").style.display = "none";
+            document.getElementById("hiringHistory").style.display = "none";
+        } else if (identity.toString() == "HR_Users") {
+            document.getElementById("shifts").style.display = "none";
+            document.getElementById("workHistory").style.display = "none";
+            document.getElementById("absences").style.display = "none";
+            document.getElementById("userProfile").style.display = "none";
+            document.getElementById("searchWorker").style.display = "none";
+            document.getElementById("hiringHistory").style.display = "none";
+        } else if (identity.toString() == "Employer_Users") {
+            document.getElementById("shifts").style.display = "none";
+            document.getElementById("workHistory").style.display = "none";
+            document.getElementById("absences").style.display = "none";
+            document.getElementById("userProfile").style.display = "none";
+            document.getElementById("recruit").style.display = "none";
+            document.getElementById("trackingWorkers").style.display = "none";
+            document.getElementById("statistics").style.display = "none";
+        }
+        $(document).ready(function () {
+            // Javascript method's body can be found in assets/js/demos.js
+            md.initDashboardPageCharts();
         });
+    </script>
 
-        $('.switch-sidebar-mini input').change(function () {
-          $body = $('body');
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 
-          $input = $(this);
+    <script>
+        $(document).ready(function () {
+            const args = <%- JSON.stringify(args) %>;
+            if (args) {
 
-          if (md.misc.sidebar_mini_active == true) {
-            $('body').removeClass('sidebar-mini');
-            md.misc.sidebar_mini_active = false;
+                const newArr = args.map(({_id, ...rest}) => ({...rest}))
 
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
 
-          } else {
-
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
-
-            setTimeout(function () {
-              $('body').addClass('sidebar-mini');
-
-              md.misc.sidebar_mini_active = true;
-            }, 300);
-          }
-
-          // we simulate the window Resize so the charts will get updated in realtime.
-          var simulateWindowResize = setInterval(function () {
-            window.dispatchEvent(new Event('resize'));
-          }, 180);
-
-          // we stop the simulation of Window Resize after the animations are completed
-          setTimeout(function () {
-            clearInterval(simulateWindowResize);
-          }, 1000);
-
-        });
-      });
-    });
-  </script>
-
-      <script>
-          const identity = document.cookie.substr(9, document.cookie.length)
-      console.log("IDENTITY: " + identity + " length: " + identity.length)
-      if (identity.toString() == "Contractor_Users") {
-        document.getElementById("recruit").style.display = "none";
-        document.getElementById("trackingWorkers").style.display = "none";
-        document.getElementById("statistics").style.display = "none";
-        document.getElementById("searchWorker").style.display = "none";
-        document.getElementById("hiringHistory").style.display = "none";
-      }
-      else if (identity.toString() == "HR_Users") {
-        document.getElementById("shifts").style.display = "none";
-        document.getElementById("workHistory").style.display = "none";
-        document.getElementById("absences").style.display = "none";
-        document.getElementById("userProfile").style.display = "none";
-        document.getElementById("searchWorker").style.display = "none";
-        document.getElementById("hiringHistory").style.display = "none";
-      }
-      else if (identity.toString() == "Employer_Users") {
-        document.getElementById("shifts").style.display = "none";
-        document.getElementById("workHistory").style.display = "none";
-        document.getElementById("absences").style.display = "none";
-        document.getElementById("userProfile").style.display = "none";
-        document.getElementById("recruit").style.display = "none";
-        document.getElementById("trackingWorkers").style.display = "none";
-        document.getElementById("statistics").style.display = "none";
-      }
-    $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
-    });
-  </script>
-
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-
-  <script>
-    $(document).ready(function () {
-      const args = <%- JSON.stringify(args) %>;
-      if(args){
-
-        console.log("arguments : ", args);
-
-          var data = args;
-
-          var _table_ = document.createElement('table'),
-              _tr_ = document.createElement('tr'),
-              _th_ = document.createElement('th'),
-              _td_ = document.createElement('td');
+                var _table_ = document.createElement('table'),
+                    _tr_ = document.createElement('tr'),
+                    _th_ = document.createElement('th'),
+                    _td_ = document.createElement('td');
 
 // Builds the HTML Table out of myList json data from Ivy restful service.
-          function buildHtmlTable(arr) {
-              var table = _table_.cloneNode(false),
-                  columns = addAllColumnHeaders(arr, table);
-              for (var i = 0, maxi = arr.length; i < maxi; ++i) {
-                  var tr = _tr_.cloneNode(false);
-                  for (var j = 0, maxj = columns.length; j < maxj; ++j) {
-                      var td = _td_.cloneNode(false);
-                      cellValue = arr[i][columns[j]];
-                      td.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
-                      tr.appendChild(td);
-                  }
-                  table.appendChild(tr);
-              }
-              return table;
-          }
+                function buildHtmlTable(arr) {
+                    table = _table_.cloneNode(false), columns = addAllColumnHeaders(arr, table);
+                    for (var i = 0, maxi = arr.length; i < maxi; ++i) {
+                        tr = _tr_.cloneNode(false);
+                        for (var j = 0, maxj = columns.length; j < maxj; ++j) {
+                            td = _td_.cloneNode(false);
+                            cellValue = arr[i][columns[j]];
+                            td.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+                            tr.appendChild(td);
+                        }
+                        table.appendChild(tr);
+                    }
+                    return table;
+                }
 
 
 // Adds a header row to the table and returns the set of columns.
 // Need to do union of keys from all records as some records may not contain
 // all records
-          function addAllColumnHeaders(arr, table) {
-              var columnSet = [],
-                  tr = _tr_.cloneNode(false);
-              for (var i = 0, l = arr.length; i < l; i++) {
-                  for (var key in arr[i]) {
-                      if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key) === -1) {
-                          columnSet.push(key);
-                          var th = _th_.cloneNode(false);
-                          th.appendChild(document.createTextNode(key));
-                          tr.appendChild(th);
-                      }
-                  }
-              }
-              table.appendChild(tr);
-              return columnSet;
-          }
-          document.getElementById('container').appendChild(buildHtmlTable(args));
-      }else{
-        console.log("EEROR ACCRUED")
-      }
-    });
+                function addAllColumnHeaders(arr, table) {
+                    var columnSet = [],
+                        tr = _tr_.cloneNode(false);
+                    for (var i = 0, l = arr.length; i < l; i++) {
+                        for (var key in arr[i]) {
+                            if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key) === -1) {
+                                columnSet.push(key);
+                                var th = _th_.cloneNode(false);
+                                th.appendChild(document.createTextNode(key));
+                                tr.appendChild(th);
+                            }
+                        }
+                    }
+                    key = "rateButton"
+                    columnSet.push(key);
+                    _th_ = document.createElement('th')
+                    th = _th_.cloneNode(false);
+                    th.id = 'thBtn'
+                    th.appendChild(document.createTextNode(key));
+                    tr.appendChild(th);
+                    table.appendChild(tr);
+                    return columnSet;
+                }
 
-  </script>
+                document.getElementById('container').appendChild(buildHtmlTable(newArr));
+
+                for (var i = 1; i < newArr.length + 1; i++) {
+                    var x = table.rows[i].cells[7];
+                    btn = document.createElement('button')
+                    btn.innerText = "rate here"
+                    btn.id = args[i - 1]._id + `#row[${i}]cells[5]`
+                    btn.onclick = (e) => {
+                        var split = e.target.id.split("#")
+                        const shiftsId = split[0]
+                        placeInTable = split[1]
+                        console.log(shiftsId)
+                        console.log(placeInTable)
+                        myWindow = window.open("/rating", "", "width=400,height=400");
+                        myWindow.name = split
+                    }
+                    btn.name = ""
+                    x.append(btn);
+                }
+            } else {
+                console.log("EEROR ACCRUED")
+            }
+        });
+
+    </script>
 
 </body>
 

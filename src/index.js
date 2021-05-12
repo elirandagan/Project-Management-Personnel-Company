@@ -439,6 +439,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
         });
 
+        router.get("/rating", function (req, res) {
+            res.status(200).render("rating")
+        });
+
+
+
         //add the router
         app.use("/", router);
     })
