@@ -92,8 +92,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     console.log("*****");
                     console.log("user", user);
                     console.log("*****");
-                    res.cookie("user", user, { maxAge: 900000, httpOnly: false });
-                    res.cookie("identity", req.body.identity, { maxAge: 900000, httpOnly: false });
+                    res.cookie("user", user, { maxAge: 9000000, httpOnly: false });
+                    res.cookie("identity", req.body.identity, { maxAge: 9000000, httpOnly: false });
                     res.status(200).render("dashboard", { exist: "invalidID" });
 
                 } else if ("userNameNotExist" === returnValue) {
@@ -168,10 +168,47 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
         });
 
-        router.get("/shifts", function (req, res) {
-            if (validateUser) {
-                res.status(200).render("shifts");
+        router.get("/shifts", async (req, res) => {
+            const query = { cwId: req.cookies.user.ID };
+            const projection = {_id:0,cwId:0,rating:0}
+            console.log(query);
+
+            try {
+                var shifts = Shifts_Collection.find(query).project(projection).sort({startWork:-1})
+                shifts = await shifts.toArray()
+                for (let i=0;i<shifts.length;++i){
+                    var start=new Date(shifts[i].startWork)
+                    var done=new Date(shifts[i].startWork)
+                    startMonth=start.getMonth()+ 1;
+                    doneMonth=done.getMonth()+ 1
+                    shifts[i].startWork=start.getUTCDate() +'/'+startMonth +'/'+start.getFullYear()
+                    shifts[i].doneWork=start.getUTCDate() +'/'+doneMonth +'/'+start.getFullYear()
+
+                    if (start.getUTCMinutes()<10){
+                        shifts[i].startHour=start.getUTCHours() + ":0" + start.getUTCMinutes();
+                    }
+                    else{
+                        shifts[i].startHour=start.getUTCHours() + ":" + start.getUTCMinutes();
+                    }
+                    if(done.getUTCMinutes() < 10){
+                        shifts[i].doneHour=done.getUTCHours() + ":0" + done.getUTCMinutes();
+                    }
+                    else{
+                        shifts[i].doneHour=done.getUTCHours() + ":" + done.getUTCMinutes();
+                    }
+                }
+                console.log("**Before***");
+                console.log(shifts);
+                console.log("*****");
+                
+                if (validateUser) {
+                    res.status(200).render("shifts",  {shifts:shifts} );
+                }
+            } catch (error) {
+                console.error(error)
+                throw error
             }
+
         });
 
         router.get("/absences", function (req, res) {
@@ -373,7 +410,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments, expertises: expertises });
         });
 
-        router.get("/trackingWorkers", function (req, res) {
+
+        router.get("/trackingWorkers", async function (req, res) {
             res.status(200).render("trackingWorkers");
         });
 
@@ -383,15 +421,15 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/hiringHistory", function (req, res) {
             console.log("router get")
-            Shifts_Collection.find().toArray().then((schema)=>{
+            Shifts_Collection.find().toArray().then((schema) => {
                 console.log("schema : " + JSON.stringify(schema))
-                schema ? res.status(200).render("hiringHistory", {args:schema}) : console.error("shifts empty")
+                schema ? res.status(200).render("hiringHistory", { args: schema }) : console.error("shifts empty")
             })
         });
 
         router.post("/hiringHistory", function (req, res) {
             console.log("router post")
-            res.status(200).render("hiringHistory",{arguments:"router post"});
+            res.status(200).render("hiringHistory", { arguments: "router post" });
         });
 
         router.get("/dashboard", function (req, res) {

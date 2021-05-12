@@ -23,7 +23,7 @@
 </head>
 
 <body class="dark-edition">
-  <div class="wrapper ">
+  <div class="wrapper">
     <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-2.jpg">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
@@ -169,244 +169,45 @@
       </nav>
       <!-- End Navbar -->
       <div class="content ">
-      
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div class="card card-profile" style="border-radius: 15px;padding: 0.6rem;margin: 1rem 0;">
-              <div class="row">
-                <div class="col-md-1">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">Where: </label>
-                  </div>
+        <div class="container">
+        <%for (let i=0,len=shifts.length;len>i;++i) { %>
+        <div class="row ">
+          <div class="card col-md-8" style="border-radius: 15px;padding: 0.6rem;margin: 1rem 0;">
+            <div class="row ">
+          <%for (const item in shifts[i]) {%>
+            <!-- <label class="bmd-label-floating" style="font-size: 16px;"><%= item %> : <%= shifts[i][item]%> </label> -->
+            <% if( item  =='where'){%>
+              <div class="col">
+                  <label class="bmd-label-floating" style="font-size: 16px;" ><%=item%> : <%= shifts[i][item]%> </label>
                 </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">Date: </label>
-                  </div>
-                </div>
-                <div class="col-md-0">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">Status:
-                    </label>
-                  </div>
-                </div>
+            <%}%>
+            <% if( item  =='startWork'){%>
+              <div class="col">
+                <label class="bmd-label-floating" style="font-size: 16px;" ><%=item%> :<%= shifts[i][item]%> </label>
               </div>
-              <div class="row">
-                <div class="col-md-1">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">By: </label>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="expertise" style="font-size: 18px;">Company: </label>
-                  </div>
-                </div>
-                <div class="col-md-1">
-                  <div class="row">
-                    <div class="form-group">
-                      <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
-                        style="padding: 0 !important;margin: 0 !important;">
-                        <i class="material-icons"
-                          style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
-                      </button>
-                      <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
-                        style="padding: 0 !important;margin: 0 !important;">
-                        <i class="material-icons"
-                          style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <%}%>
           </div>
-          <div class="col-md-3">
-            <div class="card card-profile" style="border-radius: 15px;margin: 1rem 0;">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">From :
-                      12:30</label>
-                  </div>
+          <div class="row">
+            <% if( item  =='status'){%>
+              <div class="col">
+                  <label class="bmd-label-floating" style="font-size: 16px;" ><%=item%> :<%= shifts[i][item]%> </label>
                 </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <label class="bmd-label-floating" style="font-size: 18px;margin-bottom: -0.5rem;">To :
-                    17:00</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <button type="submit" class="update-btn btn btn-primary btn-sm"
-                      style="font-size: 0.8rem;border-radius: 15px;">Report</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div class="card card-profile" style="border-radius: 15px;padding: 0.6rem;margin: 1rem 0;">
-              <div class="row">
-                <div class="col-md-1">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">Where: </label>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">Date: </label>
-                  </div>
-                </div>
-                <div class="col-md-0">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">Status:
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-1">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">By: </label>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="expertise" style="font-size: 18px;">Company: </label>
-                  </div>
-                </div>
-                <div class="col-md-1">
-                  <div class="row">
-                    <div class="form-group">
-                      <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
-                        style="padding: 0 !important;margin: 0 !important;">
-                        <i class="material-icons"
-                          style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
-                      </button>
-                      <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
-                        style="padding: 0 !important;margin: 0 !important;">
-                        <i class="material-icons"
-                          style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            <%}%>
+            <% if( item  =='employerId'){%>
+              <div class="col">
+              <label class="bmd-label-floating" style="font-size: 16px;" ><%=item%> :<%= shifts[i][item]%> </label>
             </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card card-profile" style="border-radius: 15px;margin: 1rem 0;">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">From :
-                      12:30</label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <label class="bmd-label-floating" style="font-size: 18px;margin-bottom: -0.5rem;">To :
-                    17:00</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <button type="submit" class="update-btn btn btn-primary btn-sm"
-                      style="font-size: 0.8rem;border-radius: 15px;">Report</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <div class="row justify-content-center">
-          <div class="col-md-8">
-            <div class="card card-profile" style="border-radius: 15px;padding: 0.6rem;margin: 1rem 0;">
-              <div class="row">
-                <div class="col-md-1">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">Where: </label>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">Date: </label>
-                  </div>
-                </div>
-                <div class="col-md-0">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">Status:
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-1">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">By: </label>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="form-group">
-                    <label for="expertise" style="font-size: 18px;">Company: </label>
-                  </div>
-                </div>
-                <div class="col-md-1">
-                  <div class="row">
-                    <div class="form-group">
-                      <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
-                        style="padding: 0 !important;margin: 0 !important;">
-                        <i class="material-icons"
-                          style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
-                      </button>
-                      <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
-                        style="padding: 0 !important;margin: 0 !important;">
-                        <i class="material-icons"
-                          style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-3">
-            <div class="card card-profile" style="border-radius: 15px;margin: 1rem 0;">
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <label class="bmd-label-floating" style="font-size: 18px;">From :
-                      12:30</label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <label class="bmd-label-floating" style="font-size: 18px;margin-bottom: -0.5rem;">To :
-                    17:00</label>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-12">
-                  <div class="form-group">
-                    <button type="submit" class="update-btn btn btn-primary btn-sm"
-                      style="font-size: 0.8rem;border-radius: 15px;">Report</button>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <%}%>
+            <%}%>
           </div>
         </div>
+        </div>
+        <%}%>
       </div>
+      </div>
+
 
       <footer class="footer">
         <div class="container-fluid">
@@ -440,16 +241,18 @@
           </div>
         </div>
       </footer>
+
       <script>
         const x = new Date().getFullYear();
         let date = document.getElementById('date');
         date.innerHTML = '&copy; ' + x + date.innerHTML;
       </script>
+
     </div>
   </div>
-
-  </div>
   <!--   Core JS Files   -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="js/core/jquery.min.js"></script>
   <script src="js/core/popper.min.js"></script>
   <script src="js/core/bootstrap-material-design.min.js"></script>
@@ -469,200 +272,54 @@
   <script src="demo/demo.js"></script>
   <script>
     $(document).ready(function () {
-      $().ready(function () {
-        $sidebar = $('.sidebar');
+      const user = getCookie("user")
+      const identity = getCookie("identity")
+      console.log(user.expertise);
+      console.log(identity);
 
-        $sidebar_img_container = $sidebar.find('.sidebar-background');
-
-        $full_page = $('.full-page');
-
-        $sidebar_responsive = $('body > .navbar-collapse');
-
-        window_width = $(window).width();
-
-        $('.fixed-plugin a').click(function (event) {
-          // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
-          if ($(this).hasClass('switch-trigger')) {
-            if (event.stopPropagation) {
-              event.stopPropagation();
-            } else if (window.event) {
-              window.event.cancelBubble = true;
-            }
-          }
-        });
-
-        $('.fixed-plugin .active-color span').click(function () {
-          $full_page_background = $('.full-page-background');
-
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
-
-          var new_color = $(this).data('color');
-
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-color', new_color);
-          }
-
-          if ($full_page.length != 0) {
-            $full_page.attr('filter-color', new_color);
-          }
-
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.attr('data-color', new_color);
-          }
-        });
-
-        $('.fixed-plugin .background-color .badge').click(function () {
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
-
-          var new_color = $(this).data('background-color');
-
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-background-color', new_color);
-          }
-        });
-
-        $('.fixed-plugin .img-holder').click(function () {
-          $full_page_background = $('.full-page-background');
-
-          $(this).parent('li').siblings().removeClass('active');
-          $(this).parent('li').addClass('active');
-
-
-          var new_image = $(this).find("img").attr('src');
-
-          if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            $sidebar_img_container.fadeOut('fast', function () {
-              $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-              $sidebar_img_container.fadeIn('fast');
-            });
-          }
-
-          if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $full_page_background.fadeOut('fast', function () {
-              $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-              $full_page_background.fadeIn('fast');
-            });
-          }
-
-          if ($('.switch-sidebar-image input:checked').length == 0) {
-            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-          }
-
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
-          }
-        });
-
-        $('.switch-sidebar-image input').change(function () {
-          $full_page_background = $('.full-page-background');
-
-          $input = $(this);
-
-          if ($input.is(':checked')) {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar_img_container.fadeIn('fast');
-              $sidebar.attr('data-image', '#');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page_background.fadeIn('fast');
-              $full_page.attr('data-image', '#');
-            }
-
-            background_image = true;
-          } else {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar.removeAttr('data-image');
-              $sidebar_img_container.fadeOut('fast');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page.removeAttr('data-image', '#');
-              $full_page_background.fadeOut('fast');
-            }
-
-            background_image = false;
-          }
-        });
-
-        $('.switch-sidebar-mini input').change(function () {
-          $body = $('body');
-
-          $input = $(this);
-
-          if (md.misc.sidebar_mini_active == true) {
-            $('body').removeClass('sidebar-mini');
-            md.misc.sidebar_mini_active = false;
-
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
-
-          } else {
-
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
-
-            setTimeout(function () {
-              $('body').addClass('sidebar-mini');
-
-              md.misc.sidebar_mini_active = true;
-            }, 300);
-          }
-
-          // we simulate the window Resize so the charts will get updated in realtime.
-          var simulateWindowResize = setInterval(function () {
-            window.dispatchEvent(new Event('resize'));
-          }, 180);
-
-          // we stop the simulation of Window Resize after the animations are completed
-          setTimeout(function () {
-            clearInterval(simulateWindowResize);
-          }, 1000);
-
-        });
-      });
-    });
+      if (identity === "Contractor_Users") {
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity === "HR_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity === "Employer_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+      }
+    })
   </script>
   <script>
-
-    const identity = document.cookie.substr(9, document.cookie.length)
-    console.log("IDENTITY: " + identity + " length: " + identity.length)
-    if (identity.toString() == "Contractor_Users") {
-      document.getElementById("recruit").style.display = "none";
-      document.getElementById("trackingWorkers").style.display = "none";
-      document.getElementById("statistics").style.display = "none";
-      document.getElementById("searchWorker").style.display = "none";
-      document.getElementById("hiringHistory").style.display = "none";
+    function getCookie(name) {
+      const value = "; " + document.cookie;
+      const parts = value.split("; " + name + "=");
+      if (parts.length == 2) {
+        const vlu = parts.pop().split(";").shift();
+        const decode_vlu = decodeURIComponent(vlu);
+        const replace_vlu = decode_vlu.replace(/[+]/, ' ');
+        const temp = replace_vlu.split(',')
+        if (temp.length > 1)
+          return JSON.parse(replace_vlu.replace("j:", ""));
+        else
+          return replace_vlu
+      }
+      else
+        return '';
     }
-    else if (identity.toString() == "HR_Users") {
-      document.getElementById("shifts").style.display = "none";
-      document.getElementById("workHistory").style.display = "none";
-      document.getElementById("absences").style.display = "none";
-      document.getElementById("userProfile").style.display = "none";
-      document.getElementById("searchWorker").style.display = "none";
-      document.getElementById("hiringHistory").style.display = "none";
-    }
-    else if (identity.toString() == "Employer_Users") {
-      document.getElementById("shifts").style.display = "none";
-      document.getElementById("workHistory").style.display = "none";
-      document.getElementById("absences").style.display = "none";
-      document.getElementById("userProfile").style.display = "none";
-      document.getElementById("recruit").style.display = "none";
-      document.getElementById("trackingWorkers").style.display = "none";
-      document.getElementById("statistics").style.display = "none";
-    }
-
-    $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
-
-    });
   </script>
 </body>
 
