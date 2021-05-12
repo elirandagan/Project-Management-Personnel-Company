@@ -164,7 +164,35 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/workHistory", function (req, res) {
             if (validateUser) {
-                res.status(200).render("workHistory");
+                const projection = {_id : 0, employerId: 1, startWork: 1, doneWork: 1}
+                Shifts_Collection.find({ cwId : req.cookies.user.ID, status:"approved"}).project(projection).toArray(function(err,result){
+                    if(result.length > 0){
+                        for(let i =0; i < result.length; ++ i){
+                            var start = new Date(result[i].startWork)
+                            var done = new Date(result[i].doneWork)
+                            var date = start.getDay() + "/" + start.getMonth() + "/" + start.getUTCFullYear();
+                            console.log(date)
+                            if(start.getUTCMinutes() < 10){
+                                result[i].startWork = start.getUTCHours() + " : 0" + start.getUTCMinutes();
+                            }
+                            else{
+                                result[i].startWork = start.getUTCHours() + " : " + start.getUTCMinutes();
+                            }
+                            if(done.getUTCMinutes() < 10){
+                                result[i].doneWork = done.getUTCHours() + " : 0" + done.getUTCMinutes();
+                            }
+                            else{
+                                result[i].doneWork = done.getUTCHours() + " : " + done.getUTCMinutes();
+                            }
+                        }
+                        
+                        res.status(200).render("workHistory",{results : result});
+                    }
+                    else{
+                        console.log(err);
+                        res.status(200).render("workHistory",{results : []});
+                    }
+                })
             }
         });
 

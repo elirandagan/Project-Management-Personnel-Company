@@ -169,6 +169,31 @@
       </nav>
       <!-- End Navbar -->
       <div class="content">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <div class="card-title">
+              Shifts
+            </div>
+          </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover" id="table">
+              <thead class="text-warning">
+                <th>Employer</th>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Salary</th>
+              </thead>
+            </table>
+            <%for (let i=0, len=results.length; len> i; ++i){%>
+              <%for (const item in results[i]){%>
+                <span style="margin-right:120px; font-size: 16px;"><%= results[i][item] %></span>
+                  <%}%>
+                    <br>
+                    <br>
+                    <%}%>
+          </div>
+        </div>
       </div>
       <footer class="footer">
         <div class="container-fluid">
@@ -392,9 +417,10 @@
     });
   </script>
   <script>
-
-const identity = document.cookie.substr(9, document.cookie.length)
-      console.log("IDENTITY: " + identity + " length: " + identity.length)
+    $(document).ready(function () {
+      // Javascript method's body can be found in assets/js/demos.js
+      md.initDashboardPageCharts();
+      const identity = getCookie("identity")
       if (identity.toString() == "Contractor_Users") {
         document.getElementById("recruit").style.display = "none";
         document.getElementById("trackingWorkers").style.display = "none";
@@ -420,11 +446,26 @@ const identity = document.cookie.substr(9, document.cookie.length)
         document.getElementById("statistics").style.display = "none";
       }
 
-    $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
-
     });
+  </script>
+  <script>
+    function getCookie(name) {
+      const value = "; " + document.cookie;
+      const parts = value.split("; " + name + "=");
+      if (parts.length == 2) {
+        const vlu = parts.pop().split(";").shift();
+        const decode_vlu = decodeURIComponent(vlu);
+        const replace_vlu = decode_vlu.replace(/[+]/, ' ');
+        const temp = replace_vlu.split(',')
+        if (temp.length > 1)
+          return JSON.parse(replace_vlu.replace("j:", ""));
+        else
+          return replace_vlu
+      }
+      else
+        return '';
+    }
+
   </script>
 </body>
 
