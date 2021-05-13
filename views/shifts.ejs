@@ -168,46 +168,86 @@
         </div>
       </nav>
       <!-- End Navbar -->
-      <div class="content ">
-        <div class="container">
+
+      <div class="content">
         <%for (let i=0,len=shifts.length;len>i;++i) { %>
-        <div class="row ">
-          <div class="card col-md-8" style="border-radius: 15px;padding: 0.6rem;margin: 1rem 0;">
-            <div class="row ">
-          <%for (const item in shifts[i]) {%>
-            <!-- <label class="bmd-label-floating" style="font-size: 16px;"><%= item %> : <%= shifts[i][item]%> </label> -->
-            <% if( item  =='where'){%>
-              <div class="col">
-                  <label class="bmd-label-floating" style="font-size: 16px;" ><%=item%> : <%= shifts[i][item]%> </label>
+        <div class="row">
+        <div class="col-md-8">
+          <div class="card card-profile" style="border-radius: 15px;padding: 0.6rem;margin: 1rem 0;">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">Where: <%= shifts[i].where%></label>
                 </div>
-            <%}%>
-            <% if( item  =='startWork'){%>
-              <div class="col">
-                <label class="bmd-label-floating" style="font-size: 16px;" ><%=item%> :<%= shifts[i][item]%> </label>
               </div>
-            <%}%>
-          </div>
-          <div class="row">
-            <% if( item  =='status'){%>
-              <div class="col">
-                  <label class="bmd-label-floating" style="font-size: 16px;" ><%=item%> :<%= shifts[i][item]%> </label>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">Date: <%= shifts[i].startWork%> </label>
                 </div>
-
-            <%}%>
-            <% if( item  =='employerId'){%>
-              <div class="col">
-              <label class="bmd-label-floating" style="font-size: 16px;" ><%=item%> :<%= shifts[i][item]%> </label>
+              </div>
+              <div class="col-md-0">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">Status: <%= shifts[i].status%></label>
+                </div>
+              </div>
             </div>
-
-            <%}%>
-            <%}%>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">By: <%= shifts[i].employerId%></label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="expertise" style="font-size: 18px;">Company: <%= shifts[i].company%></label>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <div class="row">
+                  <div class="form-group ">
+                    <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
+                      style="padding: 0 !important;margin: 0 !important;">
+                      <i class="material-icons"
+                        style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
+                    </button>
+                    <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
+                      style="padding: 0 !important;margin: 0 !important;">
+                      <i class="material-icons"
+                        style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-profile" style="border-radius: 15px;margin: 1rem 0;">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">From : <%= shifts[i].startHour%></label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <label class="bmd-label-floating" style="font-size: 18px;margin-bottom: -0.5rem;">To : <%= shifts[i].doneHour%></label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <button type="submit" class="update-btn btn btn-primary btn-sm"
+                    style="font-size: 0.8rem;border-radius: 15px;">Report</button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         </div>
         <%}%>
       </div>
-      </div>
-
 
       <footer class="footer">
         <div class="container-fluid">
