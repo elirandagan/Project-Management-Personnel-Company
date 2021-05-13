@@ -172,7 +172,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             const query = { cwId: req.cookies.user.ID };
             const projection = {_id:0,cwId:0,rating:0}
             console.log(query);
-
             try {
                 var shifts = Shifts_Collection.find(query).project(projection).sort({startWork:-1})
                 shifts = await shifts.toArray()
@@ -180,10 +179,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     var start=new Date(shifts[i].startWork)
                     var done=new Date(shifts[i].doneWork)
                     startMonth=start.getMonth()+ 1;
+                    doneMonth=done.getMonth()+ 1;
                     if(startMonth<10){
-                        startMonth='0'+startMonth;
+                        startMonth="0"+startMonth;
                     }
-                    doneMonth=done.getMonth()+ 1
                     shifts[i].startWork=start.getUTCDate() +'/'+startMonth +'/'+start.getFullYear()
                     shifts[i].doneWork=start.getUTCDate() +'/'+doneMonth +'/'+start.getFullYear()
 
