@@ -35,18 +35,54 @@
 
         td {
             color: whitesmoke;
+            padding: 5px;
+            margin: 5px;
         }
-
+        #ratingScaleTh{
+        }
         #container {
             margin: auto;
             width: 50%;
             border: 3px;
             padding: 10px;
         }
-
-        .checked {
-            color: orange;
+        * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+        .star-wrapper {
+            display: flex;
+            width:100%;
+            direction: rtl;
         }
+        .star-wrapper a {
+            font-size: 1em;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.5s;
+            margin: 4px;
+        }
+        .star-wrapper a:hover {
+            color: gold;
+            transform: scale(1.3);
+        }
+        .s1:hover ~ a {
+            color: gold;
+        }
+        .s2:hover ~ a {
+            color: gold;
+        }
+        .s3:hover ~ a {
+            color: gold;
+        }
+        .s4:hover ~ a {
+            color: gold;
+        }
+        .s5:hover ~ a {
+            color: gold;
+        }
+
     </style>
 </head>
 
@@ -106,6 +142,9 @@
     <script src="js/material-dashboard.js?v=2.1.0"></script>
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="demo/demo.js"></script>
+
+    <script src="https://kit.fontawesome.com/5ea815c1d0.js"></script>
+
     <script>
         $(document).ready(function () {
             $().ready(function () {
@@ -349,11 +388,11 @@
                             }
                         }
                     }
-                    key = "rateButton"
+                    key = "ratingScale"
                     columnSet.push(key);
                     _th_ = document.createElement('th')
                     th = _th_.cloneNode(false);
-                    th.id = 'thBtn'
+                    th.id = 'ratingScaleTh'
                     th.appendChild(document.createTextNode(key));
                     tr.appendChild(th);
                     table.appendChild(tr);
@@ -363,21 +402,47 @@
                 document.getElementById('container').appendChild(buildHtmlTable(newArr));
 
                 for (var i = 1; i < newArr.length + 1; i++) {
-                    var x = table.rows[i].cells[7];
-                    btn = document.createElement('button')
-                    btn.innerText = "rate here"
-                    btn.id = args[i - 1]._id + `#row[${i}]cells[5]`
-                    btn.onclick = (e) => {
-                        var split = e.target.id.split("#")
-                        const shiftsId = split[0]
-                        placeInTable = split[1]
-                        console.log(shiftsId)
-                        console.log(placeInTable)
-                        myWindow = window.open("/rating", "", "width=400,height=400");
-                        myWindow.name = split
-                    }
-                    btn.name = ""
-                    x.append(btn);
+                    let x = table.rows[i].cells[7];
+
+                    //create element
+                    let newDiv = document.createElement("div");
+                    let s1 = document.createElement("a");
+                    let s2 = document.createElement("a");
+                    let s3 = document.createElement("a");
+                    let s4 = document.createElement("a");
+                    let s5 = document.createElement("a");
+
+                    //set class names
+                    newDiv.className = "star-wrapper"
+                    s1.className = "fas fa-star s1"
+                    s2.className = "fas fa-star s2"
+                    s3.className = "fas fa-star s3"
+                    s4.className = "fas fa-star s4"
+                    s5.className = "fas fa-star s5"
+
+                    //set id names
+                    s1.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#1"
+                    s2.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#2"
+                    s3.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#3"
+                    s4.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#4"
+                    s5.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#5"
+
+                    //set herf
+                    s1.href = "/modify_rate_star"
+                    s2.href = "/modify_rate_star"
+                    s3.href = "/modify_rate_star"
+                    s4.href = "/modify_rate_star"
+                    s5.href = "/modify_rate_star"
+
+                    newDiv.append(s1)
+                    newDiv.append(s2)
+                    newDiv.append(s3)
+                    newDiv.append(s4)
+                    newDiv.append(s5)
+
+                    console.log(newDiv)
+
+                    x.append(newDiv)
                 }
             } else {
                 console.log("EEROR ACCRUED")
@@ -389,3 +454,26 @@
 </body>
 
 </html>
+
+<script>
+    // let x = table.rows[i].cells[7];
+    // let btn = document.createElement('button')
+    // btn.innerText = "rate here"
+    // btn.id = args[i - 1]._id + `#row[${i}]cells[5]`
+    // btn.onclick = (e) => {
+    //     let split = e.target.id.split("#")
+    //
+    //     function popupwindow(url, title, w, h) {
+    //         let left = (screen.width / 2) - (w / 2);
+    //         let top = (screen.height / 2) - (h / 2);
+    //         return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
+    //     }
+    //
+    //     let myWindow = popupwindow("/rating", "rating", 400, 400)
+    //     //myWindow = window.open("/rating", "", "width=400,height=400");
+    //     myWindow.name = split
+    }
+    // btn.name = ""
+    // x.append(btn);
+
+</script>

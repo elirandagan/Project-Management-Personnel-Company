@@ -422,7 +422,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         router.get("/hiringHistory", function (req, res) {
             console.log("router get")
             Shifts_Collection.find().toArray().then((schema) => {
-                console.log("schema : " + JSON.stringify(schema))
                 schema ? res.status(200).render("hiringHistory", { args: schema }) : console.error("shifts empty")
             })
         });
@@ -436,11 +435,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
         });
 
-        router.get("/rating", function (req, res) {
+
+
+        router.post("/rating", function (req, res) {
+            console.log("rating router post")
             res.status(200).render("rating")
         });
 
-
+        router.get("/modify_rate_star", (req,res)=>  {
+            console.log("/modify_rate_star")
+            console.log(req)
+            //validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
+        });
 
         //add the router
         app.use("/", router);
