@@ -1,0 +1,27 @@
+
+.denied-btn {
+  margin: 0 auto;
+  display: block;
+}
+
+@keyframes hide{
+  0% { transform: translate(0);}
+  20% { transform: translate(5px);}
+  100% { transform: translate(-120vw);}
+}
+
+@keyframes show {
+  0% { transform: translate(-120vw);}
+  80% { transform: translate(-5px);}
+  100% { transform: translate(0);}
+}
+
+.hide {
+  animation: hide 0.5s forwards ease-in-out;
+  animation-delay: .2s;
+}
+
+.show {
+  animation: show 0.5s forwards ease-in-out;
+  animation-delay: .2s;
+}

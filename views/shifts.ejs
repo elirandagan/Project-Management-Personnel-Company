@@ -19,6 +19,7 @@
   <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="demo/demo.css" rel="stylesheet" />
+  <link href="/public/css/shifts.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -172,43 +173,52 @@
       <div class="content" style="display: grid;padding: 1rem 0;">
         <div class="container">
           <%for (let i=0,len=shifts.length;len>i;++i) { %>
-            <div class="row justify-content-center" style="padding:0.5rem;">
+            <div name="nice-card"
+              class="row justify-content-center" style="padding:0.5rem;">
               <div class="col-md-8">
                 <div class="card card-body" style="border-radius: 15px;margin: 0;">
                   <div class="row">
                     <div class="col-md-4">
-                      <label style="font-size: 18px;">Where: </label>
+                      <label style="font-size: 18px;">Where : <%= shifts[i].where %> </label>
                     </div>
                     <div class="col-md-4">
-                      <label style="font-size: 18px;">Date: </label>
+                      <label style="font-size: 18px;">Date : <%= shifts[i].startWork %></label>
                     </div>
                     <div class="col-md-3">
-                      <label style="font-size: 18px;position:relative; left:35px;">Status:</label>
+                      <% if (shifts[i].status==="approved" ) { %>
+                        <label style="font-size: 18px;position:relative; left:35px;color:green"><span
+                            style="color: #AAA;">Status : </span>
+                          <%= shifts[i].status %>
+                        </label>
+                        <% } else { %>
+                          <label style="font-size: 18px;position:relative; left:35px;color: rgb(230, 219, 116);"><span
+                              style="color: #AAA;">Status : </span>
+                            <%= shifts[i].status %>
+                          </label>
+                          <% } %>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-4">
-                      <div class="form-group">
-                        <label class="" style="font-size: 18px;">By: </label>
-                      </div>
+                      <label class="" style="font-size: 18px;">By: <%= shifts[i].employerId %></label>
                     </div>
                     <div class="col-md-4">
-                      <div class="form-group">
-                        <label for="expertise" style="font-size: 18px;">Company: </label>
-                      </div>
+                      <label for="expertise" style="font-size: 18px;">Company : <%= shifts[i].company %></label>
                     </div>
                     <div class="col-md-4">
                       <div class="row">
                         <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
-                          style="display: inline-block;">
+                          style="display: inline-block;" onclick="approve()">
                           <i class="material-icons"
                             style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
                         </button>
-                        <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
-                          style="display: inline-block;">
-                          <i class="material-icons"
-                            style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
-                        </button>
+                        <form action="/shifts" method="post">
+                          <button type="submit" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
+                            style="display:block;">
+                            <i class="material-icons denied-btn"
+                              style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
+                          </button>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -229,7 +239,7 @@
                   <div class="row">
                     <div class="col">
                       <button type="submit" class="update-btn btn btn-primary btn-sm"
-                        style="font-size: 0.8rem;border-radius: 15px;">Report</button>
+                        style="font-size: 0.8rem;border-radius: 15px;" onclick="report()">Report</button>
                     </div>
                   </div>
                 </div>
@@ -289,6 +299,7 @@
   <script src="js/core/bootstrap-material-design.min.js"></script>
   <script src="https://unpkg.com/default-passive-events"></script>
   <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!--  Google Maps Plugin    -->
@@ -307,6 +318,22 @@
       const identity = getCookie("identity")
       console.log(user.expertise);
       console.log(identity);
+
+      const status = "<%= status %>"
+      console.log(status);
+
+      const shiftsIds = document.getElementsByName("nice-card");
+      const shifts = "<%= shifts %>"
+      for (let index = 0; index < shifts.length; index++) {
+          shiftsIds[i].id = shifts[i]._id
+      }
+
+      console.log("****");
+      console.log(shiftsIds.length);
+      for (var i = 0; i < shiftsIds.length; i++) {
+        console.log(i, shiftsIds[i]);
+      }
+      console.log("****");
 
       if (identity === "Contractor_Users") {
         document.getElementById("recruit").style.display = "none";
@@ -351,6 +378,21 @@
       else
         return '';
     }
+  </script>
+
+  <script>
+    function approve() {
+      swal("Good job!", "You clicked the button!", "success", {
+        button: "Aww yiss!",
+      });
+      return true;
+    }
+
+    function report() {
+      swal("Report", "You clicked the button!", "info");
+      return true;
+    }
+
   </script>
 </body>
 

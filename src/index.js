@@ -170,47 +170,84 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/shifts", async (req, res) => {
             const query = { cwId: req.cookies.user.ID };
-            const projection = {_id:0,cwId:0,rating:0}
+            const projection = { cwId: 0, rating: 0 }
             console.log(query);
             try {
-                var shifts = Shifts_Collection.find(query).project(projection).sort({startWork:-1})
+                var shifts = Shifts_Collection.find(query).project(projection).sort({ startWork: -1 })
                 shifts = await shifts.toArray()
-                for (let i=0;i<shifts.length;++i){
-                    var start=new Date(shifts[i].startWork)
-                    var done=new Date(shifts[i].doneWork)
-                    startMonth=start.getMonth()+ 1;
-                    doneMonth=done.getMonth()+ 1;
-                    if(startMonth<10){
-                        startMonth="0"+startMonth;
+                for (let i = 0; i < shifts.length; ++i) {
+                    var start = new Date(shifts[i].startWork)
+                    var done = new Date(shifts[i].doneWork)
+                    startMonth = start.getMonth() + 1;
+                    doneMonth = done.getMonth() + 1;
+                    if (startMonth < 10) {
+                        startMonth = "0" + startMonth;
                     }
-                    shifts[i].startWork=start.getUTCDate() +'/'+startMonth +'/'+start.getFullYear()
-                    shifts[i].doneWork=start.getUTCDate() +'/'+doneMonth +'/'+start.getFullYear()
+                    shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
+                    shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
 
-                    if (start.getUTCMinutes()<10){
-                        shifts[i].startHour=start.getUTCHours() + ":0" + start.getUTCMinutes();
+                    if (start.getUTCMinutes() < 10) {
+                        shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
                     }
-                    else{
-                        shifts[i].startHour=start.getUTCHours() + ":" + start.getUTCMinutes();
+                    else {
+                        shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
                     }
-                    if(done.getUTCMinutes() < 10){
-                        shifts[i].doneHour=done.getUTCHours() + ":0" + done.getUTCMinutes();
+                    if (done.getUTCMinutes() < 10) {
+                        shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
                     }
-                    else{
-                        shifts[i].doneHour=done.getUTCHours() + ":" + done.getUTCMinutes();
+                    else {
+                        shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
                     }
                 }
-                console.log("**Before***");
-                console.log(shifts);
-                console.log("*****");
-                
+
                 if (validateUser) {
-                    res.status(200).render("shifts",  {shifts:shifts} );
+                    res.status(200).render("shifts", { status: "init", shifts: shifts });
                 }
             } catch (error) {
                 console.error(error)
                 throw error
             }
 
+        });
+
+        router.post("/shifts", async (req, res) => {
+            const query = { cwId: req.cookies.user.ID };
+            const projection = { cwId: 0, rating: 0 }
+            try {
+                var shifts = Shifts_Collection.find(query).project(projection).sort({ startWork: -1 })
+                shifts = await shifts.toArray()
+                for (let i = 0; i < shifts.length; ++i) {
+                    var start = new Date(shifts[i].startWork)
+                    var done = new Date(shifts[i].doneWork)
+                    startMonth = start.getMonth() + 1;
+                    doneMonth = done.getMonth() + 1;
+                    if (startMonth < 10) {
+                        startMonth = "0" + startMonth;
+                    }
+                    shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
+                    shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
+
+                    if (start.getUTCMinutes() < 10) {
+                        shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
+                    }
+                    else {
+                        shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
+                    }
+                    if (done.getUTCMinutes() < 10) {
+                        shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
+                    }
+                    else {
+                        shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
+                    }
+                }
+
+                if (validateUser) {
+                    res.status(200).render("shifts", { status: "ok", shifts: shifts });
+                }
+            } catch (error) {
+                console.error(error)
+                throw error
+            }
         });
 
         router.get("/absences", function (req, res) {
@@ -247,7 +284,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             })
         });
 
-        router.post("/recruit", (req, res) => {
+        router.post("/recruit", async (req, res) => {
 
             Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result) {
                 console.log("ID: " + JSON.stringify(req.body.ID))
