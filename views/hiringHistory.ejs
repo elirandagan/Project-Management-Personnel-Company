@@ -38,24 +38,29 @@
             padding: 5px;
             margin: 5px;
         }
-        #ratingScaleTh{
+
+        #ratingScaleTh {
         }
+
         #container {
             margin: auto;
             width: 50%;
             border: 3px;
             padding: 10px;
         }
+
         * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         .star-wrapper {
             display: flex;
-            width:100%;
+            width: 100%;
             direction: rtl;
         }
+
         .star-wrapper a {
             font-size: 1em;
             color: #fff;
@@ -63,22 +68,28 @@
             transition: all 0.5s;
             margin: 4px;
         }
+
         .star-wrapper a:hover {
             color: gold;
             transform: scale(1.3);
         }
+
         .s1:hover ~ a {
             color: gold;
         }
+
         .s2:hover ~ a {
             color: gold;
         }
+
         .s3:hover ~ a {
             color: gold;
         }
+
         .s4:hover ~ a {
             color: gold;
         }
+
         .s5:hover ~ a {
             color: gold;
         }
@@ -388,12 +399,7 @@
                             }
                         }
                     }
-                    key = "ratingScale"
-                    columnSet.push(key);
-                    _th_ = document.createElement('th')
-                    th = _th_.cloneNode(false);
-                    th.id = 'ratingScaleTh'
-                    th.appendChild(document.createTextNode(key));
+
                     tr.appendChild(th);
                     table.appendChild(tr);
                     return columnSet;
@@ -401,49 +407,32 @@
 
                 document.getElementById('container').appendChild(buildHtmlTable(newArr));
 
+
                 for (var i = 1; i < newArr.length + 1; i++) {
+
                     let x = table.rows[i].cells[7];
 
                     //create element
                     let newDiv = document.createElement("div");
-                    let s1 = document.createElement("a");
-                    let s2 = document.createElement("a");
-                    let s3 = document.createElement("a");
-                    let s4 = document.createElement("a");
-                    let s5 = document.createElement("a");
+//create 5 star rate scale
+                    let star = []
+                    for (let j = 0; j < 5; j++) {
+                        star[j] = document.createElement("a")
+                        star[j].className = `fas fa-star s${j + 1}`
+                        star[j].id = args[i - 1]._id + `#row[${i}]cells[5]` + "#1"
+                        star[j].href = "/modify_rate_star"
+                        console.log(star[j])
+                        newDiv.append(star[j])
+                    }
+                    console.log("star : ", star)
+                    console.log("newDiw : ", newDiv)
 
-                    //set class names
                     newDiv.className = "star-wrapper"
-                    s1.className = "fas fa-star s1"
-                    s2.className = "fas fa-star s2"
-                    s3.className = "fas fa-star s3"
-                    s4.className = "fas fa-star s4"
-                    s5.className = "fas fa-star s5"
-
-                    //set id names
-                    s1.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#1"
-                    s2.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#2"
-                    s3.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#3"
-                    s4.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#4"
-                    s5.id = args[i - 1]._id + `#row[${i}]cells[5]` + "#5"
-
-                    //set herf
-                    s1.href = "/modify_rate_star"
-                    s2.href = "/modify_rate_star"
-                    s3.href = "/modify_rate_star"
-                    s4.href = "/modify_rate_star"
-                    s5.href = "/modify_rate_star"
-
-                    newDiv.append(s1)
-                    newDiv.append(s2)
-                    newDiv.append(s3)
-                    newDiv.append(s4)
-                    newDiv.append(s5)
-
-                    console.log(newDiv)
 
                     x.append(newDiv)
+
                 }
+
             } else {
                 console.log("EEROR ACCRUED")
             }
@@ -451,29 +440,8 @@
 
     </script>
 
+</div>
 </body>
 
 </html>
 
-<script>
-    // let x = table.rows[i].cells[7];
-    // let btn = document.createElement('button')
-    // btn.innerText = "rate here"
-    // btn.id = args[i - 1]._id + `#row[${i}]cells[5]`
-    // btn.onclick = (e) => {
-    //     let split = e.target.id.split("#")
-    //
-    //     function popupwindow(url, title, w, h) {
-    //         let left = (screen.width / 2) - (w / 2);
-    //         let top = (screen.height / 2) - (h / 2);
-    //         return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
-    //     }
-    //
-    //     let myWindow = popupwindow("/rating", "rating", 400, 400)
-    //     //myWindow = window.open("/rating", "", "width=400,height=400");
-    //     myWindow.name = split
-    }
-    // btn.name = ""
-    // x.append(btn);
-
-</script>

@@ -1,3 +1,5 @@
+
+var ObjectId = require("mongodb").ObjectId;
 const express = require("express");
 const bodyParser = require("body-parser");
 const app_port = process.env.PORT || 3000;
@@ -10,13 +12,13 @@ const validateFunction = require("./validate");
 const date = require("./date");
 
 let validateUser = false
-let identity = { HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Employer_Users: "Employer_Users" }
+let identity = {HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Employer_Users: "Employer_Users"}
 
 const MongoClient = require("mongodb").MongoClient;
 
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
-MongoClient.connect(uri, { useUnifiedTopology: true })
+MongoClient.connect(uri, {useUnifiedTopology: true})
     .then(client => {
         console.log("Connected to Database")
         const db = client.db("GLEM-TECH")
@@ -31,45 +33,49 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         app.set("view engine", "ejs");
         app.use(CookieParser())
         app.use(express.static("public"));
-        app.use(bodyParser.urlencoded({ extended: true }))
+        app.use(bodyParser.urlencoded({extended: true}))
         app.use(bodyParser.json())
 
 
         // HOW TO "GET" FROM COLLECTION
         router.get("/", async function (req, res) {
             console.log("HOMEPAGE")
-            res.status(200).render("login", { exist: 0 });
+            res.status(200).render("login", {exist: 0});
         });
 
         router.get("/login", function (req, res) {
             console.log("*****");
             console.log("Cookies: ", req.cookies)
             console.log("*****");
-            res.status(200).render("login", { exist: 0 });
+            res.status(200).render("login", {exist: 0});
 
         });
 
         router.get("/loaderLogin", function (req, res) {
-            res.status(200).render("loaderLogin", { exist: 0 });
+            res.status(200).render("loaderLogin", {exist: 0});
 
         });
 
         router.get("/firstTimeHere", function (req, res) {
             console.log("firstTimeHere GET")
-            res.status(200).render("firstTimeHere", { exist: 0, userName: "empty", password: "empty" });
+            res.status(200).render("firstTimeHere", {exist: 0, userName: "empty", password: "empty"});
         });
 
         router.post("/firstTimeHere", function (req, res) {
             console.log("firstTimeHere POST")
             console.log("req.body.ID" + req.body.ID)
-            Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result) {
+            Contractor_Users_Collection.find({ID: req.body.ID}).toArray(function (err, result) {
                 console.log("######################" + result)
                 if (result.length > 0) {
                     console.log("FIND")
-                    res.status(200).render("firstTimeHere", { exist: "validID", userName: result[0].userName, password: result[0].password });
+                    res.status(200).render("firstTimeHere", {
+                        exist: "validID",
+                        userName: result[0].userName,
+                        password: result[0].password
+                    });
                 } else {
                     console.log("CANT FIND")
-                    res.status(200).render("firstTimeHere", { exist: "invalidID", userName: "", password: "" });
+                    res.status(200).render("firstTimeHere", {exist: "invalidID", userName: "", password: ""});
                 }
             })
         });
@@ -92,29 +98,29 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     console.log("*****");
                     console.log("user", user);
                     console.log("*****");
-                    res.cookie("user", user, { maxAge: 9000000, httpOnly: false });
-                    res.cookie("identity", req.body.identity, { maxAge: 9000000, httpOnly: false });
-                    res.status(200).render("dashboard", { exist: "invalidID" });
+                    res.cookie("user", user, {maxAge: 9000000, httpOnly: false});
+                    res.cookie("identity", req.body.identity, {maxAge: 9000000, httpOnly: false});
+                    res.status(200).render("dashboard", {exist: "invalidID"});
 
                 } else if ("userNameNotExist" === returnValue) {
                     // console.log("router Failed user - userNameNotExist")
-                    res.status(200).render("login", { exist: "userNameNotExist" });
+                    res.status(200).render("login", {exist: "userNameNotExist"});
                 } else if ("wrongPassword" === returnValue) {
                     // console.log("router Failed user - wrongPassword")
-                    res.status(200).render("login", { exist: "wrongPassword" });
+                    res.status(200).render("login", {exist: "wrongPassword"});
                 } else {
                     // console.log("router Failed user - unexpectedToken")
                     app.set("login")
                 }
 
             } else {
-                res.status(200).render("login", { exist: validateLogin });
+                res.status(200).render("login", {exist: validateLogin});
             }
         })
 
         router.get("/signup", function (req, res) {
             console.log("signupGet")
-            res.status(200).render("signup", { exist: 0 });
+            res.status(200).render("signup", {exist: 0});
         });
 
         router.post("/signup", async (req, res) => {
@@ -122,23 +128,23 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log(validateSignUp)
             switch (validateSignUp) {
                 case "nameFieldMostContainChars":
-                    res.status(200).render("signup", { exist: 2 });
+                    res.status(200).render("signup", {exist: 2});
                     console.log("router Failed user - nameFieldMostContainChars")
                     break;
                 case "invalidID":
-                    res.status(200).render("signup", { exist: 3 });
+                    res.status(200).render("signup", {exist: 3});
                     console.log("router Failed user - invalidID")
                     break;
                 case "invalidPasswordLength":
-                    res.status(200).render("signup", { exist: 4 });
+                    res.status(200).render("signup", {exist: 4});
                     console.log("router Failed user - invalidPasswordLength")
                     break;
                 case "valid":
                     if (await (mongoDbFunction.inserToDb(identity.Employer_Users, req.body))) {
-                        res.status(200).render("login", { exist: 5 });
+                        res.status(200).render("login", {exist: 5});
                         console.log("router build user")
                     } else {
-                        res.status(200).render("signup", { exist: 1 });
+                        res.status(200).render("signup", {exist: 1});
                         console.log("router Failed user - exist id or user name")
                     }
                     break;
@@ -169,42 +175,40 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/shifts", async (req, res) => {
-            const query = { cwId: req.cookies.user.ID };
-            const projection = {_id:0,cwId:0,rating:0}
+            const query = {cwId: req.cookies.user.ID};
+            const projection = {_id: 0, cwId: 0, rating: 0}
             console.log(query);
             try {
-                var shifts = Shifts_Collection.find(query).project(projection).sort({startWork:-1})
+                var shifts = Shifts_Collection.find(query).project(projection).sort({startWork: -1})
                 shifts = await shifts.toArray()
-                for (let i=0;i<shifts.length;++i){
-                    var start=new Date(shifts[i].startWork)
-                    var done=new Date(shifts[i].doneWork)
-                    startMonth=start.getMonth()+ 1;
-                    doneMonth=done.getMonth()+ 1;
-                    if(startMonth<10){
-                        startMonth='0'+startMonth;
+                for (let i = 0; i < shifts.length; ++i) {
+                    var start = new Date(shifts[i].startWork)
+                    var done = new Date(shifts[i].doneWork)
+                    startMonth = start.getMonth() + 1;
+                    doneMonth = done.getMonth() + 1;
+                    if (startMonth < 10) {
+                        startMonth = '0' + startMonth;
                     }
-                    shifts[i].startWork=start.getUTCDate() +'/'+startMonth +'/'+start.getFullYear()
-                    shifts[i].doneWork=start.getUTCDate() +'/'+doneMonth +'/'+start.getFullYear()
+                    shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
+                    shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
 
-                    if (start.getUTCMinutes()<10){
-                        shifts[i].startHour=start.getUTCHours() + ":0" + start.getUTCMinutes();
+                    if (start.getUTCMinutes() < 10) {
+                        shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
+                    } else {
+                        shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
                     }
-                    else{
-                        shifts[i].startHour=start.getUTCHours() + ":" + start.getUTCMinutes();
-                    }
-                    if(done.getUTCMinutes() < 10){
-                        shifts[i].doneHour=done.getUTCHours() + ":0" + done.getUTCMinutes();
-                    }
-                    else{
-                        shifts[i].doneHour=done.getUTCHours() + ":" + done.getUTCMinutes();
+                    if (done.getUTCMinutes() < 10) {
+                        shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
+                    } else {
+                        shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
                     }
                 }
                 console.log("**Before***");
                 console.log(shifts);
                 console.log("*****");
-                
+
                 if (validateUser) {
-                    res.status(200).render("shifts",  {shifts:shifts} );
+                    res.status(200).render("shifts", {shifts: shifts});
                 }
             } catch (error) {
                 console.error(error)
@@ -215,15 +219,15 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/absences", function (req, res) {
             if (validateUser) {
-                res.status(200).render("absences", { arr: [], succeed: false });
+                res.status(200).render("absences", {arr: [], succeed: false});
             }
         });
 
         router.post("/absences", (req, res) => {
             if (validateUser) {
-                Absences_Collection.insertOne({ ID: "208061580", from: req.body.from, to: req.body.to })
+                Absences_Collection.insertOne({ID: "208061580", from: req.body.from, to: req.body.to})
                     .then(result => {
-                        res.status(200).render("absences", { arr: [], succeed: true })
+                        res.status(200).render("absences", {arr: [], succeed: true})
                         console.log("SUCCEED TO INSERT SHIFT FOR ID 208061580", result)
                     })
             }
@@ -237,30 +241,30 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/recruit", function (req, res) {
             console.log("recruit")
-            HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err, result) {
+            HR_Users_Collection.find({firstName: "Lior"}).toArray(function (err, result) {
                 if (err) {
                     console.log(err);
                 } else {
                     console.log(result);
-                    res.status(200).render("recruit", { exist: 2, ID: 0 });
+                    res.status(200).render("recruit", {exist: 2, ID: 0});
                 }
             })
         });
 
         router.post("/recruit", (req, res) => {
 
-            Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result) {
+            Contractor_Users_Collection.find({ID: req.body.ID}).toArray(function (err, result) {
                 console.log("ID: " + JSON.stringify(req.body.ID))
                 console.log("result: " + result.length)
                 if (result.length != 0) {
                     console.log(req.body.ID + " 1 Failed")
-                    res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
+                    res.status(200).render("recruit", {exist: 1, ID: req.body.ID});
                 } else {
-                    Contractor_Users_Collection.find({ userName: req.body.userName }).toArray(function (err, result2) {
+                    Contractor_Users_Collection.find({userName: req.body.userName}).toArray(function (err, result2) {
                         console.log("userName: " + req.body.userName)
                         console.log("result: " + result2.length)
                         if (result2.length != 0) {
-                            res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
+                            res.status(200).render("recruit", {exist: 1, ID: req.body.ID});
                             console.log(result2[0] + "2 Faileds")
                         } else {
                             console.log(res + " Succeed")
@@ -268,7 +272,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             Contractor_Users_Collection.insertOne(req.body)
                                 .then(result => {
                                     console.log(result)
-                                    res.status(200).render("recruit", { exist: 0, ID: req.body.ID });
+                                    res.status(200).render("recruit", {exist: 0, ID: req.body.ID});
                                 })
                         }
                     })
@@ -282,11 +286,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log(req.cookies.user);
             console.log(req.cookies.identity);
             console.log("******");
-            res.status(200).render("user", { status: "init" });
+            res.status(200).render("user", {status: "init"});
         });
 
         router.post("/user", (req, res) => {
-            const query = { _id: req.cookies.user.ID }
+            const query = {_id: req.cookies.user.ID}
             // eslint-disable-next-line no-undef
             const newvalues = {
                 firstName: req.body.firstName,
@@ -298,7 +302,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
             var status;
             // eslint-disable-next-line no-undef,no-unused-vars
-            Contractor_Users_Collection.updateOne(query, { $set: newvalues }, function (err, res2) {
+            Contractor_Users_Collection.updateOne(query, {$set: newvalues}, function (err, res2) {
                 if (err) {
                     console.log(err.body + " ** Failed to update **");
                     status = "Failed";
@@ -307,12 +311,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     status = "Success";
                 }
             });
-            res.status(200).render("user", { status: status });
+            res.status(200).render("user", {status: status});
         });
 
         async function getSignUps() {
-            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
-            const projection = { createAt: 1, _id: 0 }; //can be added to find()
+            const query = {createAt: {$gt: date.getFirstDateOfMonth(), $lt: new Date()}};
+            const projection = {createAt: 1, _id: 0}; //can be added to find()
             var signUps = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
             try {
                 let result = Contractor_Users_Collection.find(query).project(projection)
@@ -334,8 +338,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         }
 
         async function getRecruitments() {
-            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
-            const projection = { createAt: 1, _id: 0 }; //can be added to find()
+            const query = {createAt: {$gt: date.getFirstDateOfMonth(), $lt: new Date()}};
+            const projection = {createAt: 1, _id: 0}; //can be added to find()
             var reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
             try {
@@ -358,8 +362,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         }
 
         async function getExpertises() {
-            const query = { createAt: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
-            const projection = { expertise: 1, _id: 0 }; //can be added to find()
+            const query = {createAt: {$gt: date.getFirstDateOfMonth(), $lt: new Date()}};
+            const projection = {expertise: 1, _id: 0}; //can be added to find()
             let experts = new Array(6).fill(0); //create empty array that the index indicates the expeertises 
 
             try {
@@ -409,7 +413,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log("expertises :" + expertises);
             console.log("*****");
 
-            res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments, expertises: expertises });
+            res.status(200).render("statistics", {
+                signUps: signUps,
+                recruitments: recruitments,
+                expertises: expertises
+            });
         });
 
 
@@ -424,13 +432,13 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         router.get("/hiringHistory", function (req, res) {
             console.log("router get")
             Shifts_Collection.find().toArray().then((schema) => {
-                schema ? res.status(200).render("hiringHistory", { args: schema }) : console.error("shifts empty")
+                schema ? res.status(200).render("hiringHistory", {args: schema}) : console.error("shifts empty")
             })
         });
 
         router.post("/hiringHistory", function (req, res) {
             console.log("router post")
-            res.status(200).render("hiringHistory", { arguments: "router post" });
+            res.status(200).render("hiringHistory", {arguments: "router post"});
         });
 
         router.get("/dashboard", function (req, res) {
@@ -439,18 +447,48 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
 
 
-        router.post("/rating", function (req, res) {
-            console.log("rating router post")
-            res.status(200).render("rating")
+
+        router.get("/modify_rate_star", (req, res) => {
+            let value = "609bf35a2a1418313e3c7440#row[2]cells[5]#4'".split("#")
+
+            let shiftId = value[0]
+            let tablePlace = value[1]
+            let starAmount = value[2]
+            starAmount = starAmount[0]
+            parseInt(starAmount)
+            console.log("shiftId : ", shiftId)
+            console.log("tablePlace : ", tablePlace)
+            console.log("starAmount : ", starAmount)
+
+            const myQuery = {_id : new ObjectId(shiftId)}
+
+            // eslint-disable-next-line no-undef
+            Shifts_Collection.find(myQuery).toArray().then((schema)=>{
+
+                let vote = schema[0].vote
+                let rating = schema[0].rating
+                let newvalues
+                if(vote==0){
+                    newvalues = { $set: {rating: starAmount, vote: vote+1 } };
+                }else{
+                     rating = rating * (vote-1)/vote + starAmount / vote
+                     newvalues = { $set: {rating: rating, vote: vote+1 } };
+                }
+                Shifts_Collection.updateOne(myQuery, newvalues, function(err) {
+                    if (err) throw err;
+                    console.log("1 document updated");
+                    Shifts_Collection.find().toArray().then((schema) => {
+                        schema ? res.status(200).render("hiringHistory", {args: schema}) : console.error("shifts empty")
+                    })
+                });
+            })
+
         });
 
-        router.get("/modify_rate_star", (req,res)=>  {
-            console.log("/modify_rate_star")
-            console.log(req)
-            //validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
-        });
 
         //add the router
+
+
         app.use("/", router);
     })
     .catch(error => console.error(error))
