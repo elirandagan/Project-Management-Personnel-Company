@@ -226,16 +226,22 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/absences", function (req, res) {
             if (validateUser) {
-                res.status(200).render("absences", { arr: [], succeed: false });
+                var project = {_id: 0, from: 1, to: 1}
+                Absences_Collection.find({ID:req.cookies.user.ID}).project(project).toArray(function(err, absences){
+                    res.status(200).render("absences", { arr: absences, succeed: false })
+                    })  
             }
         });
 
         router.post("/absences", (req, res) => {
             if (validateUser) {
-                Absences_Collection.insertOne({ ID: "208061580", from: req.body.from, to: req.body.to })
+                Absences_Collection.insertOne({ ID: req.cookies.user.ID, from: req.body.from, to: req.body.to })
                     .then(result => {
-                        res.status(200).render("absences", { arr: [], succeed: true })
-                        console.log("SUCCEED TO INSERT SHIFT FOR ID 208061580", result)
+                        var project = {_id: 0, from: 1, to: 1}
+                        Absences_Collection.find({ID:req.cookies.user.ID}).project(project).toArray(function(err, absences){
+                        res.status(200).render("absences", { arr: absences, succeed: true })
+                        console.log("SUCCEED TO INSERT SHIFT")
+                        })   
                     })
             }
         })
