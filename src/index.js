@@ -446,18 +446,19 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         });
 
 
+        router.post("/modify_rate_star", (req, res) => {
+            console.log("router POST modify star")
+            console.log(req.body)
+        })
 
 
         router.get("/modify_rate_star", (req, res) => {
-            let value = "609bf35a2a1418313e3c7440#row[2]cells[5]#4'".split("#")
+            let value = "609bf35a2a1418313e3c7440#4".split("#")
 
             let shiftId = value[0]
-            let tablePlace = value[1]
-            let starAmount = value[2]
-            starAmount = starAmount[0]
+            let starAmount = value[1]
             parseInt(starAmount)
             console.log("shiftId : ", shiftId)
-            console.log("tablePlace : ", tablePlace)
             console.log("starAmount : ", starAmount)
 
             const myQuery = {_id : new ObjectId(shiftId)}
@@ -467,14 +468,14 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
                 let vote = schema[0].vote
                 let rating = schema[0].rating
-                let newvalues
+                let newValues
                 if(vote==0){
-                    newvalues = { $set: {rating: starAmount, vote: vote+1 } };
+                    newValues = { $set: {rating: starAmount, vote: vote+1 } };
                 }else{
                      rating = rating * (vote-1)/vote + starAmount / vote
-                     newvalues = { $set: {rating: rating, vote: vote+1 } };
+                     newValues = { $set: {rating: rating, vote: vote+1 } };
                 }
-                Shifts_Collection.updateOne(myQuery, newvalues, function(err) {
+                Shifts_Collection.updateOne(myQuery, newValues, function(err) {
                     if (err) throw err;
                     console.log("1 document updated");
                     Shifts_Collection.find().toArray().then((schema) => {
