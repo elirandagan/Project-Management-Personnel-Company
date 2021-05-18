@@ -375,7 +375,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/trackingWorkers", function (req, res) {
-            res.status(200).render("trackingWorkers", { status: "init", worker: {} });
+            res.status(200).render("trackingWorkers", { status: "init", worker: {}, shifts: {} });
         });
 
         router.post("/trackingWorkers", async (req, res) => {
@@ -385,15 +385,47 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log('********');
 
             try {
-                let result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
+                var result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
                 result = await result;
                 console.log('*****');
                 console.log(result);
                 console.log('*****');
+
+                if (result) {
+                    var shifts = Shifts_Collection.find({ cwId: req.body["id-text"] })
+                    shifts = await shifts.toArray();
+                    for (let i = 0; i < shifts.length; ++i) {
+                        var start = new Date(shifts[i].startWork)
+                        var done = new Date(shifts[i].doneWork)
+                        startMonth = start.getMonth() + 1;
+                        doneMonth = done.getMonth() + 1;
+                        if (startMonth < 10) {
+                            startMonth = "0" + startMonth;
+                        }
+                        shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
+                        shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
+
+                        if (start.getUTCMinutes() < 10) {
+                            shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
+                        }
+                        else {
+                            shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
+                        }
+                        if (done.getUTCMinutes() < 10) {
+                            shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
+                        }
+                        else {
+                            shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
+                        }
+                    }
+                }
+                console.log('$ $$$$');
+                console.log(shifts);
+                console.log('$$$$$');
                 if (!result)
-                    res.status(200).render("trackingWorkers", { status: "Not Found", worker: req.body["id-text"] });
+                    res.status(200).render("trackingWorkers", { status: "Not Found", worker: req.body["id-text"], shifts: {} });
                 else
-                    res.status(200).render("trackingWorkers", { status: "Success", worker: result });
+                    res.status(200).render("trackingWorkers", { status: "Success", worker: result, shifts: shifts });
 
             } catch (error) {
                 console.error(error)
