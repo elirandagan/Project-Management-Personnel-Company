@@ -271,11 +271,15 @@
                       <td>
                         <%= shifts[i].startWork %>
                       </td>
-                      <td>no company field exists</td>
+                      <% if (employers[i]) { %>
                       <td>
-                        <%= shifts[i].startWork %>
-                          <%= shifts[i].startWork %>
+                        <%= employers[i].partOfCompany %>
                       </td>
+                      <td>
+                        <%= employers[i].firstName %>
+                          <%= employers[i].lastName %>
+                      </td>
+                      <% } %>
                       <td>
                         <%= shifts[i].startHour %>
                           <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
@@ -290,8 +294,12 @@
                             <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
                           </button>
                       </td>
-                      <td>6hours</td>
-                      <td>300shekels</td>
+                      <td>
+                        <%= totalHours[i].toFixed(2) %>
+                      </td>
+                      <td>
+                        <%= (worker.hourlyPay * totalHours[i]).toFixed(2) %> ₪
+                      </td>
                       <td>
                         <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
                           onclick="report()" style="padding: 0 !important;margin: 0 !important;">
@@ -300,8 +308,6 @@
                       </td>
                     </tr>
                     <% } %>
-
-
                 </tbody>
               </table>
             </div>
@@ -370,28 +376,6 @@
   <script src="demo/demo.js"></script>
 
   <script>
-    function check() {
-      let id = document.forms["search-form"]["id-text"].value;
-      if (id !== "") {
-        console.log("clicked on check " + id);
-        return true;
-      }
-      else {
-        swal({
-          title: "EMPTY ID\n",
-          text: "Search value should not be empty",
-          icon: "warning",
-        });
-        return false;
-      }
-    }
-
-    function report() {
-      swal("Report", "This shift has been reported", "warning");
-      return true;
-    }
-  </script>
-  <script>
     $(document).ready(function () {
       const user = getCookie("user")
       const identity = getCookie("identity")
@@ -401,6 +385,8 @@
       const status = "<%= status %>";
       const worker = "<%= worker %>";
       const shifts = "<%= shifts %>";
+      const employers = "<%= employers %>";
+      const totalHours = "<%= totalHours %>";
 
       console.log("status : ", status);
       if (worker !== {}) {
@@ -465,6 +451,29 @@
       }
     })
   </script>
+  <script>
+    function check() {
+      let id = document.forms["search-form"]["id-text"].value;
+      if (id !== "") {
+        console.log("clicked on check " + id);
+        return true;
+      }
+      else {
+        swal({
+          title: "EMPTY ID\n",
+          text: "Search value should not be empty",
+          icon: "warning",
+        });
+        return false;
+      }
+    }
+
+    function report() {
+      swal("Report", "This shift has been reported", "warning");
+      return true;
+    }
+  </script>
+
   <script>
     function getCookie(name) {
       const value = "; " + document.cookie;
