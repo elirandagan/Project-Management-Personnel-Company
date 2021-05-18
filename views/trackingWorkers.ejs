@@ -280,23 +280,37 @@
                               <%= employers[i].lastName %>
                           </td>
                           <% } %>
-                            <td id= "<%= shifts[i]._id %>from">
-                              <%= shifts[i].startHour %>
-                                <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;" onclick="edit_hours()">
+                            <td>
+                              <form action="/views/trackingWorkers" method="post">
+                                <div id="<%= shifts[i]._id %>_from" name="time" >
+                                  <%= shifts[i].startHour %>
+                                </div>
+                                <button class="btn btn-link btn-sm"
+                                  style="padding: 0 !important;margin: 0 !important;"
+                                  onclick="edit_hours('<%= shifts[i]._id %>_from')">
                                   <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
                                 </button>
-                                <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;">
+                                <button type="submit" id="<%= shifts[i]._id %>_from_check" type="button" class="btn btn-link btn-sm"
+                                  style="padding: 0 !important;margin: 0 !important;display: none; "
+                                  onclick="return check('<%= shifts[i]._id %>_from')">
                                   <i class="material-icons" style="margin-left: 0.5rem;">check</i>
                                 </button>
+                              </form>
                             </td>
-                            <td id="<%= shifts[i]._id %>to">
-                              <%= shifts[i].doneHour %>
-                                <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;" onclick="edit_hours()">
-                                  <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                                </button>
+                            <td>
+                              <div id="<%= shifts[i]._id %>_to">
+                                <%= shifts[i].doneHour %>
+                              </div>
+                              <button type="button" class="btn btn-link btn-sm"
+                                style="padding: 0 !important;margin: 0 !important;"
+                                onclick="edit_hours('<%= shifts[i]._id %>_to')">
+                                <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
+                              </button>
+                              <button id="<%= shifts[i]._id %>_to_check" type="button" class="btn btn-link btn-sm"
+                                style="padding: 0 !important;margin: 0 !important;display: none;"
+                                onclick="return check('<%= shifts[i]._id %>_to')">
+                                <i class="material-icons" style="margin-left: 0.5rem;">check</i>
+                              </button>
                             </td>
                             <td>
                               <%= totalHours[i].toFixed(2) %>
@@ -395,13 +409,6 @@
       const totalHours = "<%= totalHours %>";
 
       console.log("status : ", status);
-      if (worker !== {}) {
-        console.log("worker : ", worker);
-        for (const key in worker) {
-          console.log(worker[key]);
-        }
-      } else
-        console.log("worker is -_-'");
 
       switch (status) {
         case "init":
@@ -480,20 +487,34 @@
     }
   </script>
   <script>
-    function edit_hours() {
-      // var change_editable1 = document.getElementById("edit_1")
-      // console.log("clicked 1", change_editable1.contentEditable);
-      // if (change_editable1.contentEditable === "true")
-      //   change_editable1.contentEditable = "false";
-      // else
-      //   change_editable1.contentEditable = "true";
+    function edit_hours(e) {
+      console.log(e);
+      console.log(document.getElementById(e).innerHTML.replace(/ /g, ""));
 
-      // var change_editable2 = document.getElementById("edit_2")
-      // console.log("clicked 2", change_editable1.contentEditable);
-      // if (change_editable2.contentEditable === "true")
-      //   change_editable2.contentEditable = "false";
-      // else
-      //   change_editable2.contentEditable = "true";
+      var element = document.getElementById(e)
+      console.log(element.contentEditable);
+      if (element.contentEditable !== "true") {
+        element.contentEditable = "true";
+        document.getElementById(e + "_check").style.display = "inline";
+      }
+      else {
+        element.contentEditable = "false";
+        document.getElementById(e + "_check").style.display = "none";
+      }
+    }
+
+    function check(e) {
+      const time = document.getElementById(e).innerHTML.replace(/ /g, "").slice(1, -1);
+
+      if (! /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time)) {
+        swal({
+          title: "Invalid time entered\n",
+          text: "time must be in format hh:mm",
+          icon: "warning",
+        });
+        return false;
+      }
+      return true;
     }
   </script>
   <script>
