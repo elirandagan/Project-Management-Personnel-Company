@@ -375,7 +375,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/trackingWorkers", function (req, res) {
-            res.status(200).render("trackingWorkers", { status: "init", worker: "" });
+            res.status(200).render("trackingWorkers", { status: "init", worker: {} });
         });
 
         router.post("/trackingWorkers", async (req, res) => {
