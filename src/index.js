@@ -4,6 +4,7 @@ const app_port = process.env.PORT || 3000;
 const app = express();
 const router = express.Router();
 const CookieParser = require("cookie-parser");
+const  ObjectId = require("mongodb").ObjectId;
 
 const mongoDbFunction = require("./mongoDb");
 const validateFunction = require("./validate");
@@ -226,7 +227,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/absences", function (req, res) {
             if (validateUser) {
-                var project = {_id: 0, from: 1, to: 1}
+                var project = {_id: 1, from: 1, to: 1}
                 Absences_Collection.find({ID:req.cookies.user.ID}).project(project).toArray(function(err, absences){
                     res.status(200).render("absences", { arr: absences, succeed: false })
                     })  
@@ -235,14 +236,30 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.post("/absences", (req, res) => {
             if (validateUser) {
-                Absences_Collection.insertOne({ ID: req.cookies.user.ID, from: req.body.from, to: req.body.to })
+                if(req.body.from != undefined){
+                    Absences_Collection.insertOne({ ID: req.cookies.user.ID, from: req.body.from, to: req.body.to })
                     .then(result => {
-                        var project = {_id: 0, from: 1, to: 1}
+                        var project = {_id: 1, from: 1, to: 1}
                         Absences_Collection.find({ID:req.cookies.user.ID}).project(project).toArray(function(err, absences){
                         res.status(200).render("absences", { arr: absences, succeed: true })
                         console.log("SUCCEED TO INSERT SHIFT")
                         })   
                     })
+                }
+                else{
+                    console.log(req.body.deleteId)
+                    var stringVal = req.body.deleteId.toString()
+                    console.log(stringVal.slice(1, -1))
+                    Absences_Collection.deleteOne({ _id : new ObjectId(stringVal.slice(1, -1))})
+                    .then(result =>{
+                        var project = {_id: 1, from: 1, to: 1}
+                        Absences_Collection.find({ID:req.cookies.user.ID}).project(project).toArray(function(err, absences){
+                        res.status(200).render("absences", { arr: absences, succeed: false })
+                        console.log("SUCCEED TO DELETE SHIFT")
+                        })   
+                    })
+                }
+                
             }
         })
 

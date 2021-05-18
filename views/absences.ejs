@@ -120,14 +120,14 @@
             <span class="navbar-toggler-icon icon-bar"></span>
           </button>
           <div class="collapse navbar-collapse justify-content-end">
-            <form class="navbar-form">
+            <!-- <form class="navbar-form">
               <div class="input-group no-border">
                 <input type="text" value="" class="form-control" placeholder="Search...">
                 <button type="submit" class="btn btn-default btn-round btn-just-icon">
                   <i class="material-icons">search</i>
                   <div class="ripple-container"></div>
                 </button>
-              </div>
+              </div> -->
             </form>
             <ul class="navbar-nav">
 
@@ -219,35 +219,31 @@
                     <th></th>
                     <th>From</th>
                     <th>To</th>
+                    <th>Remove</th>
                   </thead>
                   <tbody>
                     <%for (let i=0, len=arr.length; len> i; ++i){%>
                       <tr>
-                        <td>
-                          <div class="form-check">
-                            <label class="form-check-label">
-                              <input class="form-check-input" type="checkbox" value="">
-                              <span class="form-check-sign">
-                                <span class="check"></span>
-                              </span>
-                            </label>
-                          </div>
-                        </td>
                         <%for (const item in arr[i]){%>
                           <td>
-                            <%= arr[i][item] %>
+                            <% if(item.toString() !='_id' ) {%>
+                              <%= arr[i][item] %>
+                                <%}%>
                           </td>
-
                           <%}%>
-
+                            <td>
+                              <form action="/absences" method="POST">
+                              <button onclick="deleteAbsence('<%= JSON.stringify(arr[i][`_id`]) %>')" type="submit"
+                                rel="tooltip" title="Remove" class="btn btn-white btn-link btn-sm" name="deleteId" value="'<%= arr[i][`_id`] %>'">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </form>
+                            </td>
                       </tr>
                       <%}%>
                   </tbody>
                 </table>
               </div>
-            </div>
-            <div class="form-group">
-              <button class="btn btn-primary pull-right">Delete</button>
             </div>
           </div>
         </div>
@@ -496,26 +492,15 @@
   </script>
   <script>
     $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
       var arr = "<%= arr %>";
-      var check_arr = [];
-      for (let i = 0; i < arr.length; ++i) {
-        check_arr.push({ delete: 0, from: arr[i].from, to: arr[i].to })
-      }
       var succeed = "<%= succeed %>";
-      console.log("absences page say: " + succeed)
-      console.log("absences =: " + arr)
-      if (succeed == true) {
+      if (succeed == 'true') {
         swal({
           title: "Adding Leaving Period\n",
           text: "The leaving period was succeesfuly added to the system.",
           icon: "success",
         });
-      }
-
-      function deleteRows() {
-        console.log("Check arr = " + check_arr)
       }
 
       const identity = getCookie("identity")
@@ -565,6 +550,7 @@
         return '';
     }
   </script>
+
 </body>
 
 </html>
