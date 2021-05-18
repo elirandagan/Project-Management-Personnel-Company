@@ -101,8 +101,8 @@ async function findOneByIdentity(userName, password, identityType) {
     try {
         let result = await user.findOne(query)
         if (result) {
-            console.log("*** Successfully found document: ",result)
-            console.log(".*** ");
+            // console.log("*** Successfully found document: ",result)
+            // console.log(".*** ");
         } else {
             console.log("*** No document matches the provided query.*** ");
         }
