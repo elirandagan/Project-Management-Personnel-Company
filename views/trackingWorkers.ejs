@@ -284,7 +284,7 @@
                   <td>Otto</td>
                   <td>@mdo</td>
                   <td>
-                    <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
+                    <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm" onclick="report()"
                       style="padding: 0 !important;margin: 0 !important;">
                       <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
                     </button>
@@ -301,7 +301,7 @@
                     </button>
                   </td>
                   <td>Jacob
-                    <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm"
+                    <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm" 
                       style="padding: 0 !important;margin: 0 !important;">
                       <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
                     </button>
@@ -309,7 +309,7 @@
                   <td>Thornton</td>
                   <td>@fat</td>
                   <td>
-                    <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
+                    <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm" onclick="report()"
                       style="padding: 0 !important;margin: 0 !important;">
                       <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
                     </button>
@@ -334,7 +334,7 @@
                   <td>the Bird</td>
                   <td>@twitter</td>
                   <td>
-                    <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
+                    <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm" onclick="report()"
                       style="padding: 0 !important;margin: 0 !important;">
                       <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
                     </button>
@@ -422,6 +422,11 @@
         });
         return false;
       }
+    }
+  
+    function report() {
+      swal("Report", "This shift has been reported","warning");
+      return true;
     }
   </script>
   <script>
