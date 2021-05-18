@@ -272,42 +272,43 @@
                         <%= shifts[i].startWork %>
                       </td>
                       <% if (employers[i]) { %>
-                      <td>
-                        <%= employers[i].partOfCompany %>
-                      </td>
-                      <td>
-                        <%= employers[i].firstName %>
-                          <%= employers[i].lastName %>
-                      </td>
-                      <% } %>
-                      <td>
-                        <%= shifts[i].startHour %>
-                          <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                      </td>
-                      <td>
-                        <%= shifts[i].doneHour %>
-                          <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                      </td>
-                      <td>
-                        <%= totalHours[i].toFixed(2) %>
-                      </td>
-                      <td>
-                        <%= (worker.hourlyPay * totalHours[i]).toFixed(2) %> ₪
-                      </td>
-                      <td>
-                        <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
-                          onclick="report()" style="padding: 0 !important;margin: 0 !important;">
-                          <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
-                        </button>
-                      </td>
+                        <td>
+                          <%= employers[i].partOfCompany %>
+                        </td>
+                        <td>
+                          <%= employers[i].firstName %>
+                            <%= employers[i].lastName %>
+                        </td>
+                        <% } %>
+                          <td id="edit_2">
+                            <%= shifts[i].startHour %>
+                              <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
+                                style="padding: 0 !important;margin: 0 !important;" onclick="edit_hours()">
+                                <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
+                              </button>
+                          </td>
+                          <td id="edit_1">
+                            <%= shifts[i].doneHour %>
+                              <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm"
+                                style="padding: 0 !important;margin: 0 !important;" onclick="edit_hours()">
+                                <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
+                              </button>
+                          </td>
+                          <td>
+                            <%= totalHours[i].toFixed(2) %>
+                          </td>
+                          <td>
+                            <%= (worker.hourlyPay * totalHours[i]).toFixed(2) %> ₪
+                          </td>
+                          <td>
+                            <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
+                              onclick="report()" style="padding: 0 !important;margin: 0 !important;">
+                              <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
+                            </button>
+                          </td>
                     </tr>
                     <% } %>
+
                 </tbody>
               </table>
             </div>
@@ -473,7 +474,23 @@
       return true;
     }
   </script>
+  <script>
+    function edit_hours() {
+      var change_editable1 = document.getElementById("edit_1")
+      console.log("clicked 1", change_editable1.contentEditable);
+      if (change_editable1.contentEditable === "true")
+        change_editable1.contentEditable = "false";
+      else
+        change_editable1.contentEditable = "true";
 
+      var change_editable2 = document.getElementById("edit_2")
+      console.log("clicked 2", change_editable1.contentEditable);
+      if (change_editable2.contentEditable === "true")
+        change_editable2.contentEditable = "false";
+      else
+        change_editable2.contentEditable = "true";
+    }
+  </script>
   <script>
     function getCookie(name) {
       const value = "; " + document.cookie;
