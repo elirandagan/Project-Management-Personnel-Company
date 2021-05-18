@@ -23,7 +23,7 @@
 </head>
 
 <body class="dark-edition">
-  <div class="wrapper ">
+  <div class="wrapper">
     <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-2.jpg">
       <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
@@ -170,208 +170,86 @@
         </div>
       </nav>
       <!-- End Navbar -->
+
       <div class="content">
-        <div class="container">
-
-          <div class="" style="display: grid;padding: 1rem 0;">
-            <div class="row justify-content-center">
-              <div class="col-md-8">
-                <div class="card card-body" style="border-radius: 15px;margin: 0;">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label style="font-size: 18px;">Where: </label>
-                    </div>
-                    <div class="col-md-4">
-                      <label style="font-size: 18px;">Date: </label>
-                    </div>
-                    <div class="col-md-3">
-                      <label style="font-size: 18px;position:relative; left:35px;">Status: </label>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label class="" style="font-size: 18px;">By: </label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label for="expertise" style="font-size: 18px;">Company: </label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="row">
-                        <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
-                          style="display: inline-block;">
-                          <i class="material-icons"
-                            style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
-                        </button>
-                        <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
-                          style="display: inline-block;">
-                          <i class="material-icons"
-                            style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+        <%for (let i=0,len=shifts.length;len>i;++i) { %>
+        <div class="row">
+        <div class="col-md-8">
+          <div class="card card-profile" style="border-radius: 15px;padding: 0.6rem;margin: 1rem 0;">
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">Where: <%= shifts[i].where%></label>
                 </div>
               </div>
-              <div class="col-md-4">
-                <div class="card card-body text-center" style="border-radius: 15px;margin: 0;">
-                  <div class="row">
-                    <div class="col">
-                      <label style="font-size: 18px;">From :
-                        12:30</label>
-                    </div>
-                    <div class="col">
-                      <label style="font-size: 18px;">To :
-                        17:00</label>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <button type="submit" class="update-btn btn btn-primary btn-sm"
-                        style="font-size: 0.8rem;border-radius: 15px;">Report</button>
-                    </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">Date: <%= shifts[i].startWork%> </label>
+                </div>
+              </div>
+              <div class="col-md-0">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">Status: <%= shifts[i].status%></label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">By: <%= shifts[i].employerId%></label>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="expertise" style="font-size: 18px;">Company: <%= shifts[i].company%></label>
+                </div>
+              </div>
+              <div class="col-md-1">
+                <div class="row">
+                  <div class="form-group ">
+                    <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
+                      style="padding: 0 !important;margin: 0 !important;">
+                      <i class="material-icons"
+                        style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
+                    </button>
+                    <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
+                      style="padding: 0 !important;margin: 0 !important;">
+                      <i class="material-icons"
+                        style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
-          <div class="" style="display: grid;padding: 1rem 0;">
-            <div class="row justify-content-center">
-              <div class="col-md-8">
-                <div class="card card-body" style="border-radius: 15px;margin: 0;">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label style="font-size: 18px;">Where: </label>
-                    </div>
-                    <div class="col-md-4">
-                      <label style="font-size: 18px;">Date: </label>
-                    </div>
-                    <div class="col-md-3">
-                      <label style="font-size: 18px;position:relative; left:35px;">Status:</label>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label class="" style="font-size: 18px;">By: </label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label for="expertise" style="font-size: 18px;">Company: </label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="row">
-                        <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
-                          style="display: inline-block;">
-                          <i class="material-icons"
-                            style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
-                        </button>
-                        <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
-                          style="display: inline-block;">
-                          <i class="material-icons"
-                            style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="card card-body text-center" style="border-radius: 15px;margin: 0;">
-                  <div class="row">
-                    <div class="col">
-                      <label style="font-size: 18px;">From :
-                        12:30</label>
-                    </div>
-                    <div class="col">
-                      <label style="font-size: 18px;">To :
-                        17:00</label>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <button type="submit" class="update-btn btn btn-primary btn-sm"
-                        style="font-size: 0.8rem;border-radius: 15px;">Report</button>
-                    </div>
-                  </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card card-profile" style="border-radius: 15px;margin: 1rem 0;">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <label class="bmd-label-floating" style="font-size: 18px;">From : <%= shifts[i].startHour%></label>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div class="" style="display: grid;padding: 1rem 0;">
-            <div class="row justify-content-center">
-              <div class="col-md-8">
-                <div class="card card-body" style="border-radius: 15px;margin: 0;">
-                  <div class="row">
-                    <div class="col-md-4">
-                      <label style="font-size: 18px;">Where: </label>
-                    </div>
-                    <div class="col-md-4">
-                      <label style="font-size: 18px;">Date: </label>
-                    </div>
-                    <div class="col-md-3">
-                      <label style="font-size: 18px;position:relative; left:35px;">Status:</label>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label class="" style="font-size: 18px;">By: </label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="form-group">
-                        <label for="expertise" style="font-size: 18px;">Company: </label>
-                      </div>
-                    </div>
-                    <div class="col-md-4">
-                      <div class="row">
-                        <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
-                          style="display: inline-block;">
-                          <i class="material-icons"
-                            style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
-                        </button>
-                        <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
-                          style="display: inline-block;">
-                          <i class="material-icons"
-                            style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+            <div class="row">
+              <div class="col-md-12">
+                <label class="bmd-label-floating" style="font-size: 18px;margin-bottom: -0.5rem;">To : <%= shifts[i].doneHour%></label>
               </div>
-              <div class="col-md-4">
-                <div class="card card-body text-center" style="border-radius: 15px;margin: 0;">
-                  <div class="row">
-                    <div class="col">
-                      <label style="font-size: 18px;">From :
-                        12:30</label>
-                    </div>
-                    <div class="col">
-                      <label style="font-size: 18px;">To :
-                        17:00</label>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="col">
-                      <button type="submit" class="update-btn btn btn-primary btn-sm"
-                        style="font-size: 0.8rem;border-radius: 15px;">Report</button>
-                    </div>
-                  </div>
+            </div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="form-group">
+                  <button type="submit" class="update-btn btn btn-primary btn-sm"
+                    style="font-size: 0.8rem;border-radius: 15px;">Report</button>
                 </div>
               </div>
             </div>
           </div>
 
         </div>
+        </div>
+        <%}%>
       </div>
 
       <footer class="footer">
@@ -406,16 +284,18 @@
           </div>
         </div>
       </footer>
+
       <script>
         const x = new Date().getFullYear();
         let date = document.getElementById('date');
         date.innerHTML = '&copy; ' + x + date.innerHTML;
       </script>
+
     </div>
   </div>
-
-  </div>
   <!--   Core JS Files   -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js">  </script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script src="js/core/jquery.min.js"></script>
   <script src="js/core/popper.min.js"></script>
   <script src="js/core/bootstrap-material-design.min.js"></script>
@@ -434,39 +314,55 @@
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="demo/demo.js"></script>
   <script>
-
-    const identity = document.cookie.substr(9, document.cookie.length)
-    console.log("IDENTITY: " + identity + " length: " + identity.length)
-    if (identity.toString() == "Contractor_Users") {
-      document.getElementById("recruit").style.display = "none";
-      document.getElementById("trackingWorkers").style.display = "none";
-      document.getElementById("statistics").style.display = "none";
-      document.getElementById("searchWorker").style.display = "none";
-      document.getElementById("hiringHistory").style.display = "none";
-    }
-    else if (identity.toString() == "HR_Users") {
-      document.getElementById("shifts").style.display = "none";
-      document.getElementById("workHistory").style.display = "none";
-      document.getElementById("absences").style.display = "none";
-      document.getElementById("userProfile").style.display = "none";
-      document.getElementById("searchWorker").style.display = "none";
-      document.getElementById("hiringHistory").style.display = "none";
-    }
-    else if (identity.toString() == "Employer_Users") {
-      document.getElementById("shifts").style.display = "none";
-      document.getElementById("workHistory").style.display = "none";
-      document.getElementById("absences").style.display = "none";
-      document.getElementById("userProfile").style.display = "none";
-      document.getElementById("recruit").style.display = "none";
-      document.getElementById("trackingWorkers").style.display = "none";
-      document.getElementById("statistics").style.display = "none";
-    }
-
     $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
+      const user = getCookie("user")
+      const identity = getCookie("identity")
+      console.log(user.expertise);
+      console.log(identity);
 
-    });
+      if (identity === "Contractor_Users") {
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity === "HR_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("searchWorker").style.display = "none";
+        document.getElementById("hiringHistory").style.display = "none";
+      }
+      else if (identity === "Employer_Users") {
+        document.getElementById("shifts").style.display = "none";
+        document.getElementById("workHistory").style.display = "none";
+        document.getElementById("absences").style.display = "none";
+        document.getElementById("userProfile").style.display = "none";
+        document.getElementById("recruit").style.display = "none";
+        document.getElementById("trackingWorkers").style.display = "none";
+        document.getElementById("statistics").style.display = "none";
+      }
+    })
+  </script>
+  <script>
+    function getCookie(name) {
+      const value = "; " + document.cookie;
+      const parts = value.split("; " + name + "=");
+      if (parts.length == 2) {
+        const vlu = parts.pop().split(";").shift();
+        const decode_vlu = decodeURIComponent(vlu);
+        const replace_vlu = decode_vlu.replace(/[+]/, ' ');
+        const temp = replace_vlu.split(',')
+        if (temp.length > 1)
+          return JSON.parse(replace_vlu.replace("j:", ""));
+        else
+          return replace_vlu
+      }
+      else
+        return '';
+    }
   </script>
 </body>
 
