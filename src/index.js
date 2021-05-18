@@ -440,7 +440,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
 
                     var employers = new Array(shifts.length)
-                    const project = { _id: 0, userName: 0, password: 0 };
+                    const project = { userName: 0, password: 0 };
 
                     for (let i = 0; i < shifts.length; i++) { // creates employers
                         let employer = Employer_Users_Collection.findOne({ ID: shifts[i].employerId }, { projection: project });
@@ -482,18 +482,25 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         else {
                             shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
                         }
+                        if (start.getUTCHours() < 10) {
+                            shifts[i].startHour = "0" + shifts[i].startHour;
+                        }
+                        if (done.getUTCHours() < 10) {
+                            shifts[i].doneHour = "0" + shifts[i].doneHour;
+                        }
                     }
-                }
-                console.log('$ $$$$');
-                console.log(shifts);
-                console.log('$$$$$');
-                if (!result)
-                    res.status(200).render("trackingWorkers",
-                        { status: "Not Found", worker: req.body["id-text"], shifts: {}, employers: {}, totalHours: {} });
-                else
-                    res.status(200).render("trackingWorkers",
-                        { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
+                    console.log('$ $$$$');
+                    console.log(shifts);
+                    console.log('$$$$$');
+                    if (!result)
+                        res.status(200).render("trackingWorkers",
+                            { status: "Not Found", worker: req.body["id-text"], shifts: {}, employers: {}, totalHours: {} });
+                    else
+                        res.status(200).render("trackingWorkers",
+                            { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
 
+
+                }
             } catch (error) {
                 console.error(error)
                 throw error
