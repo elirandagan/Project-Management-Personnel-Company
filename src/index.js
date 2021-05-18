@@ -479,6 +479,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                     if (err) throw err;
                     console.log("1 document updated");
                     Shifts_Collection.find().toArray().then((schema) => {
+
                         schema ? res.status(200).render("hiringHistory", {args: schema}) : console.error("shifts empty")
                     })
                 });

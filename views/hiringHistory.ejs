@@ -419,6 +419,9 @@
 
                 const newArr = args.map(({_id, ...rest}) => ({...rest}))
 
+                if(window.location.href.toString().includes("modify")){
+                    location.assign("/hiringHistory")
+                }
 
                 var _table_ = document.createElement('table'),
                     _tr_ = document.createElement('tr'),
