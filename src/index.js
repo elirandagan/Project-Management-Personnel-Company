@@ -1,4 +1,3 @@
-
 var ObjectId = require("mongodb").ObjectId;
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -29,6 +28,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         const Contractor_Users_Collection = db.collection("Contractor_Users")
         const Absences_Collection = db.collection("Absences")
         const Shifts_Collection = db.collection("Shifts")
+        const AllreadyVoted_Collection = db.collection("AlreadyVoted")
 
         app.set("view engine", "ejs");
         app.use(CookieParser())
@@ -432,7 +432,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         router.get("/hiringHistory", function (req, res) {
             console.log("router get")
             Shifts_Collection.find().toArray().then((schema) => {
-                schema ? res.status(200).render("hiringHistory", {args: schema}) : console.error("shifts empty")
+                schema ? res.status(200).render("hiringHistory", {args: schema , msg:0}) : console.error("shifts empty")
             })
         });
 
@@ -446,45 +446,46 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         });
 
 
-        router.post("/modify_rate_star", (req, res) => {
-            console.log("router POST modify star")
-            console.log(req.body)
-        })
-
-
         router.get("/modify_rate_star", (req, res) => {
             let value = req.cookies.id.split("#")
-
+            let user = req.cookies.user._id
             let shiftId = value[0]
             let starAmount = value[1]
             parseInt(starAmount)
             console.log("shiftId : ", shiftId)
             console.log("starAmount : ", starAmount)
 
-            const myQuery = {_id : new ObjectId(shiftId)}
+            AllreadyVoted_Collection.find({userId: user, shiftId: shiftId}).toArray().then((result) => {
+                console.log(result)
+                if (result.length === 0) {
+                    const myQuery = {_id: new ObjectId(shiftId)}
 
-            // eslint-disable-next-line no-undef
-            Shifts_Collection.find(myQuery).toArray().then((schema)=>{
-
-                let vote = schema[0].vote
-                let rating = schema[0].rating
-                let newValues
-                if(vote==0){
-                    newValues = { $set: {rating: starAmount, vote: vote+1 } };
-                }else{
-                     rating = rating * (vote-1)/vote + starAmount / vote
-                     newValues = { $set: {rating: rating.toFixed(2), vote: vote+1 } };
-                }
-                Shifts_Collection.updateOne(myQuery, newValues, function(err) {
-                    if (err) throw err;
-                    console.log("1 document updated");
-                    Shifts_Collection.find().toArray().then((schema) => {
-
-                        schema ? res.status(200).render("hiringHistory", {args: schema}) : console.error("shifts empty")
+                    Shifts_Collection.find(myQuery).toArray().then((schema) => {
+                        let vote = schema[0].vote
+                        let rating = schema[0].rating
+                        let newValues
+                        if (vote == 0) {
+                            newValues = {$set: {rating: starAmount, vote: vote + 1}};
+                        } else {
+                            rating = rating * (vote - 1) / vote + starAmount / vote
+                            newValues = {$set: {rating: rating.toFixed(2), vote: vote + 1}};
+                        }
+                        Shifts_Collection.updateOne(myQuery, newValues, function (err) {
+                            if (err) throw err;
+                            console.log("1 document updated");
+                            AllreadyVoted_Collection.insertOne({userId: user, shiftId: shiftId})
+                            Shifts_Collection.find().toArray().then((schema) => {
+                                schema ? res.status(200).render("hiringHistory", {args: schema,msg:1}) : console.error("shifts empty")
+                            })
+                        });
                     })
-                });
+                }else{
+                    console.log("already voted")
+                    Shifts_Collection.find().toArray().then((schema) => {
+                        schema ? res.status(200).render("hiringHistory", {args: schema , msg:2}) : console.error("shifts empty")
+                    })
+                }
             })
-
         });
 
 
@@ -494,6 +495,11 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         app.use("/", router);
     })
     .catch(error => console.error(error))
+
+
+// exports.insertVotedValue = insertVotedValue;
+// exports.votedAlready = votedAlready;
+
 module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
 console.log(`http://127.0.0.1:${app_port}`);
