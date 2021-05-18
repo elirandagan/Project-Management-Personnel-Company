@@ -403,9 +403,9 @@
 
   <script>
     function check() {
-      let txt = document.forms["search-form"]["id-text"].value;
-      if (txt !== "") {
-        console.log("clicked on check " + txt);
+      let id = document.forms["search-form"]["id-text"].value;
+      if (id !== "") {
+        console.log("clicked on check " + id);
         return true;
       }
       else {
@@ -434,8 +434,6 @@
       } else
         console.log("worker is -_-'");
 
-
-
       switch (status) {
         case "init":
           swal({
@@ -454,7 +452,7 @@
         case "Success":
           swal({
             title: "Found worker\n",
-            text: "",
+            text: worker.ID + worker,
             icon: "success",
           });
           break;
