@@ -42,9 +42,8 @@
             padding: 10px;
             border: 1px solid #ccc;
             text-align: center;
-            font-size: 20px;
+            font-size: 21px;
             color: whitesmoke;
-            font-family: "Lucida Bright";
 
         }
 
@@ -480,9 +479,19 @@
                         star[j] = document.createElement("a")
                         star[j].className = `fas fa-star s${j + 1}`
                         star[j].id = args[i - 1]._id + `#${j+1}`
-                        star[j].href = "/modify_rate_star"
-                        newDiv.append(star[j])
+                        //star[j].href = "/modify_rate_star"
+                        star[j].onclick = ()=>{
+                            document.cookie = "id="+ star[j].id
+                            location.assign("/modify_rate_star")
+                        }
                     }
+
+                    newDiv.append(star[4])
+                    newDiv.append(star[3])
+                    newDiv.append(star[2])
+                    newDiv.append(star[1])
+                    newDiv.append(star[0])
+
 
                     newDiv.className = "star-wrapper"
 
@@ -493,6 +502,8 @@
             } else {
                 console.log("EEROR ACCRUED")
             }
+
+            //TODO fix the stuck path & send star.id to router get
         });
 
     </script>

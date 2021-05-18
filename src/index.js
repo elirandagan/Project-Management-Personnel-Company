@@ -453,7 +453,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
 
         router.get("/modify_rate_star", (req, res) => {
-            let value = "609bf35a2a1418313e3c7440#4".split("#")
+            let value = req.cookies.id.split("#")
 
             let shiftId = value[0]
             let starAmount = value[1]
@@ -473,7 +473,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                     newValues = { $set: {rating: starAmount, vote: vote+1 } };
                 }else{
                      rating = rating * (vote-1)/vote + starAmount / vote
-                     newValues = { $set: {rating: rating, vote: vote+1 } };
+                     newValues = { $set: {rating: rating.toFixed(2), vote: vote+1 } };
                 }
                 Shifts_Collection.updateOne(myQuery, newValues, function(err) {
                     if (err) throw err;
