@@ -338,8 +338,8 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         }
 
         async function getRecruitments() {
-            const query = {createAt: {$gt: date.getFirstDateOfMonth(), $lt: new Date()}};
-            const projection = {createAt: 1, _id: 0}; //can be added to find()
+            const query = { startWork: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
+            const projection = { startWork: 1, _id: 0 }; //can be added to find()
             var reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
             try {
@@ -349,8 +349,8 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                 // the value indicates the amount of recruitments per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
                     var nextDate = new Date(d.getDate() + 1);
-                    if (d <= result[i]["createAt"] <= nextDate) {
-                        var day = result[i]["createAt"].getDate() - 1;
+                    if (d <= result[i]["startWork"] <= nextDate) {
+                        var day = result[i]["startWork"].getDate() - 1;
                         ++reqs[day];
                     }
                 }
@@ -413,16 +413,66 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             console.log("expertises :" + expertises);
             console.log("*****");
 
-            res.status(200).render("statistics", {
-                signUps: signUps,
-                recruitments: recruitments,
-                expertises: expertises
-            });
+            res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments, expertises: expertises });
         });
 
+        router.get("/trackingWorkers", function (req, res) {
+            res.status(200).render("trackingWorkers", { status: "init", worker: {}, shifts: {} });
+        });
 
-        router.get("/trackingWorkers", async function (req, res) {
-            res.status(200).render("trackingWorkers");
+        router.post("/trackingWorkers", async (req, res) => {
+            console.log('********');
+            console.log(" in trackingWorkers post ");
+            console.log("ID", req.body["id-text"]);
+            console.log('********');
+
+            try {
+                var result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
+                result = await result;
+                console.log('*****');
+                console.log(result);
+                console.log('*****');
+
+                if (result) {
+                    var shifts = Shifts_Collection.find({ cwId: req.body["id-text"] })
+                    shifts = await shifts.toArray();
+                    for (let i = 0; i < shifts.length; ++i) {
+                        var start = new Date(shifts[i].startWork)
+                        var done = new Date(shifts[i].doneWork)
+                        startMonth = start.getMonth() + 1;
+                        doneMonth = done.getMonth() + 1;
+                        if (startMonth < 10) {
+                            startMonth = "0" + startMonth;
+                        }
+                        shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
+                        shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
+
+                        if (start.getUTCMinutes() < 10) {
+                            shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
+                        }
+                        else {
+                            shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
+                        }
+                        if (done.getUTCMinutes() < 10) {
+                            shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
+                        }
+                        else {
+                            shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
+                        }
+                    }
+                }
+                console.log('$ $$$$');
+                console.log(shifts);
+                console.log('$$$$$');
+                if (!result)
+                    res.status(200).render("trackingWorkers", { status: "Not Found", worker: req.body["id-text"], shifts: {} });
+                else
+                    res.status(200).render("trackingWorkers", { status: "Success", worker: result, shifts: shifts });
+
+            } catch (error) {
+                console.error(error)
+                throw error
+            }
         });
 
         router.get("/searchWorker", function (req, res) {
