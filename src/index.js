@@ -422,22 +422,13 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.post("/trackingWorkers", async (req, res) => {
-            console.log('********');
-            console.log(" in trackingWorkers post ");
-            console.log("ID", req.body["id-text"]);
-            console.log('********');
-
             try {
                 var result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
                 result = await result;
-                console.log('*****');
-                console.log(result);
-                console.log('*****');
 
                 if (result) {
                     var shifts = Shifts_Collection.find({ cwId: req.body["id-text"] }).sort({ startWork: -1 })
                     shifts = await shifts.toArray();
-
 
                     var employers = new Array(shifts.length)
                     const project = { userName: 0, password: 0 };
@@ -489,9 +480,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             shifts[i].doneHour = "0" + shifts[i].doneHour;
                         }
                     }
-                    console.log('$ $$$$');
-                    console.log(shifts);
-                    console.log('$$$$$');
+
                     if (!result)
                         res.status(200).render("trackingWorkers",
                             { status: "Not Found", worker: req.body["id-text"], shifts: {}, employers: {}, totalHours: {} });
