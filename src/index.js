@@ -422,6 +422,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.post("/trackingWorkers", async (req, res) => {
+            console.log("$***$");
+            console.log(req.body);
+            console.log("$***$");
+
             try {
                 var result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
                 result = await result;
@@ -481,15 +485,15 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         }
                     }
 
-                    if (!result)
-                        res.status(200).render("trackingWorkers",
-                            { status: "Not Found", worker: req.body["id-text"], shifts: {}, employers: {}, totalHours: {} });
-                    else
-                        res.status(200).render("trackingWorkers",
-                            { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
+                    
 
-
+                    res.status(200).render("trackingWorkers",
+                        { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
                 }
+                else
+                    res.status(200).render("trackingWorkers",
+                        { status: "Not Found", worker: req.body["id-text"], shifts: {}, employers: {}, totalHours: {} });
+
             } catch (error) {
                 console.error(error)
                 throw error
