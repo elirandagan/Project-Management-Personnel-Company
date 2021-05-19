@@ -415,13 +415,34 @@
     <script>
         $(document).ready(function () {
             const args = <%- JSON.stringify(args) %>;
+            const msg = <%= msg %>;
+
+            if (msg === 0) {
+                console.log("DEFAULT")
+
+            }
+            else if (msg === 1) {
+                swal({
+                    title: "Vote\n",
+                    text: "Your vote successfully update",
+                    icon: "success",
+                });
+            }else if (msg === 2) {
+                swal({
+                    title: "Vote\n",
+                    text: "you already voted",
+                    icon: "warning",
+                });
+            }
+
             if (args) {
 
                 const newArr = args.map(({_id, ...rest}) => ({...rest}))
 
-                if(window.location.href.toString().includes("modify")){
-                    location.assign("/hiringHistory")
-                }
+                //rerender to hiringHistory
+                // if(window.location.href.toString().includes("modify")){
+                //     window.location.pathname.replace("/modify", "/hiringHistory");
+                // }
 
                 var _table_ = document.createElement('table'),
                     _tr_ = document.createElement('tr'),
@@ -431,12 +452,14 @@
 // Builds the HTML Table out of myList json data from Ivy restful service.
                 function buildHtmlTable(arr) {
                     table = _table_.cloneNode(false), columns = addAllColumnHeaders(arr, table);
+                    let cellValue;
                     for (var i = 0, maxi = arr.length; i < maxi; ++i) {
                         tr = _tr_.cloneNode(false);
                         for (var j = 0, maxj = columns.length; j < maxj; ++j) {
                             td = _td_.cloneNode(false);
                             cellValue = arr[i][columns[j]];
-                            td.appendChild(document.createTextNode(arr[i][columns[j]] || ''));
+                            cellValue = cellValue.toString().includes("000Z") ? dateChangeFormat(cellValue) : cellValue
+                            td.appendChild(document.createTextNode(cellValue || ''));
                             tr.appendChild(td);
                         }
                         table.appendChild(tr);
@@ -474,42 +497,56 @@
 
                     let x = table.rows[i].cells[7];
 
-                    //create element
-                    let newDiv = document.createElement("div");
+                        //create element
+                        let newDiv = document.createElement("div");
 //create 5 star rate scale
-                    let star = []
-                    for (let j = 0; j < 5; j++) {
-                        star[j] = document.createElement("a")
-                        star[j].className = `fas fa-star s${j + 1}`
-                        star[j].id = args[i - 1]._id + `#${j+1}`
-                        //star[j].href = "/modify_rate_star"
-                        star[j].onclick = ()=>{
-                            document.cookie = "id="+ star[j].id
-                            location.assign("/modify_rate_star")
+                        let star = []
+                        for (let j = 0; j < 5; j++) {
+                            star[j] = document.createElement("a")
+                            star[j].className = `fas fa-star s${j + 1}`
+                            star[j].id = args[i - 1]._id + `#${j + 1}`
+                            //star[j].href = "/modify_rate_star"
+                            star[j].onclick = () => {
+                                document.cookie = "id=" + star[j].id
+                                location.assign("/modify_rate_star")
+                            }
                         }
-                    }
 
-                    newDiv.append(star[4])
-                    newDiv.append(star[3])
-                    newDiv.append(star[2])
-                    newDiv.append(star[1])
-                    newDiv.append(star[0])
+                        newDiv.append(star[4])
+                        newDiv.append(star[3])
+                        newDiv.append(star[2])
+                        newDiv.append(star[1])
+                        newDiv.append(star[0])
 
 
-                    newDiv.className = "star-wrapper"
+                        newDiv.className = "star-wrapper"
 
-                    x.append(newDiv)
+                        x.append(newDiv)
 
                 }
 
             } else {
-                console.log("EEROR ACCRUED")
+                console.log("ERROR ACCRUED")
             }
 
-            //TODO fix the stuck path & send star.id to router get
+            function dateChangeFormat(date){
+                const getDate = new Date(date);
+                let returnDate = getDate.getDay() + "/" + getDate.getMonth() + "/" + getDate.getUTCFullYear();
+                let hours
+                if (getDate.getUTCMinutes() < 10) {
+                    hours = getDate.getUTCHours() + " : 0" + getDate.getUTCMinutes();
+                }
+                else {
+                    hours = getDate.getUTCHours() + " : " + getDate.getUTCMinutes();
+                }
+               return returnDate + " " + hours
+            }
+
         });
 
     </script>
+
+
 
 </div>
 </body>
