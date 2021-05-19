@@ -21,20 +21,83 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="demo/demo.css" rel="stylesheet"/>
     <style>
-        th, td {
-            border: 1px solid white;
-            font-size: 20px;
-            text-align: center;
-            padding: 5px;
+        table {
+            width: 750px;
+            border-collapse: collapse;
+            margin:50px auto;
+        }
+
+        /* Zebra striping */
+        tr:nth-of-type(odd) {
+            background: #000325;
         }
 
         th {
-            font-weight: bold;
+            background: #3498db;
             color: white;
+            font-weight: bold;
         }
 
-        td {
+        td, th {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: center;
+            font-size: 21px;
             color: whitesmoke;
+
+        }
+
+        /*
+        Max width before this PARTICULAR table gets nasty
+        This query will take effect for any screen smaller than 760px
+        and also iPads specifically.
+        */
+        @media
+        only screen and (max-width: 760px),
+        (min-device-width: 768px) and (max-device-width: 1024px)  {
+
+            table {
+                width: 100%;
+            }
+
+            /* Force table to not be like tables anymore */
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            /* Hide table headers (but not display: none;, for accessibility) */
+            thead tr {
+                position: absolute;
+                top: -9999px;
+                left: -9999px;
+            }
+
+            tr { border: 1px solid #ccc; }
+
+            td {
+                /* Behave  like a "row" */
+                border: none;
+                border-bottom: 1px solid #eee;
+                position: relative;
+                padding-left: 50%;
+            }
+
+            td:before {
+                /* Now like a table header */
+                position: absolute;
+                /* Top/left values mimic padding */
+                top: 6px;
+                left: 6px;
+                width: 45%;
+                padding-right: 10px;
+                white-space: nowrap;
+                /* Label the data */
+                content: attr(data-column);
+
+                color: #000;
+                font-weight: bold;
+            }
+
         }
 
         #container {
@@ -44,15 +107,58 @@
             padding: 10px;
         }
 
-        .checked {
-            color: orange;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+
+        .star-wrapper {
+            display: flex;
+            width: 100%;
+            direction: rtl;
+        }
+
+        .star-wrapper a {
+            font-size: 1em;
+            color: #fff;
+            text-decoration: none;
+            transition: all 0.5s;
+            margin: 4px;
+        }
+
+        .star-wrapper a:hover {
+            color: gold;
+            transform: scale(1.3);
+        }
+
+        .s1:hover ~ a {
+            color: gold;
+        }
+
+        .s2:hover ~ a {
+            color: gold;
+        }
+
+        .s3:hover ~ a {
+            color: gold;
+        }
+
+        .s4:hover ~ a {
+            color: gold;
+        }
+
+        .s5:hover ~ a {
+            color: gold;
+        }
+
     </style>
 </head>
 
 <body class="dark-edition">
+<h1 class="container">Hiring history</h1>
 <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-2.jpg">
+    <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-4.jpg">
         <!--
           Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
@@ -106,6 +212,9 @@
     <script src="js/material-dashboard.js?v=2.1.0"></script>
     <!-- Material Dashboard DEMO methods, don't include it in your project! -->
     <script src="demo/demo.js"></script>
+
+    <script src="https://kit.fontawesome.com/5ea815c1d0.js"></script>
+
     <script>
         $(document).ready(function () {
             $().ready(function () {
@@ -310,6 +419,9 @@
 
                 const newArr = args.map(({_id, ...rest}) => ({...rest}))
 
+                if(window.location.href.toString().includes("modify")){
+                    location.assign("/hiringHistory")
+                }
 
                 var _table_ = document.createElement('table'),
                     _tr_ = document.createElement('tr'),
@@ -349,12 +461,7 @@
                             }
                         }
                     }
-                    key = "rateButton"
-                    columnSet.push(key);
-                    _th_ = document.createElement('th')
-                    th = _th_.cloneNode(false);
-                    th.id = 'thBtn'
-                    th.appendChild(document.createTextNode(key));
+
                     tr.appendChild(th);
                     table.appendChild(tr);
                     return columnSet;
@@ -362,30 +469,50 @@
 
                 document.getElementById('container').appendChild(buildHtmlTable(newArr));
 
+
                 for (var i = 1; i < newArr.length + 1; i++) {
-                    var x = table.rows[i].cells[7];
-                    btn = document.createElement('button')
-                    btn.innerText = "rate here"
-                    btn.id = args[i - 1]._id + `#row[${i}]cells[5]`
-                    btn.onclick = (e) => {
-                        var split = e.target.id.split("#")
-                        const shiftsId = split[0]
-                        placeInTable = split[1]
-                        console.log(shiftsId)
-                        console.log(placeInTable)
-                        myWindow = window.open("/rating", "", "width=400,height=400");
-                        myWindow.name = split
+
+                    let x = table.rows[i].cells[7];
+
+                    //create element
+                    let newDiv = document.createElement("div");
+//create 5 star rate scale
+                    let star = []
+                    for (let j = 0; j < 5; j++) {
+                        star[j] = document.createElement("a")
+                        star[j].className = `fas fa-star s${j + 1}`
+                        star[j].id = args[i - 1]._id + `#${j+1}`
+                        //star[j].href = "/modify_rate_star"
+                        star[j].onclick = ()=>{
+                            document.cookie = "id="+ star[j].id
+                            location.assign("/modify_rate_star")
+                        }
                     }
-                    btn.name = ""
-                    x.append(btn);
+
+                    newDiv.append(star[4])
+                    newDiv.append(star[3])
+                    newDiv.append(star[2])
+                    newDiv.append(star[1])
+                    newDiv.append(star[0])
+
+
+                    newDiv.className = "star-wrapper"
+
+                    x.append(newDiv)
+
                 }
+
             } else {
                 console.log("EEROR ACCRUED")
             }
+
+            //TODO fix the stuck path & send star.id to router get
         });
 
     </script>
 
+</div>
 </body>
 
 </html>
+
