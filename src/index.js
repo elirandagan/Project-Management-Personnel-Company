@@ -96,9 +96,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     const user = await mongoDbFunction.findOneByIdentity(req.body.userName, req.body.password, req.body.identity)
                     // console.log("user", user);
                     // const userInfo = { identity: req.body.identity, user: user['ID']}
-                    console.log("*****");
-                    console.log("user", user);
-                    console.log("*****");
+                    // console.log("*****");
+                    // console.log("user", user);
+                    // console.log("*****");
                     res.cookie("user", user, { maxAge: 9000000, httpOnly: false });
                     res.cookie("identity", req.body.identity, { maxAge: 9000000, httpOnly: false });
                     res.status(200).render("dashboard", { exist: "invalidID" });
@@ -422,9 +422,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.post("/trackingWorkers", async (req, res) => {
-            console.log("$***$");
-            console.log(req.body);
-            console.log("$***$");
+            // console.log("$***$");
+            // console.log(req.body);
+            // console.log("$***$");
 
             try {
                 var type = req.body.id.split("_")
@@ -488,6 +488,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                 shifts[i].doneHour = "0" + shifts[i].doneHour;
                             }
                         }
+
+
                         res.status(200).render("trackingWorkers",
                             { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
                     }
@@ -498,35 +500,56 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 }
                 else if (type === "from") {
                     try {
-                        const id = req.body.id.split("_")[0];
+                        const id = req.body.id.split("_")[0]; //id is "<id_value>_from" or "<id_value>_to"
 
-                        var start_shift = Shifts_Collection.findOne({ _id: ObjectId(id) }).project({ startWork: 1 });
-                        start_shift = await start_shift.startWork;
+                        var start_shift = Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: { _id: 0, startWork: 1 } });
+                        start_shift = await start_shift;
+                        // console.log("start_shift : ", start_shift);
+
 
                         const time = req.body["time_" + type].split(':')
+                        // console.log("time :", time);
                         const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])];
-                        const new_date = new Date(start_shift.setHours(hours, minutes));
 
-                        var shift = Shifts_Collection.updateOne(
-                            { _id: ObjectId(id) },
-                            { $set: { startWork: new_date } },
-                            { returnOriginal: false })
+                        // console.log("hours, minutes :", hours, minutes);
+                        const new_date = new Date(new Date(start_shift.startWork).setHours(hours + 3, minutes)); //added 3 for gmt
 
-                        shift = await shift;
-                        console.log("updated shidt: ", shift);
+                        console.log("new_date :", new_date);
 
+                        await Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: { startWork: new_date } }, (err, res) => {
+                            if (err) throw err;
+                            console.log("1 document updated");
+                        });
 
                     } catch (error) {
                         throw console.error(error);
                     }
-
-
-                    console.log("### in change-from");
-                    console.log(req.body.id.split("_"));
-
                 } else if (type === "to") {
-                    console.log("### in change-to");
-                    console.log(req.body.id.split("_"));
+                    try {
+                        const id = req.body.id.split("_")[0]; //id is "<id_value>_from" or "<id_value>_to"
+
+                        var start_shift = Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: { _id: 0, startWork: 1 } });
+                        start_shift = await start_shift;
+                        // console.log("start_shift : ", start_shift);
+
+
+                        const time = req.body["time_" + type].split(':')
+                        // console.log("time :", time);
+                        const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])];
+
+                        // console.log("hours, minutes :", hours, minutes);
+                        const new_date = new Date(new Date(start_shift.startWork).setHours(hours + 3, minutes)); //added 3 for gmt
+
+                        console.log("new_date :", new_date);
+
+                        await Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: { startWork: new_date } }, (err, res) => {
+                            if (err) throw err;
+                            console.log("1 document updated");
+                        });
+
+                    } catch (error) {
+                        throw console.error(error);
+                    }
                 }
                 else {
                     console.log("### something went wrong - unknown form name found");
@@ -558,7 +581,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         router.get("/dashboard", function (req, res) {
             validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
         });
-
 
         router.get("/modify_rate_star", (req, res) => {
             let value = req.cookies.id.split("#")
@@ -602,17 +624,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             })
         });
 
-
-        //add the router
-
-
         app.use("/", router);
     })
     .catch(error => console.error(error))
-
-
-// exports.insertVotedValue = insertVotedValue;
-// exports.votedAlready = votedAlready;
 
 module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
