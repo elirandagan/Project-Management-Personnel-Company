@@ -427,72 +427,87 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log("$***$");
 
             try {
-                var result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
-                result = await result;
+                var type = req.body.id.split("_")
+                type = type.length == 2 ? type[1] : "search";
 
-                if (result) {
-                    var shifts = Shifts_Collection.find({ cwId: req.body["id-text"] }).sort({ startWork: -1 })
-                    shifts = await shifts.toArray();
+                if (type === "search") {
+                    var result = Contractor_Users_Collection.findOne({ ID: req.body["id"] })
+                    result = await result;
 
-                    var employers = new Array(shifts.length)
-                    const project = { userName: 0, password: 0 };
+                    if (result) {
+                        var shifts = Shifts_Collection.find({ cwId: req.body["id"] }).sort({ startWork: -1 })
+                        shifts = await shifts.toArray();
 
-                    for (let i = 0; i < shifts.length; i++) { // creates employers
-                        let employer = Employer_Users_Collection.findOne({ ID: shifts[i].employerId }, { projection: project });
-                        employer = await employer;
-                        if (employer) {
-                            employers[i] = employer;
-                        } else {
-                            employers[i] =
-                                { firstName: "undefined", lastName: "undefined", ID: shifts[i].employerId, partOfCompany: "undefined" }
+                        var employers = new Array(shifts.length)
+                        const project = { userName: 0, password: 0 };
+
+                        for (let i = 0; i < shifts.length; i++) { // creates employers
+                            let employer = Employer_Users_Collection.findOne({ ID: shifts[i].employerId }, { projection: project });
+                            employer = await employer;
+                            if (employer) {
+                                employers[i] = employer;
+                            } else {
+                                employers[i] =
+                                    { firstName: "undefined", lastName: "undefined", ID: shifts[i].employerId, partOfCompany: "undefined" }
+                            }
                         }
+
+                        var totalHours = new Array(shifts.length);
+                        for (let i = 0; i < shifts.length; i++) { // create total hours array
+                            const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
+                            totalHours[i] = Math.abs(date1 - date2) / 36e5;
+                        }
+
+                        for (let i = 0; i < shifts.length; ++i) { // modifies shifts hours
+                            var start = new Date(shifts[i].startWork)
+                            var done = new Date(shifts[i].doneWork)
+                            startMonth = start.getMonth() + 1;
+                            doneMonth = done.getMonth() + 1;
+                            if (startMonth < 10) {
+                                startMonth = "0" + startMonth;
+                            }
+                            shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
+                            shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
+
+                            if (start.getUTCMinutes() < 10) {
+                                shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
+                            }
+                            else {
+                                shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
+                            }
+                            if (done.getUTCMinutes() < 10) {
+                                shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
+                            }
+                            else {
+                                shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
+                            }
+                            if (start.getUTCHours() < 10) {
+                                shifts[i].startHour = "0" + shifts[i].startHour;
+                            }
+                            if (done.getUTCHours() < 10) {
+                                shifts[i].doneHour = "0" + shifts[i].doneHour;
+                            }
+                        }
+                        res.status(200).render("trackingWorkers",
+                            { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
                     }
+                    else
+                        res.status(200).render("trackingWorkers",
+                            { status: "Not Found", worker: req.body["id"], shifts: {}, employers: {}, totalHours: {} });
 
-                    var totalHours = new Array(shifts.length);
-                    for (let i = 0; i < shifts.length; i++) { // create total hours array
-                        const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
-                        totalHours[i] = Math.abs(date1 - date2) / 36e5;
-                    }
-
-                    for (let i = 0; i < shifts.length; ++i) { // modifies shifts
-                        var start = new Date(shifts[i].startWork)
-                        var done = new Date(shifts[i].doneWork)
-                        startMonth = start.getMonth() + 1;
-                        doneMonth = done.getMonth() + 1;
-                        if (startMonth < 10) {
-                            startMonth = "0" + startMonth;
-                        }
-                        shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
-                        shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
-
-                        if (start.getUTCMinutes() < 10) {
-                            shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
-                        }
-                        else {
-                            shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
-                        }
-                        if (done.getUTCMinutes() < 10) {
-                            shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
-                        }
-                        else {
-                            shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
-                        }
-                        if (start.getUTCHours() < 10) {
-                            shifts[i].startHour = "0" + shifts[i].startHour;
-                        }
-                        if (done.getUTCHours() < 10) {
-                            shifts[i].doneHour = "0" + shifts[i].doneHour;
-                        }
-                    }
-
-                    
-
-                    res.status(200).render("trackingWorkers",
-                        { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
                 }
-                else
-                    res.status(200).render("trackingWorkers",
-                        { status: "Not Found", worker: req.body["id-text"], shifts: {}, employers: {}, totalHours: {} });
+                else if (type === "from") {
+                    console.log("### in change-from");
+                    console.log(req.body.split("_"));
+
+                } else if (type === "to") {
+                    console.log("### in change-to");
+                    console.log(req.body.split("_"));
+                }
+                else {
+                    console.log("### something went wrong - unknown form name found");
+                    throw console.error("something went wrong - unknown form name found");
+                }
 
             } catch (error) {
                 console.error(error)
@@ -507,7 +522,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         router.get("/hiringHistory", function (req, res) {
             console.log("router get")
             Shifts_Collection.find().toArray().then((schema) => {
-                schema ? res.status(200).render("hiringHistory", {args: schema , msg:0}) : console.error("shifts empty")
+                schema ? res.status(200).render("hiringHistory", { args: schema, msg: 0 }) : console.error("shifts empty")
             })
         });
 
@@ -530,34 +545,34 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log("shiftId : ", shiftId)
             console.log("starAmount : ", starAmount)
 
-            AllreadyVoted_Collection.find({userId: user, shiftId: shiftId}).toArray().then((result) => {
+            AllreadyVoted_Collection.find({ userId: user, shiftId: shiftId }).toArray().then((result) => {
                 console.log(result)
                 if (result.length === 0) {
-                    const myQuery = {_id: new ObjectId(shiftId)}
+                    const myQuery = { _id: new ObjectId(shiftId) }
 
                     Shifts_Collection.find(myQuery).toArray().then((schema) => {
                         let vote = schema[0].vote
                         let rating = schema[0].rating
                         let newValues
                         if (vote == 0) {
-                            newValues = {$set: {rating: starAmount, vote: vote + 1}};
+                            newValues = { $set: { rating: starAmount, vote: vote + 1 } };
                         } else {
                             rating = rating * (vote - 1) / vote + starAmount / vote
-                            newValues = {$set: {rating: rating.toFixed(2), vote: vote + 1}};
+                            newValues = { $set: { rating: rating.toFixed(2), vote: vote + 1 } };
                         }
                         Shifts_Collection.updateOne(myQuery, newValues, function (err) {
                             if (err) throw err;
                             console.log("1 document updated");
-                            AllreadyVoted_Collection.insertOne({userId: user, shiftId: shiftId})
+                            AllreadyVoted_Collection.insertOne({ userId: user, shiftId: shiftId })
                             Shifts_Collection.find().toArray().then((schema) => {
-                                schema ? res.status(200).render("hiringHistory", {args: schema,msg:1}) : console.error("shifts empty")
+                                schema ? res.status(200).render("hiringHistory", { args: schema, msg: 1 }) : console.error("shifts empty")
                             })
                         });
                     })
-                }else{
+                } else {
                     console.log("already voted")
                     Shifts_Collection.find().toArray().then((schema) => {
-                        schema ? res.status(200).render("hiringHistory", {args: schema , msg:2}) : console.error("shifts empty")
+                        schema ? res.status(200).render("hiringHistory", { args: schema, msg: 2 }) : console.error("shifts empty")
                     })
                 }
             })
