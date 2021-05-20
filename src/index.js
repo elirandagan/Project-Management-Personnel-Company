@@ -497,12 +497,36 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                 }
                 else if (type === "from") {
+                    try {
+                        const id = req.body.id.split("_")[0];
+
+                        var start_shift = Shifts_Collection.findOne({ _id: ObjectId(id) }).project({ startWork: 1 });
+                        start_shift = await start_shift.startWork;
+
+                        const time = req.body["time_" + type].split(':')
+                        const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])];
+                        const new_date = new Date(start_shift.setHours(hours, minutes));
+
+                        var shift = Shifts_Collection.updateOne(
+                            { _id: ObjectId(id) },
+                            { $set: { startWork: new_date } },
+                            { returnOriginal: false })
+
+                        shift = await shift;
+                        console.log("updated shidt: ", shift);
+
+
+                    } catch (error) {
+                        throw console.error(error);
+                    }
+
+
                     console.log("### in change-from");
-                    console.log(req.body.split("_"));
+                    console.log(req.body.id.split("_"));
 
                 } else if (type === "to") {
                     console.log("### in change-to");
-                    console.log(req.body.split("_"));
+                    console.log(req.body.id.split("_"));
                 }
                 else {
                     console.log("### something went wrong - unknown form name found");
