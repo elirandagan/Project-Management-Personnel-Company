@@ -113,7 +113,7 @@
             <span class="navbar-toggler-icon icon-bar"></span>
           </button>
           <div class="collapse navbar-collapse justify-content-end">
-            <form class="navbar-form">
+            <form name="upper-search-form" class="navbar-form">
               <div class="input-group no-border">
                 <input type="text" value="" class="form-control" placeholder="Search...">
                 <button type="submit" class="btn btn-default btn-round btn-just-icon">
@@ -163,7 +163,7 @@
       <div class="content">
         <div class="container">
         </div>
-        <form name="search-form" action="/trackingWorkers" method="POST" onsubmit="return check()" required>
+        <form name="worker-search-form" action="/trackingWorkers" method="POST" onsubmit="return check()" required>
           <div class="row">
             <div class="col-md-2">
               <h3 class="pull-right text-white">Worker ID:</h3>
@@ -243,67 +243,111 @@
           </div>
         </div>
       </div>
-
-      <div class="card card-profile">
-        <div class="card">
-          <div class="card-header card-header-primary">
-            <h4 class="card-title text-white">Worker History</h4>
-          </div>
-          <div class="card-body">
-            <div class="container" style="position: relative; top: 1.5rem;">
-              <table id="productTable" class="table table-bordered table-hover">
-                <thead class="">
-                  <tr>
-                    <th>Date</th>
-                    <th>Company</th>
-                    <th>By</th>
-                    <th>From</th>
-                    <th>To</th>
-                    <th>Total Hours</th>
-                    <th>Payment</th>
-                    <th>Report</th>
-                  </tr>
-                </thead>
-                <tbody>
-
-                  <% for( let i=0,len=shifts.length; len>i; ++i ) { %>
+      <div class="container">
+        <div class="card card-profile">
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <h4 class="card-title text-white">Worker History</h4>
+            </div>
+            <div class="card-body">
+              <div class="container" style="position: relative; top: 1.5rem;">
+                <table id="productTable" class="table table-bordered table-hover">
+                  <thead class="">
                     <tr>
-                      <td>
-                        <%= shifts[i].startWork %>
-                      </td>
-                      <td>no company field exists</td>
-                      <td>
-                        <%= shifts[i].startWork %>
-                          <%= shifts[i].startWork %>
-                      </td>
-                      <td>
-                        <%= shifts[i].startHour %>
-                          <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                      </td>
-                      <td>
-                        <%= shifts[i].doneHour %>
-                          <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                      </td>
-                      <td>6hours</td>
-                      <td>300shekels</td>
-                      <td>
-                        <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
-                          onclick="report()" style="padding: 0 !important;margin: 0 !important;">
-                          <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
-                        </button>
-                      </td>
+                      <th>Date</th>
+                      <th>Company</th>
+                      <th>By</th>
+                      <th>From</th>
+                      <th>To</th>
+                      <th>Total Hours</th>
+                      <th>Payment</th>
+                      <th>Report</th>
                     </tr>
-                    <% } %>
+                  </thead>
+                  <tbody>
 
+                    <% for( let i=0,len=shifts.length; len>i; ++i ) { %>
+                      <tr>
+                        <td>
+                          <%= shifts[i].startWork %>
+                        </td>
+                        <% if (employers[i]) { %>
+                          <td>
+                            <%= employers[i].partOfCompany %>
+                          </td>
+                          <td>
+                            <%= employers[i].firstName %>
+                              <%= employers[i].lastName %>
+                          </td>
+                          <% } %>
+                            <td>
+                              <form name="from-time-form" action="/trackingWorkers"
+                                onsubmit="return submit_check('<%= shifts[i]._id %>_from')" method="post">
 
-                </tbody>
-              </table>
+                                <div id="<%= shifts[i]._id %>_from">
+                                  <%= shifts[i].startHour %>
+                                </div>
+
+                                <input id="time_from" type="hidden" name="time_from">
+
+                                <button type="button" class="btn btn-link btn-sm"
+                                  style="padding: 0 !important;margin: 0 !important;"
+                                  onclick="edit_hours('<%= shifts[i]._id %>_from')">
+                                  <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
+                                </button>
+
+                                <input type="submit" id="<%= shifts[i]._id %>_from_check" class="btn btn-link btn-sm"
+                                  style="padding: 0 !important;margin: 0 !important;display: none;" name="submit"
+                                  value="from">
+                                </input>
+
+                              </form>
+                            </td>
+
+                            <td>
+                              <form name="to-time-form" action="/trackingWorkers"
+                                onsubmit="return submit_check('<%= shifts[i]._id %>_to')" method="post">
+
+                                <div id="<%= shifts[i]._id %>_to">
+                                  <%= shifts[i].doneHour %>
+                                </div>
+
+                                <input id="time_to" type="hidden" name="time_to">
+
+                                <button type="button" class="btn btn-link btn-sm"
+                                  style="padding: 0 !important;margin: 0 !important;"
+                                  onclick="edit_hours('<%= shifts[i]._id %>_to')">
+                                  <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
+                                </button>
+
+                                <input type="submit" id="<%= shifts[i]._id %>_to_check" class="btn btn-link btn-sm"
+                                  style="padding: 0 !important;margin: 0 !important;display: none;" name="submit"
+                                  value="to">
+                                </input>
+
+                              </form>
+                            </td>
+
+                            <td>
+                              <%= totalHours[i].toFixed(2) %>
+                            </td>
+
+                            <td>
+                              <%= (worker.hourlyPay * totalHours[i]).toFixed(2) %> ₪
+                            </td>
+
+                            <td>
+                              <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
+                                onclick="report()" style="padding: 0 !important;margin: 0 !important;">
+                                <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
+                              </button>
+                            </td>
+                      </tr>
+                      <% } %>
+
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
@@ -370,28 +414,6 @@
   <script src="demo/demo.js"></script>
 
   <script>
-    function check() {
-      let id = document.forms["search-form"]["id-text"].value;
-      if (id !== "") {
-        console.log("clicked on check " + id);
-        return true;
-      }
-      else {
-        swal({
-          title: "EMPTY ID\n",
-          text: "Search value should not be empty",
-          icon: "warning",
-        });
-        return false;
-      }
-    }
-
-    function report() {
-      swal("Report", "This shift has been reported", "warning");
-      return true;
-    }
-  </script>
-  <script>
     $(document).ready(function () {
       const user = getCookie("user")
       const identity = getCookie("identity")
@@ -401,15 +423,10 @@
       const status = "<%= status %>";
       const worker = "<%= worker %>";
       const shifts = "<%= shifts %>";
+      const employers = "<%= employers %>";
+      const totalHours = "<%= totalHours %>";
 
       console.log("status : ", status);
-      if (worker !== {}) {
-        console.log("worker : ", worker);
-        for (const key in worker) {
-          console.log(worker[key]);
-        }
-      } else
-        console.log("worker is -_-'");
 
       switch (status) {
         case "init":
@@ -464,6 +481,68 @@
         document.getElementById("statistics").style.display = "none";
       }
     })
+  </script>
+  <script>
+    function check() {
+      let id = document.forms["worker-search-form"]["id-text"].value;
+      if (id !== "") {
+        console.log("clicked on check " + id);
+        return true;
+      }
+      else {
+        swal({
+          title: "EMPTY ID\n",
+          text: "Search value should not be empty",
+          icon: "warning",
+        });
+        return false;
+      }
+    }
+
+    function report() {
+      swal("Report", "This shift has been reported", "warning");
+      return true;
+    }
+  </script>
+  <script>
+    function edit_hours(e) {
+      console.log(e);
+      var element = document.getElementById(e);
+
+      if (element.contentEditable !== "true") {
+        element.contentEditable = "true";
+        document.getElementById(e + "_check").style.display = "inline";
+      }
+      else {
+        element.contentEditable = "false";
+        document.getElementById(e + "_check").style.display = "none";
+      }
+    }
+
+    function submit_check(e) {
+      console.log(e);
+      var time = document.getElementById(e).innerText;
+
+      if (! /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time) || time.length !== 5) {
+        swal({
+          title: "Invalid time entered\n",
+          text: "Time must be in format hh:mm\nInvalid value entered - " + time,
+          icon: "warning",
+        });
+        return false;
+      }
+
+      if (e.split("_")[1] === "from")
+        var x = document.getElementById('time_from')
+      else
+        var x = document.getElementById('time_to')
+
+      console.log("x :", x);
+      console.log("e :", document.getElementById(e).innerText);
+      x.value = document.getElementById(e).innerText;
+      alert(x.value);
+      return true; //to <change></change>
+    }
   </script>
   <script>
     function getCookie(name) {
