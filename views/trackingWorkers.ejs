@@ -15,6 +15,7 @@
   <link rel="stylesheet" type="text/css"
     href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- CSS Files -->
   <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
@@ -157,213 +158,196 @@
             </ul>
           </div>
         </div>
-      </nav>
+      </nav>3
       <!-- End Navbar -->
       <div class="content">
-        <div class="row">
-          <div class="col-md-2">
-            <h3 class="pull-right text-white">Worker ID:</h3>
-          </div>
-          <div class="col-md-3 text-center" style="top: 1.2rem;">
-            <input type="textfield" class="h-50 text-white text-center" style="background-color: darkgray; border-radius: 15px;">
-          </div>
-          <div class="col-md-1 text-center" style="top: 1rem;">
-            <button type="submit" class="update-btn btn btn-primary btn-sm" style="font-size: 0.8rem;border-radius: 15px;" onclick="search()">Search</button>
-          </div>
-        </div>
-
         <div class="container">
-          <div class="card card-profile">
-            <div class="card">
-              <div class="card-header card-header-primary">
-                <h4 class="card-title text-white">Worker Details</h4>
-              </div>
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-2">
-                    <div class="form-group">
-                      <label class="bmd-label-floating">First Name: </label>
-                    </div>
-                  </div>
-                  <div class="col-md-8 ">
-                    <div class="form-group">
-                      <label class="bmd-label-floating">Payment: </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-2">
-                    <div class="form-group">
-                      <label class="bmd-label-floating">Last Name: </label>
-                    </div>
-                  </div>
-                  <div class="col-md-8">
-                    <div class="form-group">
-                      <label for="expertise">Expertise: </label>
-                    </div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-2">
-                    <div class="form-group">
-                      <label class="bmd-label-floating">First Name: </label>
-                    </div>
-                  </div>
-                  <div class="col-md-8 ">
-                    <label class="bmd-label-floating" style="position:relative; left:25px;">Registration Date: </label>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-2">
-                    <label class="bmd-label-floating" style="position: inherit; right:20px;">Area: </label>
-                  </div>
-                </div>
-              </div>
+        </div>
+        <form name="search-form" action="/trackingWorkers" method="POST" onsubmit="return check()" required>
+          <div class="row">
+            <div class="col-md-2">
+              <h3 class="pull-right text-white">Worker ID:</h3>
             </div>
-          </div>
 
-          <div class="card card-profile">
-            <div class="card">
-              <div class="card-header card-header-primary">
-                <h4 class="card-title text-white">Worker History</h4>
+            <div class="col-md-3 text-center" style="top:1.2rem;">
+              <input type="text" name="id-text" class="h-50 text-white text-center"
+                style="background-color:darkgray; border-radius: 15px;">
+            </div>
+            <div class="col-md-1 text-center" style="top: 1rem;">
+              <input type="submit" value="Search" class="update-btn btn btn-primary btn-sm"
+                style="font-size: 0.8rem;border-radius: 15px;" name="ID"></input>
+            </div>
+        </form>
+      </div>
+
+      <div class="container">
+        <div class="card card-profile">
+          <div class="card">
+            <div class="card-header card-header-primary">
+              <h4 class="card-title textwhite">Worker Details</h4>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">First Name: <%= worker.FirstName %> </label>
+                  </div>
+                </div>
+                <div class="col-md-8 ">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Payment : <%= worker.hourlyPay %></label>
+                  </div>
+                </div>
               </div>
-              <div class="card-body">
-                <div class="container" style="position: relative; top: 1.5rem;">
-                  <table id="productTable" class="table table-bordered table-hover">
-                    <thead class="">
-                      <tr>
-                        <th>Date</th>
-                        <th>Company</th>
-                        <th>By</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Total Hours</th>
-                        <th>Payment</th>
-                        <th>Report</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th>11/05/2021</th>
-                        <td>GLEM</td>
-                        <td>Dani Miller</td>
-                        <td>@mdo
-                          <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                        </td>
-                        <td>Mark
-                          <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                        </td>
-                        <td>Otto</td>
-                        <td>@mdo</td>
-                        <td>
-                          <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>10/05/2021</th>
-                        <td>SCE</td>
-                        <td>Yosi Cohen</td>
-                        <td>@fat
-                          <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                        </td>
-                        <td>Jacob
-                          <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                        </td>
-                        <td>Thornton</td>
-                        <td>@fat</td>
-                        <td>
-                          <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
-                          </button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>09/05/2021</th>
-                        <td>TECH</td>
-                        <td>Haim Hect</td>
-                        <td>@twitter
-                          <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                        </td>
-                        <td>Larry
-                          <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
-                          </button>
-                        </td>
-                        <td>the Bird</td>
-                        <td>@twitter</td>
-                        <td>
-                          <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
-                            style="padding: 0 !important;margin: 0 !important;">
-                            <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
-                          </button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Last Name : <%= worker.LastName %></label>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label for="expertise">Expertise : <%= worker.expertise %></label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">User Name : <%= worker.userName %></label>
+                  </div>
+                </div>
+                <div class="col-md-8 ">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Registration Date :
+                      <% if (worker) { %>
+                        <%= new Date(worker.createAt).toDateString() %>
+                          <% } %>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-2">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Area : <%= worker.area %></label>
+                  </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label class="bmd-label-floating">Rate : *rate is missing for now*</label>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <footer class="footer">
-          <div class="container-fluid">
-            <nav class="float-left">
-              <ul>
-                <li>
-                  <a href="https://www.creative-tim.com">
-                    GLEM TECH
-                  </a>
-                </li>
-                <li>
-                  <a href="https://creative-tim.com/presentation">
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a href="http://blog.creative-tim.com">
-                    Blog
-                  </a>
-                </li>
-                <li>
-                  <a href="https://www.creative-tim.com/license">
-                    Licenses
-                  </a>
-                </li>
-              </ul>
-            </nav>
-            <div class="copyright float-right" id="date">
-              , made with <i class="material-icons">favorite</i> by
-              <a href="https://www.creative-tim.com" target="_blank">GLEM TECH</a> for a better web.
+      </div>
+
+      <div class="card card-profile">
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <h4 class="card-title text-white">Worker History</h4>
+          </div>
+          <div class="card-body">
+            <div class="container" style="position: relative; top: 1.5rem;">
+              <table id="productTable" class="table table-bordered table-hover">
+                <thead class="">
+                  <tr>
+                    <th>Date</th>
+                    <th>Company</th>
+                    <th>By</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Total Hours</th>
+                    <th>Payment</th>
+                    <th>Report</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  <% for( let i=0,len=shifts.length; len>i; ++i ) { %>
+                    <tr>
+                      <td>
+                        <%= shifts[i].startWork %>
+                      </td>
+                      <td>no company field exists</td>
+                      <td>
+                        <%= shifts[i].startWork %>
+                          <%= shifts[i].startWork %>
+                      </td>
+                      <td>
+                        <%= shifts[i].startHour %>
+                          <button type="button" rel="tooltip" title="Edit From" class="btn btn-link btn-sm"
+                            style="padding: 0 !important;margin: 0 !important;">
+                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
+                          </button>
+                      </td>
+                      <td>
+                        <%= shifts[i].doneHour %>
+                          <button type="button" rel="tooltip" title="Edit To" class="btn btn-link btn-sm"
+                            style="padding: 0 !important;margin: 0 !important;">
+                            <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
+                          </button>
+                      </td>
+                      <td>6hours</td>
+                      <td>300shekels</td>
+                      <td>
+                        <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
+                          onclick="report()" style="padding: 0 !important;margin: 0 !important;">
+                          <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
+                        </button>
+                      </td>
+                    </tr>
+                    <% } %>
+
+
+                </tbody>
+              </table>
             </div>
           </div>
-        </footer>
-        <script>
-          const x = new Date().getFullYear();
-          let date = document.getElementById('date');
-          date.innerHTML = '&copy; ' + x + date.innerHTML;
-        </script>
+        </div>
       </div>
     </div>
+    <footer class="footer">
+      <div class="container-fluid">
+        <nav class="float-left">
+          <ul>
+            <li>
+              <a href="https://www.creative-tim.com">
+                GLEM TECH
+              </a>
+            </li>
+            <li>
+              <a href="https://creative-tim.com/presentation">
+                About Us
+              </a>
+            </li>
+            <li>
+              <a href="http://blog.creative-tim.com">
+                Blog
+              </a>
+            </li>
+            <li>
+              <a href="https://www.creative-tim.com/license">
+                Licenses
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="copyright float-right" id="date">
+          , made with <i class="material-icons">favorite</i> by
+          <a href="https://www.creative-tim.com" target="_blank">GLEM TECH</a> for a better web.
+        </div>
+      </div>
+    </footer>
+    <script>
+      const x = new Date().getFullYear();
+      let date = document.getElementById('date');
+      date.innerHTML = '&copy; ' + x + date.innerHTML;
+    </script>
+  </div>
+  </div>
 
   </div>
   <!--   Core JS Files   -->
@@ -384,176 +368,77 @@
   <script src="js/material-dashboard.js?v=2.1.0"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="demo/demo.js"></script>
+
   <script>
-    $(document).ready(function () {
-      $().ready(function () {
-        $sidebar = $('.sidebar');
-
-        $sidebar_img_container = $sidebar.find('.sidebar-background');
-
-        $full_page = $('.full-page');
-
-        $sidebar_responsive = $('body > .navbar-collapse');
-
-        window_width = $(window).width();
-
-        $('.fixed-plugin a').click(function (event) {
-          // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
-          if ($(this).hasClass('switch-trigger')) {
-            if (event.stopPropagation) {
-              event.stopPropagation();
-            } else if (window.event) {
-              window.event.cancelBubble = true;
-            }
-          }
+    function check() {
+      let id = document.forms["search-form"]["id-text"].value;
+      if (id !== "") {
+        console.log("clicked on check " + id);
+        return true;
+      }
+      else {
+        swal({
+          title: "EMPTY ID\n",
+          text: "Search value should not be empty",
+          icon: "warning",
         });
+        return false;
+      }
+    }
 
-        $('.fixed-plugin .active-color span').click(function () {
-          $full_page_background = $('.full-page-background');
-
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
-
-          var new_color = $(this).data('color');
-
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-color', new_color);
-          }
-
-          if ($full_page.length != 0) {
-            $full_page.attr('filter-color', new_color);
-          }
-
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.attr('data-color', new_color);
-          }
-        });
-
-        $('.fixed-plugin .background-color .badge').click(function () {
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
-
-          var new_color = $(this).data('background-color');
-
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-background-color', new_color);
-          }
-        });
-
-        $('.fixed-plugin .img-holder').click(function () {
-          $full_page_background = $('.full-page-background');
-
-          $(this).parent('li').siblings().removeClass('active');
-          $(this).parent('li').addClass('active');
-
-
-          var new_image = $(this).find("img").attr('src');
-
-          if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            $sidebar_img_container.fadeOut('fast', function () {
-              $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-              $sidebar_img_container.fadeIn('fast');
-            });
-          }
-
-          if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $full_page_background.fadeOut('fast', function () {
-              $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-              $full_page_background.fadeIn('fast');
-            });
-          }
-
-          if ($('.switch-sidebar-image input:checked').length == 0) {
-            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-          }
-
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
-          }
-        });
-
-        $('.switch-sidebar-image input').change(function () {
-          $full_page_background = $('.full-page-background');
-
-          $input = $(this);
-
-          if ($input.is(':checked')) {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar_img_container.fadeIn('fast');
-              $sidebar.attr('data-image', '#');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page_background.fadeIn('fast');
-              $full_page.attr('data-image', '#');
-            }
-
-            background_image = true;
-          } else {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar.removeAttr('data-image');
-              $sidebar_img_container.fadeOut('fast');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page.removeAttr('data-image', '#');
-              $full_page_background.fadeOut('fast');
-            }
-
-            background_image = false;
-          }
-        });
-
-        $('.switch-sidebar-mini input').change(function () {
-          $body = $('body');
-
-          $input = $(this);
-
-          if (md.misc.sidebar_mini_active == true) {
-            $('body').removeClass('sidebar-mini');
-            md.misc.sidebar_mini_active = false;
-
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
-
-          } else {
-
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
-
-            setTimeout(function () {
-              $('body').addClass('sidebar-mini');
-
-              md.misc.sidebar_mini_active = true;
-            }, 300);
-          }
-
-          // we simulate the window Resize so the charts will get updated in realtime.
-          var simulateWindowResize = setInterval(function () {
-            window.dispatchEvent(new Event('resize'));
-          }, 180);
-
-          // we stop the simulation of Window Resize after the animations are completed
-          setTimeout(function () {
-            clearInterval(simulateWindowResize);
-          }, 1000);
-
-        });
-      });
-    });
+    function report() {
+      swal("Report", "This shift has been reported", "warning");
+      return true;
+    }
   </script>
   <script>
     $(document).ready(function () {
       const user = getCookie("user")
       const identity = getCookie("identity")
-      console.log(user.expertise);
-      console.log(identity);
+      // console.log(user);
+      // console.log(identity);
 
-      console.log("IDENTITY: " + identity + " length: " + identity.length)
+      const status = "<%= status %>";
+      const worker = "<%= worker %>";
+      const shifts = "<%= shifts %>";
+
+      console.log("status : ", status);
+      if (worker !== {}) {
+        console.log("worker : ", worker);
+        for (const key in worker) {
+          console.log(worker[key]);
+        }
+      } else
+        console.log("worker is -_-'");
+
+      switch (status) {
+        case "init":
+          swal({
+            title: "init \n",
+            text: "",
+            icon: "info",
+          });
+          break;
+        case "Not Found":
+          swal({
+            title: "Worker Not Found\n",
+            text: "",
+            icon: "info",
+          });
+          break;
+        case "Success":
+          swal({
+            title: "Found worker\n",
+            text: "",
+            icon: "success",
+          });
+          break;
+
+        default:
+          break;
+      }
+
+
       if (identity === "Contractor_Users") {
         document.getElementById("recruit").style.display = "none";
         document.getElementById("trackingWorkers").style.display = "none";
