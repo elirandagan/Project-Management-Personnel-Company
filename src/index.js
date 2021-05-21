@@ -421,140 +421,71 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             res.status(200).render("trackingWorkers", { status: "init", worker: {}, shifts: {}, employers: {}, totalHours: {} });
         });
 
+        async function getEmployers(shifts, Employer_Users_Collection) {
+            var employers = new Array(shifts.length);
+            const project = { userName: 0, password: 0 };
+
+            for (let i = 0; i < shifts.length; i++) { // creates employers
+                let employer = Employer_Users_Collection.findOne({ ID: shifts[i].employerId }, { projection: project });
+                employer = await employer;
+                if (employer) {
+                    employers[i] = employer;
+                } else {
+                    employers[i] =
+                        { firstName: "undefined", lastName: "undefined", ID: shifts[i].employerId, partOfCompany: "undefined" };
+                }
+            }
+            return employers;
+        };
+
         router.post("/trackingWorkers", async (req, res) => {
-            // console.log("$***$");
-            // console.log(req.body);
-            // console.log("$***$");
-
             try {
-                var type = req.body.id.split("_")
-                type = type.length == 2 ? type[1] : "search";
+                var type = req.body.id.split("_") //get the type of submit
+                type = type.length == 2 ? type[1] : "search"; //arrange type
 
-                if (type === "search") {
-                    var result = Contractor_Users_Collection.findOne({ ID: req.body["id"] })
-                    result = await result;
+                var result = Contractor_Users_Collection.findOne({ ID: req.body.id })
+                result = await result;
 
-                    if (result) {
-                        var shifts = Shifts_Collection.find({ cwId: req.body["id"] }).sort({ startWork: -1 })
-                        shifts = await shifts.toArray();
+                if (result) {
+                    var shifts = Shifts_Collection.find({ cwId: req.body.id }).sort({ startWork: -1 }) // get all shifts for given id
+                    shifts = await shifts.toArray();
 
-                        var employers = new Array(shifts.length)
-                        const project = { userName: 0, password: 0 };
+                    var employers = await getEmployers(shifts, Employer_Users_Collection); // get all employers that match each shift
 
-                        for (let i = 0; i < shifts.length; i++) { // creates employers
-                            let employer = Employer_Users_Collection.findOne({ ID: shifts[i].employerId }, { projection: project });
-                            employer = await employer;
-                            if (employer) {
-                                employers[i] = employer;
-                            } else {
-                                employers[i] =
-                                    { firstName: "undefined", lastName: "undefined", ID: shifts[i].employerId, partOfCompany: "undefined" }
-                            }
-                        }
+                    var totalHours = getHoursArray(shifts); // get manipulated hours array
 
-                        var totalHours = new Array(shifts.length);
-                        for (let i = 0; i < shifts.length; i++) { // create total hours array
-                            const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
-                            totalHours[i] = Math.abs(date1 - date2) / 36e5;
-                        }
+                    shifts = modifyShiftsHours(shifts); // modify shifts' hours to match hh:mm
 
-                        for (let i = 0; i < shifts.length; ++i) { // modifies shifts hours
-                            var start = new Date(shifts[i].startWork)
-                            var done = new Date(shifts[i].doneWork)
-                            startMonth = start.getMonth() + 1;
-                            doneMonth = done.getMonth() + 1;
-                            if (startMonth < 10) {
-                                startMonth = "0" + startMonth;
-                            }
-                            shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
-                            shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
-
-                            if (start.getUTCMinutes() < 10) {
-                                shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
-                            }
-                            else {
-                                shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
-                            }
-                            if (done.getUTCMinutes() < 10) {
-                                shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
-                            }
-                            else {
-                                shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
-                            }
-                            if (start.getUTCHours() < 10) {
-                                shifts[i].startHour = "0" + shifts[i].startHour;
-                            }
-                            if (done.getUTCHours() < 10) {
-                                shifts[i].doneHour = "0" + shifts[i].doneHour;
-                            }
-                        }
+                    const id = req.body.id.split("_")[0]; // id is "<id_value>_from" or "<id_value>_to"
 
 
-                        res.status(200).render("trackingWorkers",
-                            { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
-                    }
-                    else
-                        res.status(200).render("trackingWorkers",
-                            { status: "Not Found", worker: req.body["id"], shifts: {}, employers: {}, totalHours: {} });
+                    if (type === "from" || type === "to") { // only if submit type is to or from
 
-                }
-                else if (type === "from") {
-                    try {
-                        const id = req.body.id.split("_")[0]; //id is "<id_value>_from" or "<id_value>_to"
+                        // if the type is startWork or doneWork, then different projection
+                        const project = (type === "from") ? { projection: { _id: 0, startWork: 1 } } : { projection: { _id: 0, doneWork: 1 } };
 
-                        var start_shift = Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: { _id: 0, startWork: 1 } });
-                        start_shift = await start_shift;
-                        // console.log("start_shift : ", start_shift);
-
+                        var start_shift = Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: project });
+                        start_shift = await start_shift; //get the startWork record
 
                         const time = req.body["time_" + type].split(':')
-                        // console.log("time :", time);
                         const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])];
-
-                        // console.log("hours, minutes :", hours, minutes);
                         const new_date = new Date(new Date(start_shift.startWork).setHours(hours + 3, minutes)); //added 3 for gmt
 
-                        console.log("new_date :", new_date);
+                        // if the type is startWork or doneWork, then different projection
+                        const set = (type === "from") ? { $set: { startWork: new_date } } : { $set: { startWork: new_date } }
 
-                        await Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: { startWork: new_date } }, (err, res) => {
+                        Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: set }, (err, res) => {
                             if (err) throw err;
-                            console.log("1 document updated");
+                            console.log("1 document updated in startWork");
                         });
-
-                    } catch (error) {
-                        throw console.error(error);
                     }
-                } else if (type === "to") {
-                    try {
-                        const id = req.body.id.split("_")[0]; //id is "<id_value>_from" or "<id_value>_to"
 
-                        var start_shift = Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: { _id: 0, startWork: 1 } });
-                        start_shift = await start_shift;
-                        // console.log("start_shift : ", start_shift);
-
-
-                        const time = req.body["time_" + type].split(':')
-                        // console.log("time :", time);
-                        const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])];
-
-                        // console.log("hours, minutes :", hours, minutes);
-                        const new_date = new Date(new Date(start_shift.startWork).setHours(hours + 3, minutes)); //added 3 for gmt
-
-                        console.log("new_date :", new_date);
-
-                        await Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: { startWork: new_date } }, (err, res) => {
-                            if (err) throw err;
-                            console.log("1 document updated");
-                        });
-
-                    } catch (error) {
-                        throw console.error(error);
-                    }
+                    res.status(200).render("trackingWorkers",
+                        { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
                 }
-                else {
-                    console.log("### something went wrong - unknown form name found");
-                    throw console.error("something went wrong - unknown form name found");
-                }
+                else
+                    res.status(200).render("trackingWorkers",
+                        { status: "Not Found", worker: req.body["id"], shifts: {}, employers: {}, totalHours: {} });
 
             } catch (error) {
                 console.error(error)
@@ -631,3 +562,49 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
 console.log(`http://127.0.0.1:${app_port}`);
+
+function getHoursArray(shifts) {
+    var totalHours = new Array(shifts.length);
+    for (let i = 0; i < shifts.length; i++) { // create total hours array
+        const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
+        totalHours[i] = Math.abs(date1 - date2) / 36e5;
+    }
+    return totalHours;
+}
+
+function modifyShiftsHours(shifts) {
+    var temp_shifts = shifts;
+
+    for (let i = 0; i < temp_shifts.length; ++i) { // modifies shifts hours
+        var start = new Date(temp_shifts[i].startWork);
+        var done = new Date(temp_shifts[i].doneWork);
+        startMonth = start.getMonth() + 1;
+        doneMonth = done.getMonth() + 1;
+        if (startMonth < 10) {
+            startMonth = "0" + startMonth;
+        }
+        temp_shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear();
+        temp_shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear();
+
+        if (start.getUTCMinutes() < 10) {
+            temp_shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
+        }
+        else {
+            temp_shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
+        }
+        if (done.getUTCMinutes() < 10) {
+            temp_shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
+        }
+        else {
+            temp_shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
+        }
+        if (start.getUTCHours() < 10) {
+            temp_shifts[i].startHour = "0" + temp_shifts[i].startHour;
+        }
+        if (done.getUTCHours() < 10) {
+            temp_shifts[i].doneHour = "0" + temp_shifts[i].doneHour;
+        }
+    }
+    return temp_shifts;
+}
+
