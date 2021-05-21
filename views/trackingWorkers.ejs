@@ -334,7 +334,7 @@
                             </td>
 
                             <td>
-                              <%= totalHours[i].toFixed(2) %>
+                              <%= totalHours[i] %>
                             </td>
 
                             <td>
@@ -448,11 +448,27 @@
             icon: "info",
           });
           break;
-        case "Success":
+        case "No Change":
+          swal({
+            title: "No Change Has Been Made\n",
+            text: "",
+            icon: "info",
+          });
+          break;
+        case "Search Success":
           swal({
             title: "Found worker\n",
             text: "",
             icon: "success",
+          });
+          break;
+        case "Update Success":
+          swal({
+            title: "Successfully Upadated Shifts\n",
+            text: "",
+            icon: "success",
+          }).then(() => {
+            window.location.reload();
           });
           break;
 
