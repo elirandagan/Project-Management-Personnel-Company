@@ -164,7 +164,7 @@
         <div class="container">
         </div>
         <form name="worker-search-form" action="/trackingWorkers" method="POST" onsubmit="return check()" required>
-          <input type="hidden" name="name" value="search-worker">
+          <input type="hidden" name="name" value="search">
 
           <div class="row">
             <div class="col-md-2">
@@ -422,11 +422,11 @@
     $(document).ready(function () {
       const user = getCookie("user")
       const identity = getCookie("identity")
-      // console.log(user);
-      // console.log(identity);
+      // const worker = getCookie("track_emp")
 
       const status = "<%= status %>";
       const worker = "<%= worker %>";
+
       const shifts = "<%= shifts %>";
       const employers = "<%= employers %>";
       const totalHours = "<%= totalHours %>";
@@ -488,7 +488,7 @@
   </script>
   <script>
     function check() {
-      let id = document.forms["worker-search-form"]["id-text"].value;
+      let id = document.forms["worker-search-form"].id.value;
       if (id !== "") {
         console.log("clicked on check " + id);
         return true;
@@ -536,7 +536,7 @@
         return false;
       }
       var time, id;
-      if (e.split("_")[1] === "from"){
+      if (e.split("_")[1] === "from") {
         time = document.getElementById('time_from')
         id = document.getElementById('id_from')
       }
@@ -544,8 +544,8 @@
         time = document.getElementById('time_to')
         id = document.getElementById('id_to')
       }
-      console.log("e : ",e);
-      console.log("e inner text :", document.getElementById(e).innerText); 
+      console.log("e : ", e);
+      console.log("e inner text :", document.getElementById(e).innerText);
       console.log(time.value);
 
       time.value = document.getElementById(e).innerText;

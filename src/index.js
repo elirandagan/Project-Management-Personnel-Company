@@ -87,18 +87,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
             if (validateLogin === "valid") {
                 const returnValue = await mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity)
-                // console.log("routerReturnValue", returnValue)
+
                 if ("validate" === returnValue) {
                     validateUser = true
-                    // console.log("validateUser = true")
-                    ///////// COOKIE /////////////
 
                     const user = await mongoDbFunction.findOneByIdentity(req.body.userName, req.body.password, req.body.identity)
-                    // console.log("user", user);
-                    // const userInfo = { identity: req.body.identity, user: user['ID']}
-                    // console.log("*****");
-                    // console.log("user", user);
-                    // console.log("*****");
+
                     res.cookie("user", user, { maxAge: 9000000, httpOnly: false });
                     res.cookie("identity", req.body.identity, { maxAge: 9000000, httpOnly: false });
                     res.status(200).render("dashboard", { exist: "invalidID" });
@@ -443,11 +437,16 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 var type = req.body.id.split("_") //get the type of submit
                 type = type.length == 2 ? type[1] : "search"; //arrange type
 
-                var result = Contractor_Users_Collection.findOne({ ID: req.body.id })
-                result = await result;
+                var result
+                if (type === "search") {
+                    result = await Contractor_Users_Collection.findOne({ ID: req.body.id })
 
-                if (result) {
-                    var shifts = Shifts_Collection.find({ cwId: req.body.id }).sort({ startWork: -1 }) // get all shifts for given id
+                    res.cookie("track_emp", result, { maxAge: 900000, httpOnly: false });
+                }
+
+                if (result || req.cookies.track_emp) {
+                    const res_id = result ? result.ID : req.cookies.track_emp.ID;
+                    var shifts = Shifts_Collection.find({ cwId: res_id }).sort({ startWork: -1 }) // get all shifts for given id
                     shifts = await shifts.toArray();
 
                     var employers = await getEmployers(shifts, Employer_Users_Collection); // get all employers that match each shift
@@ -462,7 +461,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     if (type === "from" || type === "to") { // only if submit type is to or from
 
                         // if the type is startWork or doneWork, then different projection
-                        const project = (type === "from") ? { projection: { _id: 0, startWork: 1 } } : { projection: { _id: 0, doneWork: 1 } };
+                        const project = (type === "from") ? { _id: 0, startWork: 1 } : { _id: 0, doneWork: 1 };
 
                         var start_shift = Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: project });
                         start_shift = await start_shift; //get the startWork record
@@ -472,12 +471,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         const new_date = new Date(new Date(start_shift.startWork).setHours(hours + 3, minutes)); //added 3 for gmt
 
                         // if the type is startWork or doneWork, then different projection
-                        const set = (type === "from") ? { $set: { startWork: new_date } } : { $set: { startWork: new_date } }
+                        const set = (type === "from") ? { startWork: new_date } : { doneWork: new_date }
 
-                        Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: set }, (err, res) => {
+                        Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: set }, err => {
                             if (err) throw err;
                             console.log("1 document updated in startWork");
                         });
+                    }
+
+                    if (!result) { // convert track_emp cookie to local object
+                        result = req.cookies.track_emp;
+                        result._id = ObjectId(result._id);
+                        result.createAt = new Date(result.createAt)
                     }
 
                     res.status(200).render("trackingWorkers",
@@ -485,7 +490,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 }
                 else
                     res.status(200).render("trackingWorkers",
-                        { status: "Not Found", worker: req.body["id"], shifts: {}, employers: {}, totalHours: {} });
+                        { status: "Not Found", worker: req.body.id, shifts: {}, employers: {}, totalHours: {} });
 
             } catch (error) {
                 console.error(error)
