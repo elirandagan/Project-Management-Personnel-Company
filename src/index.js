@@ -415,7 +415,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             res.status(200).render("trackingWorkers", { status: "init", worker: {}, shifts: {}, employers: {}, totalHours: {} });
         });
 
-        async function getEmployers(shifts, Employer_Users_Collection) {
+        async function getEmployers(shifts) {
             var employers = new Array(shifts.length);
             const project = { userName: 0, password: 0 };
 
@@ -432,65 +432,133 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             return employers;
         };
 
+        async function getTrackWorkersInitData(id) {
+            var shifts = Shifts_Collection.find({ cwId: id }).sort({ startWork: -1 }); // get all shifts for given id
+            shifts = await shifts.toArray();
+
+            var employers = await getEmployers(shifts); // get all employers that match each shift
+
+            shifts = modifyShiftsHours(shifts); // modify shifts' hours to match hh:mm
+
+            var totalHours = getHoursArray(shifts); // get manipulated hours array
+
+            return { shifts, employers, totalHours };
+        };
+
         router.post("/trackingWorkers", async (req, res) => {
             try {
-                var type = req.body.id.split("_") //get the type of submit
-                type = type.length == 2 ? type[1] : "search"; //arrange type
+                const data = req.body.id.split("_") //get the data (type & id) of submit
+                type = (data.length === 2) ? data[1] : "search"; //arrange type
 
                 var result
                 if (type === "search") {
+                    console.log("type === search");
                     result = await Contractor_Users_Collection.findOne({ ID: req.body.id })
-
                     res.cookie("track_emp", result, { maxAge: 900000, httpOnly: false });
                 }
+                else
+                    console.log("type !== search");
 
-                if (result || req.cookies.track_emp) {
-                    const res_id = result ? result.ID : req.cookies.track_emp.ID;
-                    var shifts = Shifts_Collection.find({ cwId: res_id }).sort({ startWork: -1 }) // get all shifts for given id
-                    shifts = await shifts.toArray();
+                // const res_id = result ? result.ID : req.cookies.track_emp.ID;
+                var shifts = Shifts_Collection.find({ cwId: req.body.id }).sort({ startWork: -1 }) // get all shifts for given id
+                shifts = await shifts.toArray();
 
-                    var employers = await getEmployers(shifts, Employer_Users_Collection); // get all employers that match each shift
+                const id = req.body.id.split("_")[0]; // req.body.id is "<id_value>_from" or "<id_value>_to"
 
-                    var totalHours = getHoursArray(shifts); // get manipulated hours array
+                var employers = await getEmployers(shifts); // get all employers that match each shift
 
-                    shifts = modifyShiftsHours(shifts); // modify shifts' hours to match hh:mm
+                var totalHours = getHoursArray(shifts); // get manipulated hours array
 
-                    const id = req.body.id.split("_")[0]; // id is "<id_value>_from" or "<id_value>_to"
+                shifts = modifyShiftsHours(shifts); // modify shifts' hours to match hh:mm
 
 
-                    if (type === "from" || type === "to") { // only if submit type is to or from
+                if (type === "from" || type === "to") { // only if submit type is to or from
 
-                        // if the type is startWork or doneWork, then different projection
-                        const project = (type === "from") ? { _id: 0, startWork: 1 } : { _id: 0, doneWork: 1 };
+                    // if the type is startWork or doneWork, then different projection
+                    const project = (type === "from") ? { _id: 0, startWork: 1 } : { _id: 0, doneWork: 1 };
 
-                        var start_shift = Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: project });
-                        start_shift = await start_shift; //get the startWork record
+                    var shift = Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: project });
+                    shift = await shift; //get the startWork record
 
-                        const time = req.body["time_" + type].split(':')
-                        const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])];
-                        const new_date = new Date(new Date(start_shift.startWork).setHours(hours + 3, minutes)); //added 3 for gmt
+                    const time = req.body["time_" + type].split(':')
+                    const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])];
+                    const new_date = new Date(new Date(shift.startWork).setHours(hours + 3, minutes)); //added 3 for gmt
 
-                        // if the type is startWork or doneWork, then different projection
-                        const set = (type === "from") ? { startWork: new_date } : { doneWork: new_date }
+                    // if the type is startWork or doneWork, then different projection
+                    const set = (type === "from") ? { startWork: new_date } : { doneWork: new_date }
 
+                    if (shift.startWork.getUTCHours() !== new_date.getUTCHours())
                         Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: set }, err => {
                             if (err) throw err;
                             console.log("1 document updated in startWork");
                         });
-                    }
-
-                    if (!result) { // convert track_emp cookie to local object
-                        result = req.cookies.track_emp;
-                        result._id = ObjectId(result._id);
-                        result.createAt = new Date(result.createAt)
-                    }
-
-                    res.status(200).render("trackingWorkers",
-                        { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
+                    else
+                        console.log("not updated because hours are equal");
                 }
-                else
+
+                if (!result) { // convert track_emp cookie to local object
+                    result = req.cookies.track_emp;
+                    result._id = ObjectId(result._id);
+                    result.createAt = new Date(result.createAt)
+                }
+
+                res.status(200).render("trackingWorkers",
+                    { status: "Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
+
+                res.status(200).render("trackingWorkers",
+                    { status: "Not Found", worker: req.body.id, shifts: {}, employers: {}, totalHours: {} });
+
+            } catch (error) {
+
+            }
+        });
+
+        router.post("/trackingWorkers", async (req, res) => {
+            try {
+                const data = req.body.id.split("_") //get the data (type & id) of submit
+                type = (data.length === 2) ? data[1] : "search"; // get type from data
+
+                if (type === "search") {
+                    const result = await Contractor_Users_Collection.findOne({ ID: req.body.id })
+                    if (!result) // user not found.
+                        res.status(200).render("trackingWorkers",
+                            { status: "Not Found", worker: req.body.id, shifts: {}, employers: {}, totalHours: {} });
+
+                    res.cookie("track_emp", result, { maxAge: 900000, httpOnly: false }); // crate cookie.
+
+                    // else user found
+                    const { shifts, employers, totalHours } = await getTrackWorkersInitData(req.body.id); // get data for search success
+
                     res.status(200).render("trackingWorkers",
-                        { status: "Not Found", worker: req.body.id, shifts: {}, employers: {}, totalHours: {} });
+                        { status: "Serach Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
+                }
+                // else type is not search (from or to)
+
+                const id = req.body.id.split("_")[0]; // req.body.id is "<id_value>_from" or "<id_value>_to"
+
+                // if the type is startWork or doneWork, then different projection
+                const project = (type === "from") ? { _id: 0, startWork: 1 } : { _id: 0, doneWork: 1 };
+
+                var shift = Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: project }); // get the shifts that requierd to be updated
+                shift = await shift;
+
+                if (!shift) // if the shifts has not been found
+                    res.status(200).render("trackingWorkers",
+                        { status: "Not Found", worker: id, shifts: {}, employers: {}, totalHours: {} });
+
+                const new_date = getNewDate(req.body["time_" + type], shift.startWork); //get the new date
+
+
+
+                if (!isGreaterByMinutes(new_date, shift.startWork))
+                    res.status(200).render("trackingWorkers",
+                        { status: "No Change", worker: req.cookies.track_emp, shifts: shifts, employers: employers, totalHours: totalHours });
+
+
+
+
+
+
 
             } catch (error) {
                 console.error(error)
@@ -568,6 +636,14 @@ module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
 console.log(`http://127.0.0.1:${app_port}`);
 
+
+function getNewDate(timeString, pre_date) {
+    const time = timeString.split(':'); // convert to ["hh","mm"]
+    const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])]; // convert to [hh,mm]
+    const new_date = new Date(new Date(pre_date).setHours(hours + 3, minutes)); //create new date, add 3 for gmt+
+    return new_date;
+}
+
 function getHoursArray(shifts) {
     var totalHours = new Array(shifts.length);
     for (let i = 0; i < shifts.length; i++) { // create total hours array
@@ -612,4 +688,6 @@ function modifyShiftsHours(shifts) {
     }
     return temp_shifts;
 }
+
+isGreaterByMinutes = (d1, d2) => (d1.getHours() >= d2.getHours()) && (d1.getMinutes() > d2.getMinutes()); //calc if greater
 
