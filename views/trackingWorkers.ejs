@@ -301,7 +301,8 @@
                                 </button>
 
                                 <input type="submit" id="<%= shifts[i]._id %>_from_check" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;" value="V">
+                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;"
+                                  value="V">
                                 </input>
 
                               </form>
@@ -326,8 +327,8 @@
                                 </button>
 
                                 <input type="submit" id="<%= shifts[i]._id %>_to_check" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;" name="submit"
-                                  value="V">
+                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;"
+                                  name="submit" value="V">
                                 </input>
 
                               </form>
@@ -467,8 +468,6 @@
             title: "Successfully Upadated Shifts\n",
             text: "",
             icon: "success",
-          }).then(() => {
-            window.location.reload();
           });
           break;
 
