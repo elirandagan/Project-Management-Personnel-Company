@@ -530,7 +530,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     const { shifts, employers, totalHours } = await getTrackWorkersInitData(req.body.id); // get data for search success
 
                     res.status(200).render("trackingWorkers",
-                        { status: "Serach Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
+                        { status: "Search Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
                 }
                 // else type is not search (from or to)
 
@@ -548,15 +548,24 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                 const new_date = getNewDate(req.body["time_" + type], shift.startWork); //get the new date
 
+                const { shifts, employers, totalHours } = await getTrackWorkersInitData(req.cookies.track_emp._id); // get data for update
 
+                const isGreaterByMinutes = (d1, d2) => (d1.getHours() >= d2.getHours()) && (d1.getMinutes() > d2.getMinutes()); //calc if greater
 
                 if (!isGreaterByMinutes(new_date, shift.startWork))
                     res.status(200).render("trackingWorkers",
                         { status: "No Change", worker: req.cookies.track_emp, shifts: shifts, employers: employers, totalHours: totalHours });
 
+                // if the type is startWork or doneWork, then different projection
+                const set = (type === "from") ? { startWork: new_date } : { doneWork: new_date }
 
+                Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: set }, err => {
+                    if (err) throw err;
+                    console.log("1 document updated in " + Object.keys(set));
+                });
 
-
+                res.status(200).render("trackingWorkers",
+                    { status: "Update Success", worker: result, shifts: shifts, employers: employers, totalHours: totalHours });
 
 
 
@@ -689,5 +698,4 @@ function modifyShiftsHours(shifts) {
     return temp_shifts;
 }
 
-isGreaterByMinutes = (d1, d2) => (d1.getHours() >= d2.getHours()) && (d1.getMinutes() > d2.getMinutes()); //calc if greater
 
