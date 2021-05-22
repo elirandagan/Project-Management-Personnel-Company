@@ -442,16 +442,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
             shifts = modifyShiftsHours(shifts); // modify shifts' hours to match hh:mm
 
-
-            console.log("*** shifts: ", shifts);
-            console.log("*** totalHours: ", totalHours);
-            console.log("*** employers: ", employers);
+            // console.log("*** shifts: ", shifts);
+            // console.log("*** totalHours: ", totalHours);
+            // console.log("*** employers: ", employers);
             return { shifts, employers, totalHours };
         };
 
         router.post("/trackingWorkers", async (req, res) => {
             try {
+                console.log("res :", res.body);
                 const data = req.body.id.split("_") //get the data (type & id) of submit
+                console.log("req.body :", req.body);
+                console.log("data :", data);
                 type = (data.length === 2) ? data[1] : "search"; // get type from data
                 var worker;
 
@@ -460,6 +462,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                 if (type === "search") {
                     worker = await Contractor_Users_Collection.findOne({ ID: req.body.id })
+                    if (typeof worker.createAt === "string" || worker.createAt instanceof String) {
+                        worker._id = ObjectId(worker._id);2
+                        worker.createAt = new Date(worker.createAt);
+                    }
                     console.log("*** worker :", worker);
 
                     if (!worker) { // user not found.
@@ -469,7 +475,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                 { status: "Not Found", worker: {}, shifts: {}, employers: {}, totalHours: {} });
                         } else {
                             console.log("!@%$#%$ no worker but we have a COOKIE ! !@%$#%$");
-                            console.log("!@%$#%$ the Cookie ladie and gents : ", rew.cookies.track_emp);
+                            console.log("!@%$#%$ the Cookie ladie and gents : ", req.cookies.track_emp);
                             worker = req.cookies.track_emp;
                             worker._id = ObjectId(worker._id)
                             worker.createAt = new Date(w.createAt);
@@ -489,7 +495,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     var w = req.cookies.track_emp;
                     [w._id, w.createAt] = [ObjectId(w._id), new Date(w.createAt)];
                     const worker = w;
-                    console.log("worker : ", worker);
+                    // console.log("worker : ", worker);
 
                     const id = req.body.id.split("_")[0]; // req.body.id is "<id_value>_from" or "<id_value>_to"
                     console.log("id : ", id);
@@ -497,9 +503,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     // if the type is startWork or doneWork, then different projection
                     const project = { _id: 0, startWork: 1, doneWork: 1 };
 
-                    var shift = await Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: project }); // get the shifts that requierd to be updated
+                    // get the shifts that requierd to be updated
+                    var shift = await Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: project });
 
-                    console.log("shift :", shift);
+                    // console.log("shift :", shift);
 
                     if (!shift || shift === null) {// if the shifts has not been found
                         console.log("!@%$#%$  no shift !@%$#%$");
@@ -508,14 +515,14 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     }
                     const time = (type === "from") ? shift.startWork : shift.doneWork;
                     const new_date = getNewDate(req.body["time_" + type], time); //get the new date
-                    console.log("new_date : ", new_date, new_date.getHours(), new_date.getMinutes());
-                    console.log("shift.doneWork : ", shift.doneWork, shift.doneWork.getUTCHours(), shift.doneWork.getUTCMinutes());
                     const { shifts, employers, totalHours } = await getTrackWorkersInitData(worker.ID); // get data for update
 
-                    const isGreaterByMinutes = (d1, d2) => ((d1.getUTCHours() >= d2.getUTCHours()) && (d1.getUTCMinutes() > d2.getUTCMinutes()))
-                        || ((d1.getHours() > d2.getHours()) && (d1.getMinutes() >= d2.getMinutes())); //calc if greater
+                    console.log("** new_date : ", new_date, new_date.getUTCHours(), new_date.getUTCMinutes());
+                    console.log("** shift.startWork : ", shift.startWork, shift.startWork.getUTCHours(), shift.startWork.getUTCMinutes());
+                    console.log("** shift.doneWork : ", shift.doneWork, shift.doneWork.getUTCHours(), shift.doneWork.getUTCMinutes());
 
-                    if (!isGreaterByMinutes(shift.doneWork,new_date))
+                    const counetr_date = (type === "to") ? shift.startWork : shift.doneWork;
+                    if (isInvalidTime(type, counetr_date, new_date))
                         return res.status(200).render("trackingWorkers",
                             { status: "No Change", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
 
@@ -606,6 +613,38 @@ module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
 console.log(`http://127.0.0.1:${app_port}`);
 
+// val is which time should be changed (from or to),
+// the counetr_date is the date which should be checked against,
+// new_date is the new date 
+function isInvalidTime(val, counetr_date, new_date) {
+    // אם השעה שרוצים לשנות היא שעת התחלה - אז צריך לבדוק אם שעת ההתחלה קטנה משעת סיום
+    // אם השעה שרוצים לשנות היא שעת הסיום - אז צריך לבדוק אם שעת הסיום גדולה משעת משעת ההתחלה
+    var val1, val2;
+    if (val === "from") {
+        val1 = ((counetr_date.getUTCHours() >= new_date.getUTCHours()) &&
+            (counetr_date.getUTCMinutes() > new_date.getUTCMinutes()));
+        console.log("val1 :", val1);
+
+        val2 = ((counetr_date.getUTCHours() > new_date.getUTCHours()) &&
+            (counetr_date.getUTCMinutes() >= new_date.getUTCMinutes()));
+        console.log("val2 :", val2);
+
+        console.log("from - isInvalidTime :", !(val1 || val2));
+    }
+    else if (val === "to") {
+        val1 = ((counetr_date.getUTCHours() <= new_date.getUTCHours()) &&
+            (counetr_date.getUTCMinutes() < new_date.getUTCMinutes()));
+        console.log("val1 :", val1);
+
+        val2 = ((counetr_date.getUTCHours() < new_date.getUTCHours()) &&
+            (counetr_date.getUTCMinutes() <= new_date.getUTCMinutes()));
+        console.log("val2 :", val2);
+
+        console.log("to - isInvalidTime :", !(val1 || val2));
+    }
+
+    return !(val1 || val2);
+}
 
 function getNewDate(timeString, prev_date) {
     const time = timeString.split(':'); // convert to ["hh","mm"]

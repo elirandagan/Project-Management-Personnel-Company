@@ -318,7 +318,7 @@
 
                                 <input id="time_to" type="hidden" name="time_to">
 
-                                <input type="hidden" id="id_from" name="id">
+                                <input type="hidden" id="id_to" name="id">
 
                                 <button type="button" class="btn btn-link btn-sm"
                                   style="padding: 0 !important;margin: 0 !important;"
@@ -540,6 +540,7 @@
 
     function submit_check(e) {
       console.log(e);
+      alert(e)
       var time = document.getElementById(e).innerText;
 
       if (! /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time) || time.length !== 5) {
@@ -566,9 +567,9 @@
       time.value = document.getElementById(e).innerText;
       id.value = e;
 
-
       alert(time.value)
-      return true; //to <change></change>
+      alert(e)
+      return true;
     }
   </script>
   <script>
