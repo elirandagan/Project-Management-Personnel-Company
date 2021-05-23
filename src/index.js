@@ -523,8 +523,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     // console.log("** shift.startWork : ", shift.startWork, shift.startWork.getUTCHours(), shift.startWork.getUTCMinutes());
                     // console.log("** shift.doneWork : ", shift.doneWork, shift.doneWork.getUTCHours(), shift.doneWork.getUTCMinutes());
 
-                    const counetr_date = (type === "to") ? shift.startWork : shift.doneWork;
-                    if (isInvalidTime(type, counetr_date, new_date))
+                    const counter_date = (type === "to") ? shift.startWork : shift.doneWork;
+                    if (isInvalidTime(type, counter_date, new_date))
                         return res.status(200).render("trackingWorkers",
                             { status: "No Change", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
 
@@ -618,22 +618,22 @@ console.log(`http://127.0.0.1:${app_port}`);
 // val is which time should be changed (from or to),
 // the counetr_date is the date which should be checked against,
 // new_date is the new date 
-function isInvalidTime(val, counetr_date, new_date) {
+function isInvalidTime(val, counter_date, new_date) {
     var val1, val2;
     if (val === "from") {
-        val1 = ((counetr_date.getUTCHours() >= new_date.getUTCHours()) &&
-            (counetr_date.getUTCMinutes() > new_date.getUTCMinutes()));
+        val1 = ((counter_date.getUTCHours() >= new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() > new_date.getUTCMinutes()));
 
-        val2 = ((counetr_date.getUTCHours() > new_date.getUTCHours()) &&
-            (counetr_date.getUTCMinutes() >= new_date.getUTCMinutes()));
+        val2 = ((counter_date.getUTCHours() > new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() >= new_date.getUTCMinutes()));
 
     }
     else if (val === "to") {
-        val1 = ((counetr_date.getUTCHours() <= new_date.getUTCHours()) &&
-            (counetr_date.getUTCMinutes() < new_date.getUTCMinutes()));
+        val1 = ((counter_date.getUTCHours() <= new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() < new_date.getUTCMinutes()));
 
-        val2 = ((counetr_date.getUTCHours() < new_date.getUTCHours()) &&
-            (counetr_date.getUTCMinutes() <= new_date.getUTCMinutes()));
+        val2 = ((counter_date.getUTCHours() < new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() <= new_date.getUTCMinutes()));
     }
 
     return !(val1 || val2);
