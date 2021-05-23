@@ -417,9 +417,16 @@
             const args = <%- JSON.stringify(args) %>;
             const msg = <%= msg %>;
 
+            console.log(args)
             if (msg === 0) {
                 console.log("DEFAULT")
 
+            }else if (msg === -1) {
+                swal({
+                    title: "Empty field\n",
+                    text: "Cant find for this employer hiring history",
+                    icon: "warning",
+                });
             }
             else if (msg === 1) {
                 swal({
@@ -495,7 +502,7 @@
 
                 for (var i = 1; i < newArr.length + 1; i++) {
 
-                    let x = table.rows[i].cells[7];
+                    let x = table.rows[i].cells[5];
 
                         //create element
                         let newDiv = document.createElement("div");

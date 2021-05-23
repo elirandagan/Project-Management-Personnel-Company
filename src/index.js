@@ -28,7 +28,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         const Contractor_Users_Collection = db.collection("Contractor_Users")
         const Absences_Collection = db.collection("Absences")
         const Shifts_Collection = db.collection("Shifts")
-        const AllreadyVoted_Collection = db.collection("AlreadyVoted")
+        const AlreadyVoted_Collection = db.collection("AlreadyVoted")
 
         app.set("view engine", "ejs");
         app.use(CookieParser())
@@ -338,8 +338,8 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         }
 
         async function getRecruitments() {
-            const query = { startWork: { $gt: date.getFirstDateOfMonth(), $lt: new Date() } };
-            const projection = { startWork: 1, _id: 0 }; //can be added to find()
+            const query = {startWork: {$gt: date.getFirstDateOfMonth(), $lt: new Date()}};
+            const projection = {startWork: 1, _id: 0}; //can be added to find()
             var reqs = new Array(date.getDaysInMonth()).fill(0); //create empty array of days in current month
 
             try {
@@ -413,12 +413,17 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             console.log("expertises :" + expertises);
             console.log("*****");
 
-            res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments, expertises: expertises });
+            res.status(200).render("statistics", {
+                signUps: signUps,
+                recruitments: recruitments,
+                expertises: expertises
+            });
         });
 
         router.get("/trackingWorkers", function (req, res) {
-            res.status(200).render("trackingWorkers", { status: "init", worker: {}, shifts: {} });
+            res.status(200).render("trackingWorkers", {status: "init", worker: {}, shifts: {}});
         });
+
 
         router.post("/trackingWorkers", async (req, res) => {
             console.log('********');
@@ -427,14 +432,14 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             console.log('********');
 
             try {
-                var result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
+                var result = Contractor_Users_Collection.findOne({ID: req.body["id-text"]})
                 result = await result;
                 console.log('*****');
                 console.log(result);
                 console.log('*****');
 
                 if (result) {
-                    var shifts = Shifts_Collection.find({ cwId: req.body["id-text"] })
+                    var shifts = Shifts_Collection.find({cwId: req.body["id-text"]})
                     shifts = await shifts.toArray();
                     for (let i = 0; i < shifts.length; ++i) {
                         var start = new Date(shifts[i].startWork)
@@ -449,14 +454,12 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
                         if (start.getUTCMinutes() < 10) {
                             shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
-                        }
-                        else {
+                        } else {
                             shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
                         }
                         if (done.getUTCMinutes() < 10) {
                             shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
-                        }
-                        else {
+                        } else {
                             shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
                         }
                     }
@@ -465,9 +468,13 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                 console.log(shifts);
                 console.log('$$$$$');
                 if (!result)
-                    res.status(200).render("trackingWorkers", { status: "Not Found", worker: req.body["id-text"], shifts: {} });
+                    res.status(200).render("trackingWorkers", {
+                        status: "Not Found",
+                        worker: req.body["id-text"],
+                        shifts: {}
+                    });
                 else
-                    res.status(200).render("trackingWorkers", { status: "Success", worker: result, shifts: shifts });
+                    res.status(200).render("trackingWorkers", {status: "Success", worker: result, shifts: shifts});
 
             } catch (error) {
                 console.error(error)
@@ -480,9 +487,16 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         });
 
         router.get("/hiringHistory", function (req, res) {
-            console.log("router get")
-            Shifts_Collection.find().toArray().then((schema) => {
-                schema ? res.status(200).render("hiringHistory", {args: schema , msg:0}) : console.error("shifts empty")
+            console.log(req.cookies.user.ID)
+            Shifts_Collection.find({employerId: req.cookies.user.ID}).toArray().then(async (shifts) => {
+                let newsShifts = await (updateShifts(shifts))
+
+                newsShifts.length > 0 ? res.status(200).render("hiringHistory", {
+                    args: newsShifts,
+                    msg: 0
+                }) : res.status(200).render("hiringHistory", {args: newsShifts, msg: -1})
+
+
             })
         });
 
@@ -505,8 +519,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             console.log("shiftId : ", shiftId)
             console.log("starAmount : ", starAmount)
 
-            AllreadyVoted_Collection.find({userId: user, shiftId: shiftId}).toArray().then((result) => {
-                console.log(result)
+            AlreadyVoted_Collection.find({userId: user, shiftId: shiftId}).toArray().then((result) => {
                 if (result.length === 0) {
                     const myQuery = {_id: new ObjectId(shiftId)}
 
@@ -523,20 +536,43 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                         Shifts_Collection.updateOne(myQuery, newValues, function (err) {
                             if (err) throw err;
                             console.log("1 document updated");
-                            AllreadyVoted_Collection.insertOne({userId: user, shiftId: shiftId})
-                            Shifts_Collection.find().toArray().then((schema) => {
-                                schema ? res.status(200).render("hiringHistory", {args: schema,msg:1}) : console.error("shifts empty")
+                            AlreadyVoted_Collection.insertOne({userId: user, shiftId: shiftId})
+                            Shifts_Collection.find({employerId: req.cookies.user.ID}).toArray().then((schema) => {
+                                schema.length > 0 ? res.status(200).render("hiringHistory", {
+                                    args: schema,
+                                    msg: 1
+                                }) : res.status(200).render("hiringHistory", {args: schema, msg: -1})
                             })
                         });
                     })
-                }else{
+                } else {
                     console.log("already voted")
-                    Shifts_Collection.find().toArray().then((schema) => {
-                        schema ? res.status(200).render("hiringHistory", {args: schema , msg:2}) : console.error("shifts empty")
+                    Shifts_Collection.find({employerId: req.cookies.user.ID}).toArray().then((schema) => {
+                        schema.length > 0 ? res.status(200).render("hiringHistory", {
+                            args: schema,
+                            msg: 2
+                        }) : res.status(200).render("hiringHistory", {args: schema, msg: -1})
                     })
                 }
             })
         });
+
+
+        async function updateShifts(shifts) {
+            console.log(shifts.cwId)
+            for (let i = 0;i<shifts.length;i++) {
+
+                Contractor_Users_Collection.find({ID: shifts[i].cwId}).toArray().then((user) => {
+                    console.log(user)
+                    console.log(user[0].voteRate)
+                    Shifts_Collection.updateOne({_id: shifts[i]._id}, {$set: {rating: parseInt([0].voteRate)}}, function (err, res) {
+                        if (err) throw err;
+                        console.log("1 document updated" + shifts[i]._id);
+                    });
+                })
+            }
+            return shifts
+        }
 
 
         //add the router
