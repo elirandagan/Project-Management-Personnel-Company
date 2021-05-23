@@ -584,7 +584,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 Contractor_Users_Collection.find({ID: shifts[i].cwId}).toArray().then((user) => {
                     console.log(user)
                     console.log(user[0].voteRate)
-                    Shifts_Collection.updateOne({_id: shifts[i]._id}, {$set: {rating: parseInt([0].voteRate)}}, function (err, res) {
+                    Shifts_Collection.updateOne({_id: shifts[i]._id}, {$set: {rating: parseInt(user[0].voteRate)}}, function (err, res) {
                         if (err) throw err;
                         console.log("1 document updated" + shifts[i]._id);
                     });
