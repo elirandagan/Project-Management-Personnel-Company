@@ -442,9 +442,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             var employers = await getEmployers(shifts); // get all employers that match each shift
 
             var totalHours = getHoursArray(shifts); // get manipulated hours array
-
+            console.log("##$$$1 shifts",shifts);
             shifts = modifyShiftsHours(shifts); // modify shifts' hours to match hh:mm
-
+            console.log("##$$$2 shifts",shifts);
             // console.log("*** shifts: ", shifts);
             // console.log("*** totalHours: ", totalHours);
             // console.log("*** employers: ", employers);
@@ -456,7 +456,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 const data = req.body.id.split("_") //get the data (type & id) of submit
                 console.log("req.body :", req.body);
                 console.log("data :", data);
-                type = (data.length === 2) ? data[1] : "search"; // get type from data
+                const type = (data.length === 2) ? data[1] : "search"; // get type from data
                 var worker;
 
                 console.log("type of submit :", type);
@@ -643,7 +643,7 @@ function getNewDate(timeString, prev_date) {
 
     const time = timeString.split(':'); // convert to ["hh","mm"]
     const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])]; // convert to [hh,mm]
-    const new_date = new Date(new Date(prev_date).setHours(hours, minutes)); //create new date
+    const new_date = new Date(new Date(prev_date).setHours(hours+3, minutes)); //create new date
 
     console.log("&&& prev_date :", prev_date);
     console.log("&&& new_date :", new_date);

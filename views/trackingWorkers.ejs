@@ -290,9 +290,9 @@
                                   <%= shifts[i].startHour %>
                                 </div>
 
-                                <input type="hidden" id="time_from" name="time_from">
+                                <input type="hidden" id="time_from_<%= shifts[i]._id %>" name="time_from">
 
-                                <input type="hidden" id="id_from" name="id">
+                                <input type="hidden" id="id_from_<%= shifts[i]._id %>" name="id">
 
                                 <button type="button" class="btn btn-link btn-sm"
                                   style="padding: 0 !important;margin: 0 !important;"
@@ -316,9 +316,9 @@
                                   <%= shifts[i].doneHour %>
                                 </div>
 
-                                <input id="time_to" type="hidden" name="time_to">
+                                <input id="time_to_<%= shifts[i]._id %>" type="hidden" name="time_to">
 
-                                <input type="hidden" id="id_to" name="id">
+                                <input type="hidden" id="id_to_<%= shifts[i]._id %>" name="id">
 
                                 <button type="button" class="btn btn-link btn-sm"
                                   style="padding: 0 !important;margin: 0 !important;"
@@ -552,12 +552,12 @@
       }
       var time, id;
       if (e.split("_")[1] === "from") {
-        time = document.getElementById('time_from')
-        id = document.getElementById('id_from')
+        time = document.getElementById('time_from_'+e.split("_")[0])
+        id = document.getElementById('id_from_'+e.split("_")[0])
       }
       else {
-        time = document.getElementById('time_to')
-        id = document.getElementById('id_to')
+        time = document.getElementById('time_to_'+e.split("_")[0])
+        id = document.getElementById('id_to_'+e.split("_")[0])
       }
       console.log("e : ", e);
       console.log("e inner text :", document.getElementById(e).innerText);
@@ -565,7 +565,8 @@
 
       time.value = document.getElementById(e).innerText;
       id.value = e;
-
+      alert(time.value)
+      alert(id.value)
       return true;
     }
   </script>
