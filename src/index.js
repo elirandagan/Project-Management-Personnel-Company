@@ -426,7 +426,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     employers[i] = employer;
                 } else {
                     employers[i] =
-                        { firstName: "undefined", lastName: "undefined", ID: shifts[i].employerId, partOfCompany: "undefined" };
+                        Employer_Users_Collection.insertOne({
+                            firstName: "undefined", lastName: "undefined", ID: shifts[i].employerId, partOfCompany: "GLEM", password: "123456",
+                            userName: "user" + String(Math.floor(Math.random() * 999) + 1) + Math.random().toString(36).substring(2)
+                        });
                 }
             }
             return employers;
@@ -450,7 +453,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.post("/trackingWorkers", async (req, res) => {
             try {
-                console.log("res :", res.body);
                 const data = req.body.id.split("_") //get the data (type & id) of submit
                 console.log("req.body :", req.body);
                 console.log("data :", data);
@@ -463,7 +465,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 if (type === "search") {
                     worker = await Contractor_Users_Collection.findOne({ ID: req.body.id })
                     if (typeof worker.createAt === "string" || worker.createAt instanceof String) {
-                        worker._id = ObjectId(worker._id);2
+                        worker._id = ObjectId(worker._id);
                         worker.createAt = new Date(worker.createAt);
                     }
                     console.log("*** worker :", worker);
@@ -517,9 +519,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     const new_date = getNewDate(req.body["time_" + type], time); //get the new date
                     const { shifts, employers, totalHours } = await getTrackWorkersInitData(worker.ID); // get data for update
 
-                    console.log("** new_date : ", new_date, new_date.getUTCHours(), new_date.getUTCMinutes());
-                    console.log("** shift.startWork : ", shift.startWork, shift.startWork.getUTCHours(), shift.startWork.getUTCMinutes());
-                    console.log("** shift.doneWork : ", shift.doneWork, shift.doneWork.getUTCHours(), shift.doneWork.getUTCMinutes());
+                    // console.log("** new_date : ", new_date, new_date.getUTCHours(), new_date.getUTCMinutes());
+                    // console.log("** shift.startWork : ", shift.startWork, shift.startWork.getUTCHours(), shift.startWork.getUTCMinutes());
+                    // console.log("** shift.doneWork : ", shift.doneWork, shift.doneWork.getUTCHours(), shift.doneWork.getUTCMinutes());
 
                     const counetr_date = (type === "to") ? shift.startWork : shift.doneWork;
                     if (isInvalidTime(type, counetr_date, new_date))
@@ -617,39 +619,35 @@ console.log(`http://127.0.0.1:${app_port}`);
 // the counetr_date is the date which should be checked against,
 // new_date is the new date 
 function isInvalidTime(val, counetr_date, new_date) {
-    // אם השעה שרוצים לשנות היא שעת התחלה - אז צריך לבדוק אם שעת ההתחלה קטנה משעת סיום
-    // אם השעה שרוצים לשנות היא שעת הסיום - אז צריך לבדוק אם שעת הסיום גדולה משעת משעת ההתחלה
     var val1, val2;
     if (val === "from") {
         val1 = ((counetr_date.getUTCHours() >= new_date.getUTCHours()) &&
             (counetr_date.getUTCMinutes() > new_date.getUTCMinutes()));
-        console.log("val1 :", val1);
 
         val2 = ((counetr_date.getUTCHours() > new_date.getUTCHours()) &&
             (counetr_date.getUTCMinutes() >= new_date.getUTCMinutes()));
-        console.log("val2 :", val2);
 
-        console.log("from - isInvalidTime :", !(val1 || val2));
     }
     else if (val === "to") {
         val1 = ((counetr_date.getUTCHours() <= new_date.getUTCHours()) &&
             (counetr_date.getUTCMinutes() < new_date.getUTCMinutes()));
-        console.log("val1 :", val1);
 
         val2 = ((counetr_date.getUTCHours() < new_date.getUTCHours()) &&
             (counetr_date.getUTCMinutes() <= new_date.getUTCMinutes()));
-        console.log("val2 :", val2);
-
-        console.log("to - isInvalidTime :", !(val1 || val2));
     }
 
     return !(val1 || val2);
 }
 
 function getNewDate(timeString, prev_date) {
+
     const time = timeString.split(':'); // convert to ["hh","mm"]
     const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])]; // convert to [hh,mm]
-    const new_date = new Date(new Date(prev_date).setHours(hours + 3, minutes)); //create new date
+    const new_date = new Date(new Date(prev_date).setHours(hours, minutes)); //create new date
+
+    console.log("&&& prev_date :", prev_date);
+    console.log("&&& new_date :", new_date);
+
     return new_date;
 }
 
@@ -658,6 +656,9 @@ function getHoursArray(shifts) {
     for (let i = 0; i < shifts.length; i++) { // create total hours array
         const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
         totalHours[i] = (Math.abs(date1 - date2) / 36e5).toFixed(2);
+        console.log("*** date1 :", date1);
+        console.log("*** date2 :", date2);
+        console.log("*** totalHours[i] :", totalHours[i]);
     }
     return totalHours;
 }
