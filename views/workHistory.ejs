@@ -422,19 +422,10 @@
   </script>
   <script>
     $(document).ready(function () {
-<<<<<<< HEAD
-      const user = getCookie("user")
-      const identity = getCookie("identity")
-      console.log(user.expertise);
-      console.log(identity);
-
-      if (identity === "Contractor_Users") {
-=======
       // Javascript method's body can be found in assets/js/demos.js
       md.initDashboardPageCharts();
       const identity = getCookie("identity")
       if (identity.toString() == "Contractor_Users") {
->>>>>>> work-history
         document.getElementById("recruit").style.display = "none";
         document.getElementById("trackingWorkers").style.display = "none";
         document.getElementById("statistics").style.display = "none";
@@ -458,30 +449,8 @@
         document.getElementById("trackingWorkers").style.display = "none";
         document.getElementById("statistics").style.display = "none";
       }
-<<<<<<< HEAD
-    })
-  </script>
-  <script>
-    function getCookie(name) {
-      const value = "; " + document.cookie;
-      const parts = value.split("; " + name + "=");
-      if (parts.length == 2) {
-        const vlu = parts.pop().split(";").shift();
-        const decode_vlu = decodeURIComponent(vlu);
-        const replace_vlu = decode_vlu.replace(/[+]/, ' ');
-        const temp = replace_vlu.split(',')
-        if (temp.length > 1)
-          return JSON.parse(replace_vlu.replace("j:", ""));
-        else
-          return replace_vlu
-      }
-      else
-        return '';
-    }
-=======
 
     });
->>>>>>> work-history
   </script>
   <script>
     function getCookie(name) {

@@ -5,7 +5,7 @@ const app_port = process.env.PORT || 3000;
 const app = express();
 const router = express.Router();
 const CookieParser = require("cookie-parser");
-const  ObjectId = require("mongodb").ObjectId;
+// const  ObjectId = require("mongodb").ObjectId;
 
 const mongoDbFunction = require("./mongoDb");
 const validateFunction = require("./validate");
@@ -31,11 +31,8 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         const Absences_Collection = db.collection("Absences")
         const Shifts_Collection = db.collection("Shifts")
-<<<<<<< HEAD
         const AlreadyVoted_Collection = db.collection("AlreadyVoted")
-=======
-        const Employer_Users_Collection = db.collection("Employer_Users")
->>>>>>> work-history
+        // const Employer_Users_Collection = db.collection("Employer_Users")
 
         app.set("view engine", "ejs");
         app.use(CookieParser())
@@ -275,25 +272,15 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         router.get("/absences", function (req, res) {
             if (validateUser) {
-<<<<<<< HEAD
-                res.status(200).render("absences", {arr: [], succeed: false});
-=======
                 var project = {_id: 1, from: 1, to: 1}
                 Absences_Collection.find({ID:req.cookies.user.ID}).project(project).toArray(function(err, absences){
                     res.status(200).render("absences", { arr: absences, succeed: false })
                     })  
->>>>>>> work-history
             }
         });
 
         router.post("/absences", (req, res) => {
             if (validateUser) {
-<<<<<<< HEAD
-                Absences_Collection.insertOne({ID: "208061580", from: req.body.from, to: req.body.to})
-                    .then(result => {
-                        res.status(200).render("absences", {arr: [], succeed: true})
-                        console.log("SUCCEED TO INSERT SHIFT FOR ID 208061580", result)
-=======
                 if(req.body.from != undefined){
                     Absences_Collection.insertOne({ ID: req.cookies.user.ID, from: req.body.from, to: req.body.to })
                     .then(result => {
@@ -302,7 +289,6 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                         res.status(200).render("absences", { arr: absences, succeed: true })
                         console.log("SUCCEED TO INSERT SHIFT")
                         })   
->>>>>>> work-history
                     })
                 }
                 else{
@@ -606,25 +592,16 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         });
 
         router.get("/hiringHistory", function (req, res) {
-<<<<<<< HEAD
-            console.log(req.cookies.user.ID)
-            renderToHiringHistory(req, res, 0)
-=======
             console.log("router get")
             Shifts_Collection.find().toArray().then((schema) => {
                 console.log("schema : " + JSON.stringify(schema))
                 schema ? res.status(200).render("hiringHistory", { args: schema }) : console.error("shifts empty")
             })
->>>>>>> work-history
         });
 
         router.post("/hiringHistory", function (req, res) {
             console.log("router post")
-<<<<<<< HEAD
-            res.status(200).render("hiringHistory", {arguments: "router post"});
-=======
             res.status(200).render("hiringHistory", { arguments: "router post" });
->>>>>>> work-history
         });
 
 
