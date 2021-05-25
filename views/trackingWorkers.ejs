@@ -164,18 +164,20 @@
         <div class="container">
         </div>
         <form name="worker-search-form" action="/trackingWorkers" method="POST" onsubmit="return check()" required>
+          <input type="hidden" name="name" value="search">
+
           <div class="row">
             <div class="col-md-2">
               <h3 class="pull-right text-white">Worker ID:</h3>
             </div>
 
             <div class="col-md-3 text-center" style="top:1.2rem;">
-              <input type="text" name="id-text" class="h-50 text-white text-center"
+              <input type="text" name="id" class="h-50 text-white text-center"
                 style="background-color:darkgray; border-radius: 15px;">
             </div>
             <div class="col-md-1 text-center" style="top: 1rem;">
               <input type="submit" value="Search" class="update-btn btn btn-primary btn-sm"
-                style="font-size: 0.8rem;border-radius: 15px;" name="ID"></input>
+                style="font-size: 0.8rem;border-radius: 15px;"></input>
             </div>
         </form>
       </div>
@@ -288,7 +290,9 @@
                                   <%= shifts[i].startHour %>
                                 </div>
 
-                                <input id="time_from" type="hidden" name="time_from">
+                                <input type="hidden" id="time_from_<%= shifts[i]._id %>" name="time_from">
+
+                                <input type="hidden" id="id_from_<%= shifts[i]._id %>" name="id">
 
                                 <button type="button" class="btn btn-link btn-sm"
                                   style="padding: 0 !important;margin: 0 !important;"
@@ -297,8 +301,8 @@
                                 </button>
 
                                 <input type="submit" id="<%= shifts[i]._id %>_from_check" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;display: none;" name="submit"
-                                  value="from">
+                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;"
+                                  value="V">
                                 </input>
 
                               </form>
@@ -312,7 +316,9 @@
                                   <%= shifts[i].doneHour %>
                                 </div>
 
-                                <input id="time_to" type="hidden" name="time_to">
+                                <input id="time_to_<%= shifts[i]._id %>" type="hidden" name="time_to">
+
+                                <input type="hidden" id="id_to_<%= shifts[i]._id %>" name="id">
 
                                 <button type="button" class="btn btn-link btn-sm"
                                   style="padding: 0 !important;margin: 0 !important;"
@@ -321,15 +327,15 @@
                                 </button>
 
                                 <input type="submit" id="<%= shifts[i]._id %>_to_check" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;display: none;" name="submit"
-                                  value="to">
+                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;"
+                                  name="submit" value="V">
                                 </input>
 
                               </form>
                             </td>
 
                             <td>
-                              <%= totalHours[i].toFixed(2) %>
+                              <%= totalHours[i] %>
                             </td>
 
                             <td>
@@ -417,11 +423,11 @@
     $(document).ready(function () {
       const user = getCookie("user")
       const identity = getCookie("identity")
-      // console.log(user);
-      // console.log(identity);
+      // const worker = getCookie("track_emp")
 
       const status = "<%= status %>";
       const worker = "<%= worker %>";
+
       const shifts = "<%= shifts %>";
       const employers = "<%= employers %>";
       const totalHours = "<%= totalHours %>";
@@ -443,9 +449,23 @@
             icon: "info",
           });
           break;
-        case "Success":
+        case "No Change":
+          swal({
+            title: "No Change Has Been Made\n",
+            text: "",
+            icon: "info",
+          });
+          break;
+        case "Search Success":
           swal({
             title: "Found worker\n",
+            text: "",
+            icon: "success",
+          });
+          break;
+        case "Update Success":
+          swal({
+            title: "Successfully Upadated Shifts\n",
             text: "",
             icon: "success",
           });
@@ -454,7 +474,6 @@
         default:
           break;
       }
-
 
       if (identity === "Contractor_Users") {
         document.getElementById("recruit").style.display = "none";
@@ -484,7 +503,7 @@
   </script>
   <script>
     function check() {
-      let id = document.forms["worker-search-form"]["id-text"].value;
+      let id = document.forms["worker-search-form"].id.value;
       if (id !== "") {
         console.log("clicked on check " + id);
         return true;
@@ -531,17 +550,24 @@
         });
         return false;
       }
+      var time, id;
+      if (e.split("_")[1] === "from") {
+        time = document.getElementById('time_from_'+e.split("_")[0])
+        id = document.getElementById('id_from_'+e.split("_")[0])
+      }
+      else {
+        time = document.getElementById('time_to_'+e.split("_")[0])
+        id = document.getElementById('id_to_'+e.split("_")[0])
+      }
+      console.log("e : ", e);
+      console.log("e inner text :", document.getElementById(e).innerText);
+      console.log(time.value);
 
-      if (e.split("_")[1] === "from")
-        var x = document.getElementById('time_from')
-      else
-        var x = document.getElementById('time_to')
-
-      console.log("x :", x);
-      console.log("e :", document.getElementById(e).innerText);
-      x.value = document.getElementById(e).innerText;
-      alert(x.value);
-      return true; //to <change></change>
+      time.value = document.getElementById(e).innerText;
+      id.value = e;
+      alert(time.value)
+      alert(id.value)
+      return true;
     }
   </script>
   <script>

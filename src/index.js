@@ -88,18 +88,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
             if (validateLogin === "valid") {
                 const returnValue = await mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity)
-                // console.log("routerReturnValue", returnValue)
+
                 if ("validate" === returnValue) {
                     validateUser = true
-                    // console.log("validateUser = true")
-                    ///////// COOKIE /////////////
 
                     const user = await mongoDbFunction.findOneByIdentity(req.body.userName, req.body.password, req.body.identity)
-                    // console.log("user", user);
-                    // const userInfo = { identity: req.body.identity, user: user['ID']}
-                    console.log("*****");
-                    console.log("user", user);
-                    console.log("*****");
+
                     res.cookie("user", user, { maxAge: 9000000, httpOnly: false });
                     res.cookie("identity", req.body.identity, { maxAge: 9000000, httpOnly: false });
                     res.status(200).render("dashboard", { exist: "invalidID" });
@@ -422,79 +416,129 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             res.status(200).render("trackingWorkers", { status: "init", worker: {}, shifts: {}, employers: {}, totalHours: {} });
         });
 
-        router.post("/trackingWorkers", async (req, res) => {
-            console.log("$***$");
-            console.log(req.body);
-            console.log("$***$");
+        async function getEmployers(shifts) {
+            var employers = new Array(shifts.length);
+            const project = { userName: 0, password: 0 };
 
-            try {
-                var result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
-                result = await result;
-                console.log('*****');
-                console.log(result);
-                console.log('*****');
-
-                if (result) {
-                    var shifts = Shifts_Collection.find({ cwId: req.body["id-text"] }).sort({ startWork: -1 })
-                    shifts = await shifts.toArray();
-
-                    var employers = new Array(shifts.length)
-                    const project = { userName: 0, password: 0 };
-
-                    for (let i = 0; i < shifts.length; i++) { // creates employers
-                        let employer = Employer_Users_Collection.findOne({ ID: shifts[i].employerId }, { projection: project });
-                        employer = await employer;
-                        if (employer) {
-                            employers[i] = employer;
-                        } else {
-                            employers[i] =
-                                { firstName: "undefined", lastName: "undefined", ID: shifts[i].employerId, partOfCompany: "undefined" }
-                        }
-                    }
-
-                    var totalHours = new Array(shifts.length);
-                    for (let i = 0; i < shifts.length; i++) { // create total hours array
-                        const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
-                        totalHours[i] = Math.abs(date1 - date2) / 36e5;
-                    }
-
-                    for (let i = 0; i < shifts.length; ++i) { // modifies shifts
-                        var start = new Date(shifts[i].startWork)
-                        var done = new Date(shifts[i].doneWork)
-                        startMonth = start.getMonth() + 1;
-                        doneMonth = done.getMonth() + 1;
-                        if (startMonth < 10) {
-                            startMonth = "0" + startMonth;
-                        }
-                        shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
-                        shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
-
-                        if (start.getUTCMinutes() < 10) {
-                            shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
-                        }
-                        else {
-                            shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
-                        }
-                        if (done.getUTCMinutes() < 10) {
-                            shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
-                        }
-                        else {
-                            shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
-                        }
-                    }
+            for (let i = 0; i < shifts.length; i++) { // creates employers
+                let employer = Employer_Users_Collection.findOne({ ID: shifts[i].employerId }, { projection: project });
+                employer = await employer;
+                if (employer) {
+                    employers[i] = employer;
+                } else {
+                    employers[i] =
+                        Employer_Users_Collection.insertOne({
+                            firstName: "undefined", lastName: "undefined", ID: shifts[i].employerId, partOfCompany: "GLEM", password: "123456",
+                            userName: "user" + String(Math.floor(Math.random() * 999) + 1) + Math.random().toString(36).substring(2)
+                        });
                 }
-                console.log('$ $$$$');
-                console.log(shifts);
-                console.log('$$$$$');
-                if (!result)
-                    res.status(200).render("trackingWorkers", {
-                        status: "Not Found",
-                        worker: req.body["id-text"],
-                        shifts: {}
-                    });
-                else
-                    res.status(200).render("trackingWorkers", {status: "Success", worker: result, shifts: shifts});
+            }
+            return employers;
+        };
 
+        async function getTrackWorkersInitData(id) {
+            var shifts = Shifts_Collection.find({ cwId: id }).sort({ startWork: -1 }); // get all shifts for given id
+            shifts = await shifts.toArray();
+
+            var employers = await getEmployers(shifts); // get all employers that match each shift
+
+            var totalHours = getHoursArray(shifts); // get manipulated hours array
+            console.log("##$$$1 shifts", shifts);
+            shifts = modifyShiftsHours(shifts); // modify shifts' hours to match hh:mm
+            console.log("##$$$2 shifts", shifts);
+            // console.log("*** shifts: ", shifts);
+            // console.log("*** totalHours: ", totalHours);
+            // console.log("*** employers: ", employers);
+            return { shifts, employers, totalHours };
+        };
+
+        router.post("/trackingWorkers", async (req, res) => {
+            try {
+                const data = req.body.id.split("_") //get the data (type & id) of submit
+                console.log("req.body :", req.body);
+                console.log("data :", data);
+                const type = (data.length === 2) ? data[1] : "search"; // get type from data
+                var worker;
+
+                console.log("type of submit :", type);
+                console.log("req.body.id :", req.body.id);
+
+                if (type === "search") {
+                    worker = await Contractor_Users_Collection.findOne({ ID: req.body.id })
+                    if (typeof worker.createAt === "string" || worker.createAt instanceof String) {
+                        worker._id = ObjectId(worker._id);
+                        worker.createAt = new Date(worker.createAt);
+                    }
+                    console.log("*** worker :", worker);
+
+                    if (!worker) { // user not found.
+                        if (!req.cookies.track_emp) { // not cookie found
+                            console.log("$$ Im in a very bad place ... $$");
+                            return res.status(200).render("trackingWorkers",
+                                { status: "Not Found", worker: {}, shifts: {}, employers: {}, totalHours: {} });
+                        } else {
+                            console.log("!@%$#%$ no worker but we have a COOKIE ! !@%$#%$");
+                            console.log("!@%$#%$ the Cookie ladie and gents : ", req.cookies.track_emp);
+                            worker = req.cookies.track_emp;
+                            worker._id = ObjectId(worker._id)
+                            worker.createAt = new Date(w.createAt);
+                            console.log("!@%$#%$ the Cookie ladie and gents : ", worker);
+                        }
+                    }
+                    const { shifts, employers, totalHours } = await getTrackWorkersInitData(worker.ID); // get data for search success
+
+                    res.cookie("track_emp", worker, { maxAge: 900000, httpOnly: false }); // create cookie.
+
+                    return res.status(200).render("trackingWorkers",
+                        { status: "Search Success", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
+                }
+                // else type is not search (from or to)
+                else {
+                    var w = req.cookies.track_emp;
+                    [w._id, w.createAt] = [ObjectId(w._id), new Date(w.createAt)];
+                    const worker = w;
+                    // console.log("worker : ", worker);
+
+                    const id = req.body.id.split("_")[0]; // req.body.id is "<id_value>_from" or "<id_value>_to"
+                    console.log("id : ", id);
+
+                    // if the type is startWork or doneWork, then different projection
+                    const project = { _id: 0, startWork: 1, doneWork: 1 };
+
+                    // get the shifts that requierd to be updated
+                    var shift = await Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: project });
+
+                    // console.log("shift :", shift);
+
+                    if (!shift || shift === null) {// if the shifts has not been found
+                        console.log("!@%$#%$  no shift !@%$#%$");
+                        return res.status(200).render("trackingWorkers",
+                            { status: "Not Found", worker: id, shifts: {}, employers: {}, totalHours: {} });
+                    }
+                    const time = (type === "from") ? shift.startWork : shift.doneWork;
+                    const new_date = getNewDate(req.body["time_" + type], time); //get the new date
+                    const { shifts, employers, totalHours } = await getTrackWorkersInitData(worker.ID); // get data for update
+
+                    // console.log("** new_date : ", new_date, new_date.getUTCHours(), new_date.getUTCMinutes());
+                    // console.log("** shift.startWork : ", shift.startWork, shift.startWork.getUTCHours(), shift.startWork.getUTCMinutes());
+                    // console.log("** shift.doneWork : ", shift.doneWork, shift.doneWork.getUTCHours(), shift.doneWork.getUTCMinutes());
+
+                    const counter_date = (type === "to") ? shift.startWork : shift.doneWork;
+                    if (isInvalidTime(type, counter_date, new_date))
+                        return res.status(200).render("trackingWorkers",
+                            { status: "No Change", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
+
+                    // if the type is startWork or doneWork, then different projection
+                    const set = (type === "from") ? { startWork: new_date } : { doneWork: new_date }
+
+                    Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: set }, err => {
+                        if (err) throw err;
+                        console.log("1 document updated in " + Object.keys(set));
+                    });
+
+                    return res.status(200).render("trackingWorkers",
+                        { status: "Update Success", worker: req.cookies.track_emp, shifts: shifts, employers: employers, totalHours: totalHours });
+                }
             } catch (error) {
                 console.error(error)
                 throw error
@@ -508,12 +552,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         router.get("/hiringHistory", function (req, res) {
             console.log(req.cookies.user.ID)
             Shifts_Collection.find({employerId: req.cookies.user.ID}).toArray().then(async (shifts) => {
-                let newsShifts = await (updateShifts(shifts))
+                let newShifts = await (updateShifts(shifts))
 
-                newsShifts.length > 0 ? res.status(200).render("hiringHistory", {
-                    args: newsShifts,
+                newShifts.length > 0 ? res.status(200).render("hiringHistory", {
+                    args: newShifts,
                     msg: 0
-                }) : res.status(200).render("hiringHistory", {args: newsShifts, msg: -1})
+                }) : res.status(200).render("hiringHistory", {args: newShifts, msg: -1})
 
 
             })
@@ -528,7 +572,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
         });
 
-
         router.get("/modify_rate_star", (req, res) => {
             let value = req.cookies.id.split("#")
             let user = req.cookies.user._id
@@ -540,17 +583,17 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
             AlreadyVoted_Collection.find({userId: user, shiftId: shiftId}).toArray().then((result) => {
                 if (result.length === 0) {
-                    const myQuery = {_id: new ObjectId(shiftId)}
+                    const myQuery = { _id: new ObjectId(shiftId) }
 
                     Shifts_Collection.find(myQuery).toArray().then((schema) => {
                         let vote = schema[0].vote
                         let rating = schema[0].rating
                         let newValues
                         if (vote == 0) {
-                            newValues = {$set: {rating: starAmount, vote: vote + 1}};
+                            newValues = { $set: { rating: starAmount, vote: vote + 1 } };
                         } else {
                             rating = rating * (vote - 1) / vote + starAmount / vote
-                            newValues = {$set: {rating: rating.toFixed(2), vote: vote + 1}};
+                            newValues = { $set: { rating: rating.toFixed(2), vote: vote + 1 } };
                         }
                         Shifts_Collection.updateOne(myQuery, newValues, function (err) {
                             if (err) throw err;
@@ -576,7 +619,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             })
         });
 
-
         async function updateShifts(shifts) {
             console.log(shifts.cwId)
             for (let i = 0;i<shifts.length;i++) {
@@ -592,19 +634,103 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
             return shifts
         }
-
-
         //add the router
-
-
         app.use("/", router);
     })
     .catch(error => console.error(error))
 
-
-// exports.insertVotedValue = insertVotedValue;
-// exports.votedAlready = votedAlready;
-
 module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
 console.log(`http://127.0.0.1:${app_port}`);
+
+// val is which time should be changed (from or to),
+// the counetr_date is the date which should be checked against,
+// new_date is the new date 
+function isInvalidTime(val, counter_date, new_date) {
+    var val1, val2;
+    if (val === "from") {
+        val1 = ((counter_date.getUTCHours() >= new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() > new_date.getUTCMinutes()));
+
+        val2 = ((counter_date.getUTCHours() > new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() >= new_date.getUTCMinutes()));
+
+    }
+    else if (val === "to") {
+        val1 = ((counter_date.getUTCHours() <= new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() < new_date.getUTCMinutes()));
+
+        val2 = ((counter_date.getUTCHours() < new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() <= new_date.getUTCMinutes()));
+    }
+
+    return !(val1 || val2);
+}
+
+function getNewDate(timeString, prev_date) {
+
+    const time = timeString.split(':'); // convert to ["hh","mm"]
+    const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])]; // convert to [hh,mm]
+
+    console.log("^%$^$% prev_date.getUTCHours :", prev_date.getUTCHours());
+
+    if (prev_date.getUTCHours() >= 21)
+        prev_date.setDate(prev_date.getDate() - 1)
+
+    const new_date = new Date(new Date(prev_date).setHours(hours + 3, minutes)); //create new date
+
+    console.log("&&& prev_date :", prev_date);
+    console.log("&&& new_date :", new_date);
+
+    return new_date;
+}
+
+function getHoursArray(shifts) {
+    var totalHours = new Array(shifts.length);
+    for (let i = 0; i < shifts.length; i++) { // create total hours array
+        const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
+        totalHours[i] = (Math.abs(date1 - date2) / 36e5).toFixed(2);
+        console.log("*** date1 :", date1);
+        console.log("*** date2 :", date2);
+        console.log("*** totalHours[i] :", totalHours[i]);
+    }
+    return totalHours;
+}
+
+function modifyShiftsHours(shifts) {
+    var temp_shifts = shifts;
+
+    for (let i = 0; i < temp_shifts.length; ++i) { // modifies shifts hours
+        var start = new Date(temp_shifts[i].startWork);
+        var done = new Date(temp_shifts[i].doneWork);
+        startMonth = start.getMonth() + 1;
+        doneMonth = done.getMonth() + 1;
+        if (startMonth < 10) {
+            startMonth = "0" + startMonth;
+        }
+        temp_shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear();
+        temp_shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear();
+
+        if (start.getUTCMinutes() < 10) {
+            temp_shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
+        }
+        else {
+            temp_shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
+        }
+        if (done.getUTCMinutes() < 10) {
+            temp_shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
+        }
+        else {
+            temp_shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
+        }
+        if (start.getUTCHours() < 10) {
+            temp_shifts[i].startHour = "0" + temp_shifts[i].startHour;
+        }
+        if (done.getUTCHours() < 10) {
+            temp_shifts[i].doneHour = "0" + temp_shifts[i].doneHour;
+        }
+    }
+    return temp_shifts;
+}
+
+
