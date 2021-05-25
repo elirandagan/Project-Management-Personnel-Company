@@ -30,18 +30,19 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         const Absences_Collection = db.collection("Absences")
         const Shifts_Collection = db.collection("Shifts")
-        const AllreadyVoted_Collection = db.collection("AlreadyVoted")
+        const AlreadyVoted_Collection = db.collection("AlreadyVoted")
 
         app.set("view engine", "ejs");
         app.use(CookieParser())
         app.use(express.static("public"));
-        app.use(bodyParser.urlencoded({ extended: true }))
+        app.use(bodyParser.urlencoded({extended: true}))
         app.use(bodyParser.json())
+
 
         // HOW TO "GET" FROM COLLECTION
         router.get("/", async function (req, res) {
             console.log("HOMEPAGE")
-            res.status(200).render("login", { exist: 0 });
+            res.status(200).render("login", {exist: 0});
         });
 
         router.get("/login", function (req, res) {
@@ -482,7 +483,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             worker._id = ObjectId(worker._id)
                             worker.createAt = new Date(w.createAt);
                             console.log("!@%$#%$ the Cookie ladie and gents : ", worker);
-
                         }
                     }
                     const { shifts, employers, totalHours } = await getTrackWorkersInitData(worker.ID); // get data for search success
@@ -550,15 +550,22 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/hiringHistory", function (req, res) {
-            console.log("router get")
-            Shifts_Collection.find().toArray().then((schema) => {
-                schema ? res.status(200).render("hiringHistory", { args: schema, msg: 0 }) : console.error("shifts empty")
+            console.log(req.cookies.user.ID)
+            Shifts_Collection.find({employerId: req.cookies.user.ID}).toArray().then(async (shifts) => {
+                let newShifts = await (updateShifts(shifts))
+
+                newShifts.length > 0 ? res.status(200).render("hiringHistory", {
+                    args: newShifts,
+                    msg: 0
+                }) : res.status(200).render("hiringHistory", {args: newShifts, msg: -1})
+
+
             })
         });
 
         router.post("/hiringHistory", function (req, res) {
             console.log("router post")
-            res.status(200).render("hiringHistory", { arguments: "router post" });
+            res.status(200).render("hiringHistory", {arguments: "router post"});
         });
 
         router.get("/dashboard", function (req, res) {
@@ -574,8 +581,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log("shiftId : ", shiftId)
             console.log("starAmount : ", starAmount)
 
-            AllreadyVoted_Collection.find({ userId: user, shiftId: shiftId }).toArray().then((result) => {
-                console.log(result)
+            AlreadyVoted_Collection.find({userId: user, shiftId: shiftId}).toArray().then((result) => {
                 if (result.length === 0) {
                     const myQuery = { _id: new ObjectId(shiftId) }
 
@@ -592,21 +598,43 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         Shifts_Collection.updateOne(myQuery, newValues, function (err) {
                             if (err) throw err;
                             console.log("1 document updated");
-                            AllreadyVoted_Collection.insertOne({ userId: user, shiftId: shiftId })
-                            Shifts_Collection.find().toArray().then((schema) => {
-                                schema ? res.status(200).render("hiringHistory", { args: schema, msg: 1 }) : console.error("shifts empty")
+                            AlreadyVoted_Collection.insertOne({userId: user, shiftId: shiftId})
+                            Shifts_Collection.find({employerId: req.cookies.user.ID}).toArray().then((schema) => {
+                                schema.length > 0 ? res.status(200).render("hiringHistory", {
+                                    args: schema,
+                                    msg: 1
+                                }) : res.status(200).render("hiringHistory", {args: schema, msg: -1})
                             })
                         });
                     })
                 } else {
                     console.log("already voted")
-                    Shifts_Collection.find().toArray().then((schema) => {
-                        schema ? res.status(200).render("hiringHistory", { args: schema, msg: 2 }) : console.error("shifts empty")
+                    Shifts_Collection.find({employerId: req.cookies.user.ID}).toArray().then((schema) => {
+                        schema.length > 0 ? res.status(200).render("hiringHistory", {
+                            args: schema,
+                            msg: 2
+                        }) : res.status(200).render("hiringHistory", {args: schema, msg: -1})
                     })
                 }
             })
         });
 
+        async function updateShifts(shifts) {
+            console.log(shifts.cwId)
+            for (let i = 0;i<shifts.length;i++) {
+
+                Contractor_Users_Collection.find({ID: shifts[i].cwId}).toArray().then((user) => {
+                    console.log(user)
+                    console.log(user[0].voteRate)
+                    Shifts_Collection.updateOne({_id: shifts[i]._id}, {$set: {rating: parseInt(user[0].voteRate)}}, function (err, res) {
+                        if (err) throw err;
+                        console.log("1 document updated" + shifts[i]._id);
+                    });
+                })
+            }
+            return shifts
+        }
+        //add the router
         app.use("/", router);
     })
     .catch(error => console.error(error))
