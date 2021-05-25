@@ -300,10 +300,10 @@
                                   <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
                                 </button>
 
-                                <input type="submit" id="<%= shifts[i]._id %>_from_check" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;"
-                                  value="V">
-                                </input>
+                                <button type="submit" id="<%= shifts[i]._id %>_from_check" class="btn btn-link btn-sm"
+                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;">
+                                  <i class="material-icons" style="margin-left: 0.5rem;">check</i>
+                                </button>
 
                               </form>
                             </td>
@@ -326,10 +326,11 @@
                                   <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
                                 </button>
 
-                                <input type="submit" id="<%= shifts[i]._id %>_to_check" class="btn btn-link btn-sm"
+                                <button type="submit" id="<%= shifts[i]._id %>_to_check" class="btn btn-link btn-sm"
                                   style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;"
-                                  name="submit" value="V">
-                                </input>
+                                  name="submit">
+                                  <i class="material-icons" style="margin-left: 0.5rem;">check</i>
+                                </button>
 
                               </form>
                             </td>
@@ -547,12 +548,12 @@
       }
       var time, id;
       if (e.split("_")[1] === "from") {
-        time = document.getElementById('time_from_'+e.split("_")[0])
-        id = document.getElementById('id_from_'+e.split("_")[0])
+        time = document.getElementById('time_from_' + e.split("_")[0])
+        id = document.getElementById('id_from_' + e.split("_")[0])
       }
       else {
-        time = document.getElementById('time_to_'+e.split("_")[0])
-        id = document.getElementById('id_to_'+e.split("_")[0])
+        time = document.getElementById('time_to_' + e.split("_")[0])
+        id = document.getElementById('id_to_' + e.split("_")[0])
       }
 
       time.value = document.getElementById(e).innerText;

@@ -170,47 +170,30 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
         });
 
-        router.get("/shifts", async (req, res) => {
-            const query = { cwId: req.cookies.user.ID };
+        async function getShifts(id) {
+            const query = { cwId: id };
             const projection = { cwId: 0, rating: 0 }
             console.log(query);
+
+            var shifts = Shifts_Collection.find(query).project(projection).sort({ startWork: -1 });
+            shifts = await shifts.toArray();
+            shifts = modifyShiftsHours(shifts)
+
+            for (let i = 0; i < shifts.length; i++) {
+                const q = { ID: shifts[i].employerId };
+                const p = { _id: 0, partOfCompany: 1 };
+                const company = await Employer_Users_Collection.findOne(q, { projection: p });
+                shifts[i].company = Object.values(company);
+            }
+            console.log("***** Shifts :");
+            console.log(shifts);
+            console.log("*****");
+            return shifts;
+        }
+
+        router.get("/shifts", async (req, res) => {
             try {
-                var shifts = Shifts_Collection.find(query).project(projection).sort({ startWork: -1 })
-                shifts = await shifts.toArray()
-                for (let i = 0; i < shifts.length; ++i) {
-                    var start = new Date(shifts[i].startWork)
-                    var done = new Date(shifts[i].doneWork)
-                    startMonth = start.getMonth() + 1;
-                    doneMonth = done.getMonth() + 1;
-                    if (startMonth < 10) {
-                        startMonth = "0" + startMonth;
-                    }
-                    shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
-                    shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
-
-                    if (start.getUTCMinutes() < 10) {
-                        shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
-                    }
-                    else {
-                        shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
-                    }
-                    if (done.getUTCMinutes() < 10) {
-                        shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
-                    }
-                    else {
-                        shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
-                    }
-                }
-
-                for (let i = 0; i < shifts.length; i++) {
-                    const q = { ID: shifts[i].employerId }
-                    const p = { _id: 0, partOfCompany: 1 }
-                    const company = await Employer_Users_Collection.findOne(q, { projection: p });
-                    shifts[i].company = Object.values(company);
-                }
-                console.log("***** Shifts :");
-                console.log(shifts);
-                console.log("*****");
+                var shifts = await getShifts(req.cookies.user.ID);
                 if (validateUser) {
                     res.status(200).render("shifts", { status: "init", shifts: shifts });
                 }
@@ -218,43 +201,43 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 console.error(error)
                 throw error
             }
-
         });
 
         router.post("/shifts", async (req, res) => {
-            const query = { cwId: req.cookies.user.ID };
-            const projection = { cwId: 0, rating: 0 }
             try {
-                var shifts = Shifts_Collection.find(query).project(projection).sort({ startWork: -1 })
-                shifts = await shifts.toArray()
-                for (let i = 0; i < shifts.length; ++i) {
-                    var start = new Date(shifts[i].startWork)
-                    var done = new Date(shifts[i].doneWork)
-                    startMonth = start.getMonth() + 1;
-                    doneMonth = done.getMonth() + 1;
-                    if (startMonth < 10) {
-                        startMonth = "0" + startMonth;
-                    }
-                    shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
-                    shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
-
-                    if (start.getUTCMinutes() < 10) {
-                        shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
-                    }
-                    else {
-                        shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
-                    }
-                    if (done.getUTCMinutes() < 10) {
-                        shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
-                    }
-                    else {
-                        shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
-                    }
-                }
+                const submit_type = req.body.type;
+                const submit_id = req.body.id;
+                const shift = await Shifts_Collection.findOne({ _id: ObjectId(submit_id) });
+                const shifts = await getShifts(req.cookies.user.ID)
 
                 if (validateUser) {
-                    res.status(200).render("shifts", { status: "ok", shifts: shifts });
+                    switch (submit_type) {
+                        case "accept":
+                            if (shift.status === "pending") {
+                                Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "approved" } },
+                                    err => {
+                                        if (err) throw err;
+                                        console.log("1 document updated by status to approved");
+                                    });
+
+                                setTimeout(async function () { res.status(200).render("shifts", { status: "Success", shifts: shifts }); }
+                                    , 5000);
+                            } else {
+                                setTimeout(async function () { res.status(200).render("shifts", { status: "No Change", shifts: shifts }); }
+                                    , 5000);
+                            }
+                            break;
+                        case "deny":
+                        case "report":
+                            setTimeout(async function () { res.status(200).render("shifts", { status: "No Change", shifts: shifts }); }
+                                , 5000);
+                            break;
+                        default:
+                            setTimeout(async function () { res.status(200).render("shifts", { status: "Failed", shifts: shifts }); }
+                                , 5000);
+                    }
                 }
+
             } catch (error) {
                 console.error(error)
                 throw error
@@ -738,9 +721,6 @@ function getHoursArray(shifts) {
     for (let i = 0; i < shifts.length; i++) { // create total hours array
         const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
         totalHours[i] = (Math.abs(date1 - date2) / 36e5).toFixed(2);
-        console.log("*** date1 :", date1);
-        console.log("*** date2 :", date2);
-        console.log("*** totalHours[i] :", totalHours[i]);
     }
     return totalHours;
 }

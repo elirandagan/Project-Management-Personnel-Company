@@ -19,7 +19,6 @@
   <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="demo/demo.css" rel="stylesheet" />
-  <link href="/public/css/shifts.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -180,12 +179,15 @@
               <div class="col-md-8">
                 <div class="card card-body" style="border-radius: 15px;margin: 0;">
                   <div class="row">
+
                     <div class="col-md-4">
                       <label style="font-size: 18px;">Where : <%= shifts[i].where %> </label>
                     </div>
+
                     <div class="col-md-4">
                       <label style="font-size: 18px;">Date : <%= shifts[i].startWork %></label>
                     </div>
+
                     <div class="col-md-3">
                       <% if (shifts[i].status==="approved" ) { %>
                         <label style="font-size: 18px;position:relative; left:35px;color:green"><span
@@ -212,17 +214,19 @@
                     <div class="col-md-4">
                       <div class="row">
 
-                        <form action="/shifts" method="post" name="accept"
-                          onsubmit="return accept('<%= shifts[i]._id %>')">
-                          <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
-                            id="<%= shifts[i]._id %>_acc" style="display: inline-block;" onclick=>
+                        <form action="/shifts" method="post" name="accept">
+
+                          <button type="submit" class="btn btn-link btn-sm" id="<%= shifts[i]._id %>_acc"
+                            style="display: inline-block;">
                             <i class="material-icons"
                               style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
                           </button>
+
+                          <input type="hidden" name="type" value="accept">
+                          <input type="hidden" name="id" value="<%= shifts[i]._id %>">
                         </form>
 
                         <form action="/shifts" method="post" name="deny">
-
                           <button type="submit" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
                             style="display:block;" id="<%= shifts[i]._id %>_den">
                             <i class="material-icons denied-btn"
@@ -320,8 +324,6 @@
   <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!--  Google Maps Plugin    -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
   <!-- Chartist JS -->
   <script src="js/plugins/chartist.min.js"></script>
   <!--  Notifications Plugin    -->
@@ -343,12 +345,34 @@
       switch (status) {
         case "init":
           swal({
-            title: "init \n",
+            title: "Init \n",
             text: "",
             icon: "info",
           });
           break;
+        case "Success":
+          swal({
+            title: "Success \n",
+            text: "",
+            icon: "success",
+          });
+          break;
+        case "No Change":
+          swal({
+            title: "No change \n",
+            text: "",
+            icon: "info",
+          });
+          break;
+        case "Failed":
+          swal({
+            title: "Failed \n",
+            text: "",
+            icon: "warning",
+          });
+          break;
         default:
+          console.error("error");
           break;
       }
 
@@ -405,7 +429,7 @@
       });
       document.getElementById(e + "_box").style.display = "inline";
 
-      return true;
+      return false;
     }
 
     function report() {
