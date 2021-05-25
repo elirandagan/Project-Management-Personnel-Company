@@ -169,45 +169,74 @@
       </nav>
       <!-- End Navbar -->
       <div class="content">
-      </div>
-      <footer class="footer">
-        <div class="container-fluid">
-          <nav class="float-left">
-            <ul>
-              <li>
-                <a href="https://www.creative-tim.com">
-                  GLEM TECH
-                </a>
-              </li>
-              <li>
-                <a href="https://creative-tim.com/presentation">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="http://blog.creative-tim.com">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="https://www.creative-tim.com/license">
-                  Licenses
-                </a>
-              </li>
-            </ul>
-          </nav>
-          <div class="copyright float-right" id="date">
-            , made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">GLEM TECH</a> for a better web.
+        <div class="card">
+          <div class="card-header card-header-primary">
+            <div class="card-title">
+              Shifts
+            </div>
           </div>
+          <div class="card-body table-responsive">
+            <table class="table table-hover" id="table">
+              <thead class="text-warning">
+                <th>Employer</th>
+                <th>Date</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Salary</th>
+              </thead>
+              <tbody>
+                <%for (let i=0, len=results.length; len> i; ++i){%>
+                  <tr>
+                  <%for (const item in results[i]){%>
+                    <td sty>
+                      <%= results[i][item] %>
+                    </td>
+                    <%}%>
+                  </tr>
+              <%}%>
+            </tbody>
+            </table>
         </div>
-      </footer>
-      <script>
-        const x = new Date().getFullYear();
-        let date = document.getElementById('date');
-        date.innerHTML = '&copy; ' + x + date.innerHTML;
-      </script>
+      </div>
     </div>
+    <footer class="footer">
+      <div class="container-fluid">
+        <nav class="float-left">
+          <ul>
+            <li>
+              <a href="https://www.creative-tim.com">
+                GLEM TECH
+              </a>
+            </li>
+            <li>
+              <a href="https://creative-tim.com/presentation">
+                About Us
+              </a>
+            </li>
+            <li>
+              <a href="http://blog.creative-tim.com">
+                Blog
+              </a>
+            </li>
+            <li>
+              <a href="https://www.creative-tim.com/license">
+                Licenses
+              </a>
+            </li>
+          </ul>
+        </nav>
+        <div class="copyright float-right" id="date">
+          , made with <i class="material-icons">favorite</i> by
+          <a href="https://www.creative-tim.com" target="_blank">GLEM TECH</a> for a better web.
+        </div>
+      </div>
+    </footer>
+    <script>
+      const x = new Date().getFullYear();
+      let date = document.getElementById('date');
+      date.innerHTML = '&copy; ' + x + date.innerHTML;
+    </script>
+  </div>
   </div>
 
   </div>
@@ -393,12 +422,19 @@
   </script>
   <script>
     $(document).ready(function () {
+<<<<<<< HEAD
       const user = getCookie("user")
       const identity = getCookie("identity")
       console.log(user.expertise);
       console.log(identity);
 
       if (identity === "Contractor_Users") {
+=======
+      // Javascript method's body can be found in assets/js/demos.js
+      md.initDashboardPageCharts();
+      const identity = getCookie("identity")
+      if (identity.toString() == "Contractor_Users") {
+>>>>>>> work-history
         document.getElementById("recruit").style.display = "none";
         document.getElementById("trackingWorkers").style.display = "none";
         document.getElementById("statistics").style.display = "none";
@@ -422,6 +458,7 @@
         document.getElementById("trackingWorkers").style.display = "none";
         document.getElementById("statistics").style.display = "none";
       }
+<<<<<<< HEAD
     })
   </script>
   <script>
@@ -441,6 +478,29 @@
       else
         return '';
     }
+=======
+
+    });
+>>>>>>> work-history
+  </script>
+  <script>
+    function getCookie(name) {
+      const value = "; " + document.cookie;
+      const parts = value.split("; " + name + "=");
+      if (parts.length == 2) {
+        const vlu = parts.pop().split(";").shift();
+        const decode_vlu = decodeURIComponent(vlu);
+        const replace_vlu = decode_vlu.replace(/[+]/, ' ');
+        const temp = replace_vlu.split(',')
+        if (temp.length > 1)
+          return JSON.parse(replace_vlu.replace("j:", ""));
+        else
+          return replace_vlu
+      }
+      else
+        return '';
+    }
+
   </script>
 </body>
 

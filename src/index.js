@@ -5,6 +5,7 @@ const app_port = process.env.PORT || 3000;
 const app = express();
 const router = express.Router();
 const CookieParser = require("cookie-parser");
+const  ObjectId = require("mongodb").ObjectId;
 
 const mongoDbFunction = require("./mongoDb");
 const validateFunction = require("./validate");
@@ -30,7 +31,11 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         const Absences_Collection = db.collection("Absences")
         const Shifts_Collection = db.collection("Shifts")
+<<<<<<< HEAD
         const AlreadyVoted_Collection = db.collection("AlreadyVoted")
+=======
+        const Employer_Users_Collection = db.collection("Employer_Users")
+>>>>>>> work-history
 
         app.set("view engine", "ejs");
         app.use(CookieParser())
@@ -172,7 +177,56 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         router.get("/workHistory", function (req, res) {
             if (validateUser) {
-                res.status(200).render("workHistory");
+                const projection = { _id: 0, employerId: 1, startWork: 1, doneWork: 1 }
+                Shifts_Collection.find({ cwId: req.cookies.user.ID, status: "approved" }).project(projection).toArray(function (err, result) {
+                    if (result.length > 0) {
+                        var arr = [];
+                        var totalSalary = 0;
+                        var totalHouers = 0;
+                        var totalShifts = result.length;
+                        for (let i = 0; i < result.length; ++i) {
+                            Employer_Users_Collection.find({ ID: result[i].employerId }).toArray(function (er, emp) {
+                                if (emp) {
+                                    // console.log("Employer first Name: " + JSON.stringify(emp))
+                                    var emp_string = emp[0].firstName + " " + emp[0].lastName;
+                                    var start = new Date(result[i].startWork)
+                                    var done = new Date(result[i].doneWork)
+                                    var date = start.getDay() + "/" + start.getMonth() + "/" + start.getUTCFullYear();
+
+                                    if (start.getUTCMinutes() < 10) {
+                                        result[i].startWork = start.getUTCHours() + " : 0" + start.getUTCMinutes();
+                                    }
+                                    else {
+                                        result[i].startWork = start.getUTCHours() + " : " + start.getUTCMinutes();
+                                    }
+                                    if (done.getUTCMinutes() < 10) {
+                                        result[i].doneWork = done.getUTCHours() + " : 0" + done.getUTCMinutes();
+                                    }
+                                    else {
+                                        result[i].doneWork = done.getUTCHours() + " : " + done.getUTCMinutes();
+                                    }
+
+                                    totalHouers += ((done.getTime() - start.getTime()) * 2.77777778 * 0.0000001);
+                                    var salary = ((done.getTime() - start.getTime()) * 2.77777778 * 0.0000001) * req.cookies.user.hourlyPay;
+                                    totalSalary += salary;
+                                    var SHIFT = { employer: emp_string, date: date, start: result[i].startWork, done: result[i].doneWork, salary: salary.toFixed(2) + " NIS" }
+                                    arr.push(SHIFT)
+
+                                    if(i + 1 == result.length){
+                                        var bot_row = {employer:"Shifts: " + totalShifts, date:null,start:null,done:"Houers: " + totalHouers.toFixed(2),salary:"Salary: " +totalSalary.toFixed(2) + " NIS"}
+                                        arr.push({ employer:null, date: null, start:null, done: null, salary:null })
+                                        arr.push(bot_row)
+                                        res.status(200).render("workHistory", { results: arr });
+                                    }
+                                }
+                            })
+                        }
+                    }
+                    else {
+                        console.log(err);
+                        res.status(200).render("workHistory", { results: [] });
+                    }
+                })
             }
         });
 
@@ -221,17 +275,50 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         router.get("/absences", function (req, res) {
             if (validateUser) {
+<<<<<<< HEAD
                 res.status(200).render("absences", {arr: [], succeed: false});
+=======
+                var project = {_id: 1, from: 1, to: 1}
+                Absences_Collection.find({ID:req.cookies.user.ID}).project(project).toArray(function(err, absences){
+                    res.status(200).render("absences", { arr: absences, succeed: false })
+                    })  
+>>>>>>> work-history
             }
         });
 
         router.post("/absences", (req, res) => {
             if (validateUser) {
+<<<<<<< HEAD
                 Absences_Collection.insertOne({ID: "208061580", from: req.body.from, to: req.body.to})
                     .then(result => {
                         res.status(200).render("absences", {arr: [], succeed: true})
                         console.log("SUCCEED TO INSERT SHIFT FOR ID 208061580", result)
+=======
+                if(req.body.from != undefined){
+                    Absences_Collection.insertOne({ ID: req.cookies.user.ID, from: req.body.from, to: req.body.to })
+                    .then(result => {
+                        var project = {_id: 1, from: 1, to: 1}
+                        Absences_Collection.find({ID:req.cookies.user.ID}).project(project).toArray(function(err, absences){
+                        res.status(200).render("absences", { arr: absences, succeed: true })
+                        console.log("SUCCEED TO INSERT SHIFT")
+                        })   
+>>>>>>> work-history
                     })
+                }
+                else{
+                    console.log(req.body.deleteId)
+                    var stringVal = req.body.deleteId.toString()
+                    console.log(stringVal.slice(1, -1))
+                    Absences_Collection.deleteOne({ _id : new ObjectId(stringVal.slice(1, -1))})
+                    .then(result =>{
+                        var project = {_id: 1, from: 1, to: 1}
+                        Absences_Collection.find({ID:req.cookies.user.ID}).project(project).toArray(function(err, absences){
+                        res.status(200).render("absences", { arr: absences, succeed: false })
+                        console.log("SUCCEED TO DELETE SHIFT")
+                        })   
+                    })
+                }
+                
             }
         })
 
@@ -519,13 +606,25 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         });
 
         router.get("/hiringHistory", function (req, res) {
+<<<<<<< HEAD
             console.log(req.cookies.user.ID)
             renderToHiringHistory(req, res, 0)
+=======
+            console.log("router get")
+            Shifts_Collection.find().toArray().then((schema) => {
+                console.log("schema : " + JSON.stringify(schema))
+                schema ? res.status(200).render("hiringHistory", { args: schema }) : console.error("shifts empty")
+            })
+>>>>>>> work-history
         });
 
         router.post("/hiringHistory", function (req, res) {
             console.log("router post")
+<<<<<<< HEAD
             res.status(200).render("hiringHistory", {arguments: "router post"});
+=======
+            res.status(200).render("hiringHistory", { arguments: "router post" });
+>>>>>>> work-history
         });
 
 

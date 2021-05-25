@@ -120,14 +120,14 @@
             <span class="navbar-toggler-icon icon-bar"></span>
           </button>
           <div class="collapse navbar-collapse justify-content-end">
-            <form class="navbar-form">
+            <!-- <form class="navbar-form">
               <div class="input-group no-border">
                 <input type="text" value="" class="form-control" placeholder="Search...">
                 <button type="submit" class="btn btn-default btn-round btn-just-icon">
                   <i class="material-icons">search</i>
                   <div class="ripple-container"></div>
                 </button>
-              </div>
+              </div> -->
             </form>
             <ul class="navbar-nav">
 
@@ -180,13 +180,13 @@
               <div class="row">
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label class="bmd-label-floating">Start Your Leaving Period Here*</label>
+                    <label>FROM:*</label>
                     <input type="date" class="form-control" required id="from" name="from">
                   </div>
                 </div>
                 <div class="col-md-4">
                   <div class="form-group">
-                    <label class="bmd-label-floating">Finish Your Leaving Period Here*</label>
+                    <label>To:*</label>
                     <input type="date" class="form-control" required id="to" name="to">
                   </div>
                 </div>
@@ -211,8 +211,40 @@
               Future Absences
             </div>
           </div>
-          <div class="card-body">
-
+          <div class="card-body table-responsive">
+            <div class="tab-content">
+              <div class="tab-pane active">
+                <table class="table table-hover" id="table">
+                  <thead class="text-warning">
+                    <th></th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th>Remove</th>
+                  </thead>
+                  <tbody>
+                    <%for (let i=0, len=arr.length; len> i; ++i){%>
+                      <tr>
+                        <%for (const item in arr[i]){%>
+                          <td>
+                            <% if(item.toString() !='_id' ) {%>
+                              <%= arr[i][item] %>
+                                <%}%>
+                          </td>
+                          <%}%>
+                            <td>
+                              <form action="/absences" method="POST">
+                              <button onclick="deleteAbsence('<%= JSON.stringify(arr[i][`_id`]) %>')" type="submit"
+                                rel="tooltip" title="Remove" class="btn btn-white btn-link btn-sm" name="deleteId" value="'<%= arr[i][`_id`] %>'">
+                                <i class="material-icons">close</i>
+                              </button>
+                            </form>
+                            </td>
+                      </tr>
+                      <%}%>
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
         <!-- End Form for Future Absences-->
@@ -459,9 +491,19 @@
     });
   </script>
   <script>
+    $(document).ready(function () {
+      md.initDashboardPageCharts();
+      var arr = "<%= arr %>";
+      var succeed = "<%= succeed %>";
+      if (succeed == 'true') {
+        swal({
+          title: "Adding Leaving Period\n",
+          text: "The leaving period was succeesfuly added to the system.",
+          icon: "success",
+        });
+      }
 
-const identity = document.cookie.substr(9, document.cookie.length)
-      console.log("IDENTITY: " + identity + " length: " + identity.length)
+      const identity = getCookie("identity")
       if (identity.toString() == "Contractor_Users") {
         document.getElementById("recruit").style.display = "none";
         document.getElementById("trackingWorkers").style.display = "none";
@@ -486,23 +528,29 @@ const identity = document.cookie.substr(9, document.cookie.length)
         document.getElementById("trackingWorkers").style.display = "none";
         document.getElementById("statistics").style.display = "none";
       }
-
-    $(document).ready(function () {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
-      var arr = "<%= arr %>";
-      var succeed = "<%= succeed %>";
-      console.log("absences page say: "+succeed)
-      if(succeed == true){
-        swal({
-          title: "Adding Leaving Period\n",
-          text: "The leaving period was succeesfuly added to the system.",
-          icon: "success",
-        });
-      }
-
     });
+
+
   </script>
+  <script>
+    function getCookie(name) {
+      const value = "; " + document.cookie;
+      const parts = value.split("; " + name + "=");
+      if (parts.length == 2) {
+        const vlu = parts.pop().split(";").shift();
+        const decode_vlu = decodeURIComponent(vlu);
+        const replace_vlu = decode_vlu.replace(/[+]/, ' ');
+        const temp = replace_vlu.split(',')
+        if (temp.length > 1)
+          return JSON.parse(replace_vlu.replace("j:", ""));
+        else
+          return replace_vlu
+      }
+      else
+        return '';
+    }
+  </script>
+
 </body>
 
 </html>
