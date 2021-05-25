@@ -30,6 +30,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         const Absences_Collection = db.collection("Absences")
         const Shifts_Collection = db.collection("Shifts")
+        const Denied_Shifts_Collection = db.collection("Denied_Shifts")
         const AlreadyVoted_Collection = db.collection("AlreadyVoted")
 
         app.set("view engine", "ejs");
@@ -172,14 +173,21 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         async function getShifts(id) {
             const query = { cwId: id };
-            const projection = { cwId: 0, rating: 0 }
+            // const projection = { cwId: 0, rating: 0 }
             console.log(query);
 
-            var shifts = Shifts_Collection.find(query).project(projection).sort({ startWork: -1 });
+            var shifts = Shifts_Collection.find(query).sort({ startWork: -1 });
             shifts = await shifts.toArray();
-            shifts = modifyShiftsHours(shifts)
 
             for (let i = 0; i < shifts.length; i++) {
+                if (shifts[i].status == "denied") {
+                    Denied_Shifts_Collection.insertOne(shifts[i])
+                }
+            }
+
+            shifts = modifyShiftsHours(shifts)
+
+            for (let i = 0; i < shifts.length; i++) { // add each employer's company to shifts
                 const q = { ID: shifts[i].employerId };
                 const p = { _id: 0, partOfCompany: 1 };
                 const company = await Employer_Users_Collection.findOne(q, { projection: p });
@@ -214,30 +222,40 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     switch (submit_type) {
                         case "accept":
                             if (shift.status === "pending") {
-                                Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "approved" } },
-                                    err => {
-                                        if (err) throw err;
-                                        console.log("1 document updated by status to approved");
-                                    });
+                                if (new Date() > shift_date) {
+                                    Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "denied" } },
+                                        err => {
+                                            if (err) throw err;
+                                            console.log("1 document updated by status to denied");
+                                        });
+                                    res.status(200).render("shifts", { status: "Success", shifts: shifts });
+                                } else {
+                                    Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "approved" } },
+                                        err => {
+                                            if (err) throw err;
+                                            console.log("1 document updated by status to approved");
 
-                                setTimeout(async function () { res.status(200).render("shifts", { status: "Success", shifts: shifts }); }
-                                    , 5000);
-                            } else {
-                                setTimeout(async function () { res.status(200).render("shifts", { status: "No Change", shifts: shifts }); }
-                                    , 5000);
+                                        });
+                                    res.status(200).render("shifts", { status: "Success", shifts: shifts });
+                                }
+                            } else { // if (shift.status === "approved") 
+                                const diff = Math.round((second - first) / (1000 * 60 * 60 * 24))
+                                var notify = { id: submit_id }
+                                notify.status = (0 < diff && diff < 10) ? "Yes" : "No";
+
+                                res.status(200).render("shifts", { status: "No Change", shifts: shifts, notify: notify });
                             }
                             break;
                         case "deny":
+
+                            break;
                         case "report":
-                            setTimeout(async function () { res.status(200).render("shifts", { status: "No Change", shifts: shifts }); }
-                                , 5000);
+                            res.status(200).render("shifts", { status: "No Change", shifts: shifts });
                             break;
                         default:
-                            setTimeout(async function () { res.status(200).render("shifts", { status: "Failed", shifts: shifts }); }
-                                , 5000);
+                            res.status(200).render("shifts", { status: "Failed", shifts: shifts });
                     }
                 }
-
             } catch (error) {
                 console.error(error)
                 throw error
