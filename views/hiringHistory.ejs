@@ -465,7 +465,12 @@
                         for (var j = 0, maxj = columns.length; j < maxj; ++j) {
                             td = _td_.cloneNode(false);
                             cellValue = arr[i][columns[j]];
-                            cellValue = cellValue.toString().includes("000Z") ? dateChangeFormat(cellValue) : cellValue
+                            if(typeof cellValue==="object"){
+                                console.log("OBJECT")
+                                cellValue = cellValue.length > 0 ? average(cellValue) : 0
+                            }else{
+                                cellValue = cellValue.toString().includes("000Z") ? dateChangeFormat(cellValue) : cellValue
+                            }
                             td.appendChild(document.createTextNode(cellValue || ''));
                             tr.appendChild(td);
                         }
@@ -547,6 +552,10 @@
                     hours = getDate.getUTCHours() + " : " + getDate.getUTCMinutes();
                 }
                return returnDate + " " + hours
+            }
+
+            function average(arr) {
+                return arr.reduce((p, c) => p + c, 0) / arr.length
             }
 
         });
