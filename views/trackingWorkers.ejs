@@ -432,8 +432,6 @@
       const employers = "<%= employers %>";
       const totalHours = "<%= totalHours %>";
 
-      console.log("status : ", status);
-
       switch (status) {
         case "init":
           swal({
@@ -505,7 +503,6 @@
     function check() {
       let id = document.forms["worker-search-form"].id.value;
       if (id !== "") {
-        console.log("clicked on check " + id);
         return true;
       }
       else {
@@ -525,7 +522,6 @@
   </script>
   <script>
     function edit_hours(e) {
-      console.log(e);
       var element = document.getElementById(e);
 
       if (element.contentEditable !== "true") {
@@ -539,7 +535,6 @@
     }
 
     function submit_check(e) {
-      console.log(e);
       var time = document.getElementById(e).innerText;
 
       if (! /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time) || time.length !== 5) {
@@ -559,14 +554,9 @@
         time = document.getElementById('time_to_'+e.split("_")[0])
         id = document.getElementById('id_to_'+e.split("_")[0])
       }
-      console.log("e : ", e);
-      console.log("e inner text :", document.getElementById(e).innerText);
-      console.log(time.value);
 
       time.value = document.getElementById(e).innerText;
       id.value = e;
-      alert(time.value)
-      alert(id.value)
       return true;
     }
   </script>
