@@ -19,6 +19,7 @@
   <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="demo/demo.css" rel="stylesheet" />
+  <link href="/public/css/shifts.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
@@ -171,86 +172,101 @@
       </nav>
       <!-- End Navbar -->
 
-      <div class="content">
-        <%for (let i=0,len=shifts.length;len>i;++i) { %>
-        <div class="row">
-        <div class="col-md-8">
-          <div class="card card-profile" style="border-radius: 15px;padding: 0.6rem;margin: 1rem 0;">
-            <div class="row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="bmd-label-floating" style="font-size: 18px;">Where: <%= shifts[i].where%></label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label class="bmd-label-floating" style="font-size: 18px;">Date: <%= shifts[i].startWork%> </label>
-                </div>
-              </div>
-              <div class="col-md-0">
-                <div class="form-group">
-                  <label class="bmd-label-floating" style="font-size: 18px;">Status: <%= shifts[i].status%></label>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label class="bmd-label-floating" style="font-size: 18px;">By: <%= shifts[i].employerId%></label>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                  <label for="expertise" style="font-size: 18px;">Company: <%= shifts[i].company%></label>
-                </div>
-              </div>
-              <div class="col-md-1">
-                <div class="row">
-                  <div class="form-group ">
-                    <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
-                      style="padding: 0 !important;margin: 0 !important;">
-                      <i class="material-icons"
-                        style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
-                    </button>
-                    <button type="button" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
-                      style="padding: 0 !important;margin: 0 !important;">
-                      <i class="material-icons"
-                        style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
-                    </button>
+      <div class="content" style="display: grid;padding: 1rem 0;">
+        <div class="container">
+          <%for (let i=0,len=shifts.length;len>i;++i) { %>
+            <div name="nice-card" class="row justify-content-center" style="padding:0.5rem;" id="<%= shifts[i]._id %>">
+
+              <div class="col-md-8">
+                <div class="card card-body" style="border-radius: 15px;margin: 0;">
+                  <div class="row">
+                    <div class="col-md-4">
+                      <label style="font-size: 18px;">Where : <%= shifts[i].where %> </label>
+                    </div>
+                    <div class="col-md-4">
+                      <label style="font-size: 18px;">Date : <%= shifts[i].startWork %></label>
+                    </div>
+                    <div class="col-md-3">
+                      <% if (shifts[i].status==="approved" ) { %>
+                        <label style="font-size: 18px;position:relative; left:35px;color:green"><span
+                            style="color: #AAA;">Status : </span>
+                          <%= shifts[i].status %>
+                        </label>
+                        <% } else { %>
+                          <label style="font-size: 18px;position:relative; left:35px;color: rgb(230, 219, 116);"><span
+                              style="color: #AAA;">Status : </span>
+                            <%= shifts[i].status %>
+                          </label>
+                          <% } %>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-4">
+                      <label class="" style="font-size: 18px;">By: <%= shifts[i].employerId %></label>
+                    </div>
+
+                    <div class="col-md-4">
+                      <label for="expertise" style="font-size: 18px;">Company : <%= shifts[i].company %></label>
+                    </div>
+
+                    <div class="col-md-4">
+                      <div class="row">
+
+                        <form action="/shifts" method="post" name="accept"
+                          onsubmit="return accept('<%= shifts[i]._id %>')">
+                          <button type="button" rel="tooltip" title="Approve" class="btn btn-link btn-sm"
+                            id="<%= shifts[i]._id %>_acc" style="display: inline-block;" onclick=>
+                            <i class="material-icons"
+                              style="font-size: 24px; margin-left: 0.5rem;color: green;">check_circle_outline</i>
+                          </button>
+                        </form>
+
+                        <form action="/shifts" method="post" name="deny">
+
+                          <button type="submit" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
+                            style="display:block;" id="<%= shifts[i]._id %>_den">
+                            <i class="material-icons denied-btn"
+                              style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
+                          </button>
+                        </form>
+
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-3">
-          <div class="card card-profile" style="border-radius: 15px;margin: 1rem 0;">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <label class="bmd-label-floating" style="font-size: 18px;">From : <%= shifts[i].startHour%></label>
-                </div>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <label class="bmd-label-floating" style="font-size: 18px;margin-bottom: -0.5rem;">To : <%= shifts[i].doneHour%></label>
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-md-12">
-                <div class="form-group">
-                  <button type="submit" class="update-btn btn btn-primary btn-sm"
-                    style="font-size: 0.8rem;border-radius: 15px;">Report</button>
-                </div>
-              </div>
-            </div>
-          </div>
 
+              <div class="col-md-4" id='<%= shifts[i]._id %>_box' style="display: none;">
+                <div class="card card-body text-center" style="border-radius: 15px;margin: 0;">
+
+                  <form action="/shifts" method="post" name="accept">
+                    <div class="row">
+                      <div class="col">
+                        <span style="font-size: 18px;">From :
+                          <input type="time" name="<%= shifts[i]._id %>_from">
+                        </span>
+                      </div>
+                      <div class="col">
+                        <span style="font-size: 18px;">To :
+                          <input type="time" name="<%= shifts[i]._id %>_to">
+                        </span>
+                      </div>
+                    </div>
+                  </form>
+                  <div class="row">
+                    <div class="col">
+                      <button type="submit" class="update-btn btn btn-primary btn-sm"
+                        style="font-size: 0.8rem;border-radius: 15px;" onclick="report()">Report</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+            <%}%>
         </div>
-        </div>
-        <%}%>
       </div>
+
 
       <footer class="footer">
         <div class="container-fluid">
@@ -301,6 +317,7 @@
   <script src="js/core/bootstrap-material-design.min.js"></script>
   <script src="https://unpkg.com/default-passive-events"></script>
   <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!--  Google Maps Plugin    -->
@@ -319,6 +336,21 @@
       const identity = getCookie("identity")
       console.log(user.expertise);
       console.log(identity);
+
+      const status = "<%= status %>"
+      console.log(status);
+
+      switch (status) {
+        case "init":
+          swal({
+            title: "init \n",
+            text: "",
+            icon: "info",
+          });
+          break;
+        default:
+          break;
+      }
 
       if (identity === "Contractor_Users") {
         document.getElementById("recruit").style.display = "none";
@@ -363,6 +395,24 @@
       else
         return '';
     }
+  </script>
+
+  <script>
+    function accept(e) {
+      alert(e)
+      swal("Good job!", "You clicked the button!", "success", {
+        button: "Aww yiss!",
+      });
+      document.getElementById(e + "_box").style.display = "inline";
+
+      return true;
+    }
+
+    function report() {
+      swal("Report", "You clicked the button!", "info");
+      return true;
+    }
+
   </script>
 </body>
 
