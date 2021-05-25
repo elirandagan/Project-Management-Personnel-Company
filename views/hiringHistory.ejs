@@ -24,7 +24,7 @@
         table {
             width: 750px;
             border-collapse: collapse;
-            margin:50px auto;
+            margin: 50px auto;
         }
 
         /* Zebra striping */
@@ -52,9 +52,8 @@
         This query will take effect for any screen smaller than 760px
         and also iPads specifically.
         */
-        @media
-        only screen and (max-width: 760px),
-        (min-device-width: 768px) and (max-device-width: 1024px)  {
+        @media only screen and (max-width: 760px),
+        (min-device-width: 768px) and (max-device-width: 1024px) {
 
             table {
                 width: 100%;
@@ -72,7 +71,9 @@
                 left: -9999px;
             }
 
-            tr { border: 1px solid #ccc; }
+            tr {
+                border: 1px solid #ccc;
+            }
 
             td {
                 /* Behave  like a "row" */
@@ -421,20 +422,19 @@
             if (msg === 0) {
                 console.log("DEFAULT")
 
-            }else if (msg === -1) {
+            } else if (msg === -1) {
                 swal({
                     title: "Empty field\n",
                     text: "Cant find for this employer hiring history",
                     icon: "warning",
                 });
-            }
-            else if (msg === 1) {
+            } else if (msg === 1) {
                 swal({
                     title: "Vote\n",
                     text: "Your vote successfully update",
                     icon: "success",
                 });
-            }else if (msg === 2) {
+            } else if (msg === 2) {
                 swal({
                     title: "Vote\n",
                     text: "you already voted",
@@ -465,12 +465,7 @@
                         for (var j = 0, maxj = columns.length; j < maxj; ++j) {
                             td = _td_.cloneNode(false);
                             cellValue = arr[i][columns[j]];
-                            if(typeof cellValue==="object"){
-                                console.log("OBJECT")
-                                cellValue = cellValue.length > 0 ? average(cellValue) : 0
-                            }else{
-                                cellValue = cellValue.toString().includes("000Z") ? dateChangeFormat(cellValue) : cellValue
-                            }
+                            cellValue = cellValue.toString().includes("000Z") ? dateChangeFormat(cellValue) : cellValue
                             td.appendChild(document.createTextNode(cellValue || ''));
                             tr.appendChild(td);
                         }
@@ -509,31 +504,31 @@
 
                     let x = table.rows[i].cells[5];
 
-                        //create element
-                        let newDiv = document.createElement("div");
+                    //create element
+                    let newDiv = document.createElement("div");
 //create 5 star rate scale
-                        let star = []
-                        for (let j = 0; j < 5; j++) {
-                            star[j] = document.createElement("a")
-                            star[j].className = `fas fa-star s${j + 1}`
-                            star[j].id = args[i - 1]._id + `#${j + 1}`
-                            //star[j].href = "/modify_rate_star"
-                            star[j].onclick = () => {
-                                document.cookie = "id=" + star[j].id
-                                location.assign("/modify_rate_star")
-                            }
+                    let star = []
+                    for (let j = 0; j < 5; j++) {
+                        star[j] = document.createElement("a")
+                        star[j].className = `fas fa-star s${j + 1}`
+                        star[j].id = args[i - 1]._id + `#${j + 1}`
+                        //star[j].href = "/modify_rate_star"
+                        star[j].onclick = () => {
+                            document.cookie = "id=" + star[j].id
+                            location.assign("/modify_rate_star")
                         }
+                    }
 
-                        newDiv.append(star[4])
-                        newDiv.append(star[3])
-                        newDiv.append(star[2])
-                        newDiv.append(star[1])
-                        newDiv.append(star[0])
+                    newDiv.append(star[4])
+                    newDiv.append(star[3])
+                    newDiv.append(star[2])
+                    newDiv.append(star[1])
+                    newDiv.append(star[0])
 
 
-                        newDiv.className = "star-wrapper"
+                    newDiv.className = "star-wrapper"
 
-                        x.append(newDiv)
+                    x.append(newDiv)
 
                 }
 
@@ -541,27 +536,22 @@
                 console.log("ERROR ACCRUED")
             }
 
-            function dateChangeFormat(date){
+            function dateChangeFormat(date) {
                 const getDate = new Date(date);
                 let returnDate = getDate.getDay() + "/" + getDate.getMonth() + "/" + getDate.getUTCFullYear();
                 let hours
                 if (getDate.getUTCMinutes() < 10) {
                     hours = getDate.getUTCHours() + " : 0" + getDate.getUTCMinutes();
-                }
-                else {
+                } else {
                     hours = getDate.getUTCHours() + " : " + getDate.getUTCMinutes();
                 }
-               return returnDate + " " + hours
+                return returnDate + " " + hours
             }
 
-            function average(arr) {
-                return arr.reduce((p, c) => p + c, 0) / arr.length
-            }
 
         });
 
     </script>
-
 
 
 </div>
