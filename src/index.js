@@ -177,14 +177,23 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             console.log(query);
 
             var shifts = Shifts_Collection.find(query).sort({ startWork: -1 });
-            shifts = await shifts.toArray();
+            shifts = await shifts.toArray(); // get the shifts with the same cwId
+
+            var temp_shifts = [];
 
             for (let i = 0; i < shifts.length; i++) {
-                if (shifts[i].status == "denied") {
+                if (shifts[i].status == "denied") { // delete denied shifts for the user
                     Denied_Shifts_Collection.insertOne(shifts[i])
-                    Shifts_Collection.deleteOne({})
+                    Shifts_Collection.deleteOne({ _id: shifts[i]._id }, function (err, obj) {
+                        if (err) throw err;
+                        console.log("1 document deleted :" + shifts[i]._id)
+                    });
+                } else { // save only non-denied shifts and re-assign
+                    temp_shifts.push(shifts[i])
                 }
             }
+            if (temp_shifts.length > 0)
+                shifts = temp_shifts // re-assign shifts
 
             shifts = modifyShiftsHours(shifts)
 
@@ -204,7 +213,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             try {
                 var shifts = await getShifts(req.cookies.user.ID);
                 if (validateUser) {
-                    res.status(200).render("shifts", { status: "init", shifts: shifts });
+                    res.status(200).render("shifts", { status: "init", shifts: shifts, notify: "init" });
                 }
             } catch (error) {
                 console.error(error)
@@ -218,44 +227,64 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 const submit_id = req.body.id;
                 const shift = await Shifts_Collection.findOne({ _id: ObjectId(submit_id) });
                 const shifts = await getShifts(req.cookies.user.ID)
+                var notify = { id: submit_id }
+                var status
 
                 if (validateUser) {
                     switch (submit_type) {
                         case "accept":
-                            if (shift.status === "pending") {
-                                if (new Date() > shift_date) {
+                            if (shift.status === "pending") { // shift waits for approval
+                                if (new Date().getTime() > shift.startWork.getTime()) { // if date of shifts has passed - then should be denied
                                     Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "denied" } },
                                         err => {
                                             if (err) throw err;
                                             console.log("1 document updated by status to denied");
                                         });
-                                    res.status(200).render("shifts", { status: "Success", shifts: shifts });
-                                } else {
+                                    notify.status = "Expired"
+                                    status = "Failed"
+                                } else { // shift is yet to be
                                     Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "approved" } },
                                         err => {
                                             if (err) throw err;
                                             console.log("1 document updated by status to approved");
-
                                         });
-                                    res.status(200).render("shifts", { status: "Success", shifts: shifts });
+                                    notify.status = "Approved"
+                                    status = "Success"
                                 }
-                            } else { // if (shift.status === "approved") 
-                                const diff = Math.round((second - first) / (1000 * 60 * 60 * 24))
-                                var notify = { id: submit_id }
-                                notify.status = (0 < diff && diff < 10) ? "Yes" : "No";
+                            } else { // if (shift.status === "approved" or "denied") 
 
-                                res.status(200).render("shifts", { status: "No Change", shifts: shifts, notify: notify });
+                                const diff = Math.round((shift.startWork.getTime() - (new Date()).getTime()) / (1000 * 60 * 60 * 24))
+
+                                console.log("*** diff :", diff);
+
+                                notify.status = (0 < diff && diff < 10) ? "Yes" : "No"; // the deadline of update shift's hours is only 10 days
+                                status = "No Change"
                             }
                             break;
                         case "deny":
+                            if (shift.status === "pending") {
+                                shift.status = "denied"
+                                Denied_Shifts_Collection.insertOne(shift);
 
+                                Shifts_Collection.deleteOne({ _id: shifts[i]._id }, err => {
+                                    if (err) throw err;
+                                    console.log("1 document deleted :" + shifts[i]._id)
+                                });
+                                notify.status = "denied"
+                                status = "Success"
+                            }
+                            else {
+                                status = "No Change"
+                            }
                             break;
                         case "report":
-                            res.status(200).render("shifts", { status: "No Change", shifts: shifts });
+                            status = "Report"
                             break;
                         default:
-                            res.status(200).render("shifts", { status: "Failed", shifts: shifts });
+                            status = "Failed"
                     }
+
+                    res.status(200).render("shifts", { status: status, shifts: shifts, notify: notify }); // render with relevant data
                 }
             } catch (error) {
                 console.error(error)
