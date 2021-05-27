@@ -203,9 +203,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 const company = await Employer_Users_Collection.findOne(q, { projection: p });
                 shifts[i].company = Object.values(company);
             }
-            console.log("***** Shifts :");
-            console.log(shifts);
-            console.log("*****");
+            // console.log("***** Shifts :");
+            // console.log(shifts);
+            // console.log("*****");
             return shifts;
         }
 
@@ -213,7 +213,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             try {
                 var shifts = await getShifts(req.cookies.user.ID);
                 if (validateUser) {
-                    res.status(200).render("shifts", { status: "init", shifts: shifts, notify: "init" });
+                    const notify = { id: "init", status: "init" }
+                    res.status(200).render("shifts", { status: "init", shifts: shifts, notify: notify });
                 }
             } catch (error) {
                 console.error(error)
@@ -227,7 +228,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 const submit_id = req.body.id;
                 const shift = await Shifts_Collection.findOne({ _id: ObjectId(submit_id) });
                 const shifts = await getShifts(req.cookies.user.ID)
-                var notify = { id: submit_id }
+                var notify = { id: submit_id, status: "init" }
                 var status
 
                 if (validateUser) {
@@ -283,7 +284,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         default:
                             status = "Failed"
                     }
-
+                    console.log("*** status : ", status);
+                    console.log("*** notify : ", notify);
                     res.status(200).render("shifts", { status: status, shifts: shifts, notify: notify }); // render with relevant data
                 }
             } catch (error) {
@@ -356,11 +358,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         })
 
         router.get("/user", (req, res) => {
-            console.log("******");
-            console.log("in user router");
-            console.log(req.cookies.user);
-            console.log(req.cookies.identity);
-            console.log("******");
+            // console.log("******");
+            // console.log("in user router");
+            // console.log(req.cookies.user);
+            // console.log(req.cookies.identity);
+            // console.log("******");
             res.status(200).render("user", { status: "init" });
         });
 
@@ -474,14 +476,14 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/statistics", async (req, res) => {
             const signUps = await getSignUps();
-            console.log("*****");
-            console.log("signUps :" + signUps);
-            console.log("*****");
+            // console.log("*****");
+            // console.log("signUps :" + signUps);
+            // console.log("*****");
 
             const recruitments = await getRecruitments();
-            console.log("*****");
-            console.log("recruitments :" + recruitments);
-            console.log("*****");
+            // console.log("*****");
+            // console.log("recruitments :" + recruitments);
+            // console.log("*****");
 
             const expertises = await getExpertises();
             console.log("*****");
