@@ -182,6 +182,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             for (let i = 0; i < shifts.length; i++) {
                 if (shifts[i].status == "denied") {
                     Denied_Shifts_Collection.insertOne(shifts[i])
+                    Shifts_Collection.deleteOne({})
                 }
             }
 
