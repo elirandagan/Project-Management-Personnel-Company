@@ -340,38 +340,41 @@
       console.log(identity);
 
       const status = "<%= status %>"
-      const notify = "<%= notify %>"
+      const notify = { id: "<%= notify.id %>", status: "<%= notify.status %>" }
       console.log(status);
       alert("status " + status)
       alert("notify.id " + notify.id)
+      alert("notify.status " + notify.status)
 
       switch (status) {
         case "init":
-          // swal({
-          //   title: "Init \n",
-          //   text: "",
-          //   icon: "info",
-          // });
+          console.log("*** status is init");
           break;
         case "Success":
           swal({
             title: "Success \n",
-            text: "If content has yet been changed - refresh page",
+            text: "Shift" + notify.status + "\nIf content has yet been changed - refresh page",
             icon: "success",
           });
           break;
         case "No Change":
           swal({
             title: "No change \n",
-            text: "If content has yet been changed - refresh page",
+            text: "Shift ID :" + notify.id + "\nare you able to edit the shift's hours? " + notify.status,
             icon: "info",
           });
           break;
         case "Failed":
           swal({
             title: "Failed \n",
-            text: "If content has yet been changed - refresh page",
+            text: "Something went wrong\nReport to HR\nshift ID: " + notify.id,
             icon: "warning",
+          });
+        case "Report":
+          swal({
+            title: "Report Shift \n",
+            text: "You have reported this shift to HR\nshift ID: " + notify.id,
+            icon: "info",
           });
           break;
         default:

@@ -176,41 +176,63 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             // const projection = { cwId: 0, rating: 0 }
             console.log(query);
 
+            // get the shifts with the same cwId
             var shifts = Shifts_Collection.find(query).sort({ startWork: -1 });
-            shifts = await shifts.toArray(); // get the shifts with the same cwId
+            shifts = await shifts.toArray();
+
+
+            // change expired shifts from status pending to status denied
+            for (let i = 0; i < shifts.length; i++) {
+                if (shifts[i].status == "pending" && (new Date()).getTime() > shifts[i].startWork.getTime())
+                    Shifts_Collection.updateOne({ _id: shifts[i]._id }, { $set: { status: "denied" } })
+                console.log("*** inedx : " + i + ", updated shift status to denied, id : " + shifts[i]._id);
+            }
 
             var temp_shifts = [];
 
+            // delete denied shifts or 
+            // console.log("delete denied");
             for (let i = 0; i < shifts.length; i++) {
                 if (shifts[i].status == "denied") { // delete denied shifts for the user
-                    Denied_Shifts_Collection.insertOne(shifts[i])
+                    await Denied_Shifts_Collection.insertOne(shifts[i])
                     Shifts_Collection.deleteOne({ _id: shifts[i]._id }, function (err, obj) {
                         if (err) throw err;
-                        console.log("1 document deleted :" + shifts[i]._id)
+                        console.log("1 document deleted ")
                     });
+                    console.log("*** inedx : " + i + ", deleted shift,status: " + shifts[i].status + ", id : " + shifts[i]._id);
                 } else { // save only non-denied shifts and re-assign
                     temp_shifts.push(shifts[i])
                 }
             }
-            if (temp_shifts.length > 0)
-                shifts = temp_shifts // re-assign shifts
 
+            // if temp_shifts is not empty - re-assign shifts
+            if (temp_shifts.length > 0)
+                shifts = temp_shifts
+
+            //modify shifts' hours
             shifts = modifyShiftsHours(shifts)
 
-            for (let i = 0; i < shifts.length; i++) { // add each employer's company to shifts
+            // add each employer's company to shifts
+            for (let i = 0; i < shifts.length; i++) {
                 const q = { ID: shifts[i].employerId };
                 const p = { _id: 0, partOfCompany: 1 };
                 const company = await Employer_Users_Collection.findOne(q, { projection: p });
                 shifts[i].company = Object.values(company);
             }
-            // console.log("***** Shifts :");
-            // console.log(shifts);
-            // console.log("*****");
+
             return shifts;
         }
 
         router.get("/shifts", async (req, res) => {
             try {
+                // **** THIS LINES ARE FOR TESTING ONLY ****
+                //   // Shifts_Collection.updateMany({ status: "approved" }, { $set: { status: "pending"}})
+                //   // const ds = await Denied_Shifts_Collection.find().toArray()
+                //   // await Shifts_Collection.insertMany(ds)
+                //   // const obj = await Denied_Shifts_Collection.deleteMany({})
+                //   // console.log(obj.result);
+
+
                 var shifts = await getShifts(req.cookies.user.ID);
                 if (validateUser) {
                     const notify = { id: "init", status: "init" }
@@ -235,36 +257,22 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     switch (submit_type) {
                         case "accept":
                             if (shift.status === "pending") { // shift waits for approval
-                                if (new Date().getTime() > shift.startWork.getTime()) { // if date of shifts has passed - then should be denied
-                                    Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "denied" } },
-                                        err => {
-                                            if (err) throw err;
-                                            console.log("1 document updated by status to denied");
-                                        });
-                                    notify.status = "Expired"
-                                    status = "Failed"
-                                } else { // shift is yet to be
-                                    Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "approved" } },
-                                        err => {
-                                            if (err) throw err;
-                                            console.log("1 document updated by status to approved");
-                                        });
-                                    notify.status = "Approved"
-                                    status = "Success"
-                                }
+                                Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "approved" } },
+                                    err => {
+                                        if (err) throw err;
+                                        console.log("1 document updated by status to approved");
+                                    });
+                                notify.status = "approved"
+                                status = "Success"
                             } else { // if (shift.status === "approved" or "denied") 
-
                                 const diff = Math.round((shift.startWork.getTime() - (new Date()).getTime()) / (1000 * 60 * 60 * 24))
-
-                                console.log("*** diff :", diff);
-
+                                // console.log("*** diff :", diff);
                                 notify.status = (0 < diff && diff < 10) ? "Yes" : "No"; // the deadline of update shift's hours is only 10 days
                                 status = "No Change"
                             }
                             break;
                         case "deny":
                             if (shift.status === "pending") {
-                                shift.status = "denied"
                                 Denied_Shifts_Collection.insertOne(shift);
 
                                 Shifts_Collection.deleteOne({ _id: shifts[i]._id }, err => {
@@ -274,7 +282,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                 notify.status = "denied"
                                 status = "Success"
                             }
-                            else {
+                            else {  // if (shift.status === "approved" or "denied") 
+                                notify.status = "denied"
                                 status = "No Change"
                             }
                             break;
@@ -486,9 +495,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             // console.log("*****");
 
             const expertises = await getExpertises();
-            console.log("*****");
-            console.log("expertises :" + expertises);
-            console.log("*****");
+            // console.log("*****");
+            // console.log("expertises :" + expertises);
+            // console.log("*****");
 
             res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments, expertises: expertises });
         });
