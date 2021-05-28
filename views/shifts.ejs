@@ -272,6 +272,37 @@
 
             </div>
             <%}%>
+              <% if (shifts.length===0) { %>
+                <div class="container" style="width:80%">
+                  <div class="alert alert-primary " role="alert">
+                    <h3 id="insert-name" class="alert-heading">userName</h3>
+                    <p>
+                      We, <strong>GLEM</strong>ers, see you don't have any upcoming requests for a shift. <br>
+                      Hopefully we can shine some light over you, and advise you the following things:
+                    <ul>
+                      <li>Instead of declining requests, try to set a leave period if you are unable to work at certain
+                        dates.</li>
+                      <li>If no requests are coming your way, you can alway contact our HR for finding available
+                        projects for you!</li>
+                    </ul>
+                    </p>
+                    <hr>
+                    <p class="mb-0">Whenever you need to, feel free to contact us at any time
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-heart" viewBox="0 0 16 16">
+                        <path
+                          d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z" />
+                      </svg>.
+                    </p>
+                  </div>
+                  <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Holy guacamole!</strong> No shifts aviable for now, comeback later.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                </div>
+                <% } %>
         </div>
       </div>
 
@@ -340,18 +371,11 @@
     $(document).ready(function () {
       const user = getCookie("user")
       const identity = getCookie("identity")
-      console.log(user.expertise);
-      console.log(identity);
 
       const status = "<%= status %>"
       const notify = { id: "<%= notify.id %>", status: "<%= notify.status %>" }
-      console.log(status);
-      // alert("status " + status)
-      // alert("notify.id " + notify.id)
-      // alert("notify.status " + notify.status)
-      // alert("notify.status " + notify.status)
-      alert("<%= shifts.length%>")
 
+      document.getElementById("insert-name").innerHTML = "Hey There, " + user.userName + " !";
       switch (status) {
         case "init":
           console.log("*** status is init");

@@ -190,17 +190,16 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
             var temp_shifts = [];
 
-            // delete denied shifts or 
+            // delete denied shifts or
             // console.log("delete denied");
             for (let i = 0; i < shifts.length; i++) {
                 if (shifts[i].status == "denied") { // delete denied shifts for the user
-                    await Shifts_Collection.deleteOne({ _id: shifts[i]._id }, function (err, obj) {
+                    // console.log("shifts[i] : ", shifts[i]);
+                    await Denied_Shifts_Collection.insertOne(shifts[i])
+                    await Shifts_Collection.deleteOne({ _id: shifts[i]._id }, async err => {
                         if (err) throw err;
-                        console.log("1 document deleted, shift ID : ", shifts[i]._id)
-                        Denied_Shifts_Collection.insertOne(shifts[i])
-                        console.log(obj);
+                        console.log("1 document deleted, 1 document iserted to denied shifts DB")
                     });
-                    console.log("*** inedx : " + i + ", deleted shift,status: " + shifts[i].status + ", id : " + shifts[i]._id);
                 } else { // save only non-denied shifts and re-assign
                     temp_shifts.push(shifts[i])
                 }
@@ -226,15 +225,15 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/shifts", async (req, res) => {
             try {
-                //    // **** THIS LINES ARE FOR TESTING ONLY ****
-                //    //     Shifts_Collection.updateMany({ status: "approved" }, { $set: { status: "pending"}})
-                //    //     const ds = await Denied_Shifts_Collection.find().toArray()
-                //   //     for (let i = 0; i < ds.length; i++) {
-                //    //         ds[i].status = "pending"
-                //    //     }
-                //    //     await Shifts_Collection.insertMany(ds)
-                //    //     const obj = await Denied_Shifts_Collection.deleteMany({})
-                //    //     console.log(obj.result);
+                // **** THIS LINES ARE FOR TESTING ONLY ****
+                //   // Shifts_Collection.updateMany({ status: "approved" }, { $set: { status: "pending" } })
+                //   // const ds = await Denied_Shifts_Collection.find().toArray()
+                //  // for (let i = 0; i < ds.length; i++) {
+                //   //     ds[i].status = "pending"
+                //    // }
+                //    // await Shifts_Collection.insertMany(ds)
+                //    // const obj = await Denied_Shifts_Collection.deleteMany({})
+                //   // console.log(obj.result.n, obj.result.ok);
 
                 var shifts = await getShifts(req.cookies.user.ID);
                 if (validateUser) {
@@ -257,7 +256,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 var status
 
                 console.log("submit_type : ", submit_type);
-                if (validateUser) {
+                console.log("submit_id : ", submit_id);
+                if (validateUser && shifts) {
                     switch (submit_type) {
                         case "accept":
                             if (shift.status === "pending") { // shift waits for approval
@@ -277,13 +277,23 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             break;
                         case "deny":
                             if (shift.status === "pending") {
-                                Denied_Shifts_Collection.insertOne(shift);
-
+                                console.log("inside deny");
                                 // Shifts_Collection.deleteOne({ _id: submit_id }, err => {
                                 //     if (err) throw err;
                                 //     console.log("1 document deleted :" + submit_id)
                                 // });
-                                Shifts_Collection.updateOne({ _id: submit_id }, { $set: { status: "denied" } })
+
+                                // await Denied_Shifts_Collection.insertOne(shift);
+
+                                await Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "denied" } }, async err => {
+                                    if (err) throw err;
+                                    console.log("1 document updated from pending to denied");
+                                    const s = await Shifts_Collection.findOne({ _id: ObjectId(submit_id) })
+                                    const ds = await Denied_Shifts_Collection.findOne({ _id: ObjectId(submit_id) })
+                                    // console.log("^^^ s.status: ", s.status);
+                                    // console.log("^^^ ds.status: ", ds.status);
+                                });
+
                                 notify.status = "denied"
                                 status = "Success"
                             }
@@ -298,8 +308,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         default:
                             status = "Failed"
                     }
-                    console.log("*** status : ", status);
-                    console.log("*** notify : ", notify);
+                    // console.log("*** status : ", status);
+                    // console.log("*** notify : ", notify);
                     res.status(200).render("shifts", { status: status, shifts: shifts, notify: notify }); // render with relevant data
                 }
             } catch (error) {
