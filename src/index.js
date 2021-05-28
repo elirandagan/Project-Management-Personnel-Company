@@ -41,12 +41,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
 
         // HOW TO "GET" FROM COLLECTION
-        router.get("/", async function (req, res) {
+        router.get("/", async function(req, res) {
             console.log("HOMEPAGE")
             res.status(200).render("login", { exist: 0 });
         });
 
-        router.get("/login", function (req, res) {
+        router.get("/login", function(req, res) {
             console.log("*****");
             console.log("Cookies: ", req.cookies)
             console.log("*****");
@@ -54,20 +54,20 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         });
 
-        router.get("/loaderLogin", function (req, res) {
+        router.get("/loaderLogin", function(req, res) {
             res.status(200).render("loaderLogin", { exist: 0 });
 
         });
 
-        router.get("/firstTimeHere", function (req, res) {
+        router.get("/firstTimeHere", function(req, res) {
             console.log("firstTimeHere GET")
             res.status(200).render("firstTimeHere", { exist: 0, userName: "empty", password: "empty" });
         });
 
-        router.post("/firstTimeHere", function (req, res) {
+        router.post("/firstTimeHere", function(req, res) {
             console.log("firstTimeHere POST")
             console.log("req.body.ID" + req.body.ID)
-            Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result) {
+            Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function(err, result) {
                 console.log("######################" + result)
                 if (result.length > 0) {
                     console.log("FIND")
@@ -83,9 +83,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             })
         });
 
-        router.post("/login", async (req, res) => {
+        router.post("/login", async(req, res) => {
             const validateLogin = await validateFunction.validateLogin(req.body)
-            // console.log("validateLogin : ", validateLogin)
+                // console.log("validateLogin : ", validateLogin)
 
             if (validateLogin === "valid") {
                 const returnValue = await mongoDbFunction.loginAuth(req.body.userName, req.body.password, req.body.identity)
@@ -115,12 +115,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
         })
 
-        router.get("/signup", function (req, res) {
+        router.get("/signup", function(req, res) {
             console.log("signupGet")
             res.status(200).render("signup", { exist: 0 });
         });
 
-        router.post("/signup", async (req, res) => {
+        router.post("/signup", async(req, res) => {
             const validateSignUp = await validateFunction.validateSignUp(req.body)
             console.log(validateSignUp)
             switch (validateSignUp) {
@@ -149,23 +149,23 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
         });
 
-        router.get("/privacyPolicy", function (req, res) {
+        router.get("/privacyPolicy", function(req, res) {
             console.log("router get privacy")
             res.status(200).render("privacyPolicy");
         });
 
-        router.post("/privacyPolicy", function (req, res) {
+        router.post("/privacyPolicy", function(req, res) {
             console.log("router POST privacy")
             res.status(200).render("privacyPolicy");
         });
 
-        router.get("/template", function (req, res) {
+        router.get("/template", function(req, res) {
             if (validateUser) {
                 res.status(200).render("template");
             }
         });
 
-        router.get("/workHistory", function (req, res) {
+        router.get("/workHistory", function(req, res) {
             if (validateUser) {
                 res.status(200).render("workHistory");
             }
@@ -174,7 +174,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         async function getShifts(id) {
             const query = { cwId: id };
             // const projection = { cwId: 0, rating: 0 }
-            console.log(query);
+            // console.log(query);
 
             // get the shifts with the same cwId
             var shifts = Shifts_Collection.find(query).sort({ startWork: -1 });
@@ -223,17 +223,18 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             return shifts;
         }
 
-        router.get("/shifts", async (req, res) => {
+        router.get("/shifts", async(req, res) => {
             try {
-                // **** THIS LINES ARE FOR TESTING ONLY ****
-                //   // Shifts_Collection.updateMany({ status: "approved" }, { $set: { status: "pending" } })
-                //   // const ds = await Denied_Shifts_Collection.find().toArray()
-                //  // for (let i = 0; i < ds.length; i++) {
-                //   //     ds[i].status = "pending"
-                //    // }
-                //    // await Shifts_Collection.insertMany(ds)
-                //    // const obj = await Denied_Shifts_Collection.deleteMany({})
-                //   // console.log(obj.result.n, obj.result.ok);
+                // // // **** THIS LINES ARE FOR TESTING ONLY ****
+                // // Shifts_Collection.updateMany({ status: "approved" }, { $set: { status: "pending" } })
+                // // const ds = await Denied_Shifts_Collection.find().toArray()
+                // // for (let i = 0; i < ds.length; i++) {
+                // //     ds[i].status = "pending"
+                // // }
+                // // await Shifts_Collection.insertMany(ds)
+                // // const obj = await Denied_Shifts_Collection.deleteMany({})
+                // // console.log(obj.result.n, obj.result.ok);
+                // // // **** THIS LINES ARE FOR TESTING ONLY ****
 
                 var shifts = await getShifts(req.cookies.user.ID);
                 if (validateUser) {
@@ -246,7 +247,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
         });
 
-        router.post("/shifts", async (req, res) => {
+        router.post("/shifts", async(req, res) => {
             try {
                 const submit_type = req.body.type;
                 const submit_id = req.body.id;
@@ -270,7 +271,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                 status = "Success"
                             } else { // if (shift.status === "approved" or "denied") 
                                 const diff = Math.round((shift.startWork.getTime() - (new Date()).getTime()) / (1000 * 60 * 60 * 24))
-                                // console.log("*** diff :", diff);
+                                    // console.log("*** diff :", diff);
                                 notify.status = (0 < diff && diff < 10) ? "Yes" : "No"; // the deadline of update shift's hours is only 10 days
                                 status = "No Change"
                             }
@@ -290,14 +291,13 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                     console.log("1 document updated from pending to denied");
                                     const s = await Shifts_Collection.findOne({ _id: ObjectId(submit_id) })
                                     const ds = await Denied_Shifts_Collection.findOne({ _id: ObjectId(submit_id) })
-                                    // console.log("^^^ s.status: ", s.status);
-                                    // console.log("^^^ ds.status: ", ds.status);
+                                        // console.log("^^^ s.status: ", s.status);
+                                        // console.log("^^^ ds.status: ", ds.status);
                                 });
 
                                 notify.status = "denied"
                                 status = "Success"
-                            }
-                            else {  // if (shift.status === "approved" or "denied") 
+                            } else { // if (shift.status === "approved" or "denied") 
                                 notify.status = "denied"
                                 status = "No Change"
                             }
@@ -318,7 +318,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
         });
 
-        router.get("/absences", function (req, res) {
+        router.get("/absences", function(req, res) {
             if (validateUser) {
                 res.status(200).render("absences", { arr: [], succeed: false });
             }
@@ -334,15 +334,15 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
         })
 
-        router.get("/loaderLogin", function (req, res) {
+        router.get("/loaderLogin", function(req, res) {
             if (validateUser) {
                 res.status(200).render("loaderLogin");
             }
         });
 
-        router.get("/recruit", function (req, res) {
+        router.get("/recruit", function(req, res) {
             console.log("recruit")
-            HR_Users_Collection.find({ firstName: "Lior" }).toArray(function (err, result) {
+            HR_Users_Collection.find({ firstName: "Lior" }).toArray(function(err, result) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -354,14 +354,14 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.post("/recruit", (req, res) => {
 
-            Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function (err, result) {
+            Contractor_Users_Collection.find({ ID: req.body.ID }).toArray(function(err, result) {
                 console.log("ID: " + JSON.stringify(req.body.ID))
                 console.log("result: " + result.length)
                 if (result.length != 0) {
                     console.log(req.body.ID + " 1 Failed")
                     res.status(200).render("recruit", { exist: 1, ID: req.body.ID });
                 } else {
-                    Contractor_Users_Collection.find({ userName: req.body.userName }).toArray(function (err, result2) {
+                    Contractor_Users_Collection.find({ userName: req.body.userName }).toArray(function(err, result2) {
                         console.log("userName: " + req.body.userName)
                         console.log("result: " + result2.length)
                         if (result2.length != 0) {
@@ -392,7 +392,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.post("/user", (req, res) => {
             const query = { _id: req.cookies.user.ID }
-            // eslint-disable-next-line no-undef
+                // eslint-disable-next-line no-undef
             const newvalues = {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
@@ -403,7 +403,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
             var status;
             // eslint-disable-next-line no-undef,no-unused-vars
-            Contractor_Users_Collection.updateOne(query, { $set: newvalues }, function (err, res2) {
+            Contractor_Users_Collection.updateOne(query, { $set: newvalues }, function(err, res2) {
                 if (err) {
                     console.log(err.body + " ** Failed to update **");
                     status = "Failed";
@@ -422,8 +422,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             try {
                 let result = Contractor_Users_Collection.find(query).project(projection)
                 result = await result.toArray()
-                // manipulte data to create array that the index indicates the day of month
-                // the value indicates the amount of signups per that day of the month
+                    // manipulte data to create array that the index indicates the day of month
+                    // the value indicates the amount of signups per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
                     let nextDate = new Date(d.getDate() + 1);
                     if (d <= result[i]["createAt"] <= nextDate) {
@@ -446,8 +446,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             try {
                 let result = Shifts_Collection.find(query).project(projection)
                 result = await result.toArray()
-                // manipulte data to create array that the index indicates the day of month
-                // the value indicates the amount of recruitments per that day of the month
+                    // manipulte data to create array that the index indicates the day of month
+                    // the value indicates the amount of recruitments per that day of the month
                 for (let i = 0, d = date.getFirstDateOfMonth(); i < result.length; i++, d.setDate(d.getDate() + 1)) {
                     var nextDate = new Date(d.getDate() + 1);
                     if (d <= result[i]["startWork"] <= nextDate) {
@@ -498,7 +498,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             return experts;
         }
 
-        router.get("/statistics", async (req, res) => {
+        router.get("/statistics", async(req, res) => {
             const signUps = await getSignUps();
             // console.log("*****");
             // console.log("signUps :" + signUps);
@@ -517,7 +517,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             res.status(200).render("statistics", { signUps: signUps, recruitments: recruitments, expertises: expertises });
         });
 
-        router.get("/trackingWorkers", function (req, res) {
+        router.get("/trackingWorkers", function(req, res) {
             res.status(200).render("trackingWorkers", { status: "init", worker: {}, shifts: {}, employers: {}, totalHours: {} });
         });
 
@@ -533,7 +533,11 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 } else {
                     employers[i] =
                         Employer_Users_Collection.insertOne({
-                            firstName: "undefined", lastName: "undefined", ID: shifts[i].employerId, partOfCompany: "GLEM", password: "123456",
+                            firstName: "undefined",
+                            lastName: "undefined",
+                            ID: shifts[i].employerId,
+                            partOfCompany: "GLEM",
+                            password: "123456",
                             userName: "user" + String(Math.floor(Math.random() * 999) + 1) + Math.random().toString(36).substring(2)
                         });
                 }
@@ -557,7 +561,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             return { shifts, employers, totalHours };
         };
 
-        router.post("/trackingWorkers", async (req, res) => {
+        router.post("/trackingWorkers", async(req, res) => {
             try {
                 const data = req.body.id.split("_") //get the data (type & id) of submit
                 console.log("req.body :", req.body);
@@ -579,8 +583,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     if (!worker) { // user not found.
                         if (!req.cookies.track_emp) { // not cookie found
                             console.log("$$ Im in a very bad place ... $$");
-                            return res.status(200).render("trackingWorkers",
-                                { status: "Not Found", worker: {}, shifts: {}, employers: {}, totalHours: {} });
+                            return res.status(200).render("trackingWorkers", { status: "Not Found", worker: {}, shifts: {}, employers: {}, totalHours: {} });
                         } else {
                             console.log("!@%$#%$ no worker but we have a COOKIE ! !@%$#%$");
                             console.log("!@%$#%$ the Cookie ladie and gents : ", req.cookies.track_emp);
@@ -594,8 +597,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                     res.cookie("track_emp", worker, { maxAge: 900000, httpOnly: false }); // create cookie.
 
-                    return res.status(200).render("trackingWorkers",
-                        { status: "Search Success", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
+                    return res.status(200).render("trackingWorkers", { status: "Search Success", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
                 }
                 // else type is not search (from or to)
                 else {
@@ -615,10 +617,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                     // console.log("shift :", shift);
 
-                    if (!shift || shift === null) {// if the shifts has not been found
+                    if (!shift || shift === null) { // if the shifts has not been found
                         console.log("!@%$#%$  no shift !@%$#%$");
-                        return res.status(200).render("trackingWorkers",
-                            { status: "Not Found", worker: id, shifts: {}, employers: {}, totalHours: {} });
+                        return res.status(200).render("trackingWorkers", { status: "Not Found", worker: id, shifts: {}, employers: {}, totalHours: {} });
                     }
                     const time = (type === "from") ? shift.startWork : shift.doneWork;
                     const new_date = getNewDate(req.body["time_" + type], time); //get the new date
@@ -630,8 +631,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                     const counter_date = (type === "to") ? shift.startWork : shift.doneWork;
                     if (isInvalidTime(type, counter_date, new_date))
-                        return res.status(200).render("trackingWorkers",
-                            { status: "No Change", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
+                        return res.status(200).render("trackingWorkers", { status: "No Change", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
 
                     // if the type is startWork or doneWork, then different projection
                     const set = (type === "from") ? { startWork: new_date } : { doneWork: new_date }
@@ -641,8 +641,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         console.log("1 document updated in " + Object.keys(set));
                     });
 
-                    return res.status(200).render("trackingWorkers",
-                        { status: "Update Success", worker: req.cookies.track_emp, shifts: shifts, employers: employers, totalHours: totalHours });
+                    return res.status(200).render("trackingWorkers", { status: "Update Success", worker: req.cookies.track_emp, shifts: shifts, employers: employers, totalHours: totalHours });
                 }
             } catch (error) {
                 console.error(error)
@@ -650,13 +649,13 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             }
         });
 
-        router.get("/searchWorker", function (req, res) {
+        router.get("/searchWorker", function(req, res) {
             res.status(200).render("searchWorker");
         });
 
-        router.get("/hiringHistory", function (req, res) {
+        router.get("/hiringHistory", function(req, res) {
             console.log(req.cookies.user.ID)
-            Shifts_Collection.find({ employerId: req.cookies.user.ID }).toArray().then(async (shifts) => {
+            Shifts_Collection.find({ employerId: req.cookies.user.ID }).toArray().then(async(shifts) => {
                 let newShifts = await (updateShifts(shifts))
 
                 newShifts.length > 0 ? res.status(200).render("hiringHistory", {
@@ -668,12 +667,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             })
         });
 
-        router.post("/hiringHistory", function (req, res) {
+        router.post("/hiringHistory", function(req, res) {
             console.log("router post")
             res.status(200).render("hiringHistory", { arguments: "router post" });
         });
 
-        router.get("/dashboard", function (req, res) {
+        router.get("/dashboard", function(req, res) {
             validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
         });
 
@@ -700,7 +699,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             rating = rating * (vote - 1) / vote + starAmount / vote
                             newValues = { $set: { rating: rating.toFixed(2), vote: vote + 1 } };
                         }
-                        Shifts_Collection.updateOne(myQuery, newValues, function (err) {
+                        Shifts_Collection.updateOne(myQuery, newValues, function(err) {
                             if (err) throw err;
                             console.log("1 document updated");
                             AlreadyVoted_Collection.insertOne({ userId: user, shiftId: shiftId })
@@ -731,7 +730,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 Contractor_Users_Collection.find({ ID: shifts[i].cwId }).toArray().then((user) => {
                     console.log(user)
                     console.log(user[0].voteRate)
-                    Shifts_Collection.updateOne({ _id: shifts[i]._id }, { $set: { rating: parseInt(user[0].voteRate) } }, function (err, res) {
+                    Shifts_Collection.updateOne({ _id: shifts[i]._id }, { $set: { rating: parseInt(user[0].voteRate) } }, function(err, res) {
                         if (err) throw err;
                         console.log("1 document updated" + shifts[i]._id);
                     });
@@ -760,8 +759,7 @@ function isInvalidTime(val, counter_date, new_date) {
         val2 = ((counter_date.getUTCHours() > new_date.getUTCHours()) &&
             (counter_date.getUTCMinutes() >= new_date.getUTCMinutes()));
 
-    }
-    else if (val === "to") {
+    } else if (val === "to") {
         val1 = ((counter_date.getUTCHours() <= new_date.getUTCHours()) &&
             (counter_date.getUTCMinutes() < new_date.getUTCMinutes()));
 
@@ -815,14 +813,12 @@ function modifyShiftsHours(shifts) {
 
         if (start.getUTCMinutes() < 10) {
             temp_shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
-        }
-        else {
+        } else {
             temp_shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
         }
         if (done.getUTCMinutes() < 10) {
             temp_shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
-        }
-        else {
+        } else {
             temp_shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
         }
         if (start.getUTCHours() < 10) {
@@ -834,5 +830,3 @@ function modifyShiftsHours(shifts) {
     }
     return temp_shifts;
 }
-
-
