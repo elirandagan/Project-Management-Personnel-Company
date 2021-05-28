@@ -227,11 +227,15 @@
                         </form>
 
                         <form action="/shifts" method="post" name="deny">
-                          <button type="submit" rel="tooltip" title="Denied" class="btn btn-link btn-sm"
-                            style="display:block;" id="<%= shifts[i]._id %>_den">
+
+                          <button type="submit" class="btn btn-link btn-sm" id="<%= shifts[i]._id %>_den"
+                            style="display:block;">
                             <i class="material-icons denied-btn"
                               style="font-size: 24px; margin-left: 0.5rem;color: red;">highlight_off</i>
                           </button>
+
+                          <input type="hidden" name="type" value="deny">
+                          <input type="hidden" name="id" value="<%= shifts[i]._id %>">
                         </form>
 
                       </div>
@@ -342,9 +346,11 @@
       const status = "<%= status %>"
       const notify = { id: "<%= notify.id %>", status: "<%= notify.status %>" }
       console.log(status);
-      alert("status " + status)
-      alert("notify.id " + notify.id)
-      alert("notify.status " + notify.status)
+      // alert("status " + status)
+      // alert("notify.id " + notify.id)
+      // alert("notify.status " + notify.status)
+      // alert("notify.status " + notify.status)
+      alert("<%= shifts.length%>")
 
       switch (status) {
         case "init":
@@ -353,16 +359,24 @@
         case "Success":
           swal({
             title: "Success \n",
-            text: "Shift" + notify.status + "\nIf content has yet been changed - refresh page",
+            text: "SHIFT " + notify.status.toUpperCase() + "\nIf content has yet been changed - refresh page",
             icon: "success",
-          });
+          }).then(function () { window.location.replace("./dashboard") });
           break;
         case "No Change":
-          swal({
-            title: "No change \n",
-            text: "Shift ID :" + notify.id + "\nare you able to edit the shift's hours? " + notify.status,
-            icon: "info",
-          });
+          if (notify.status !== "denied") {
+            swal({
+              title: "No change \n",
+              text: "Shift ID :" + notify.id + "\nare you able to edit the shift's hours? " + notify.status,
+              icon: "info",
+            });
+          } else {
+            swal({
+              title: "No change \n",
+              text: "Shift ID :" + notify.id + "\nCannot deny approved shift",
+              icon: "info",
+            });
+          }
           break;
         case "Failed":
           swal({
@@ -370,6 +384,7 @@
             text: "Something went wrong\nReport to HR\nshift ID: " + notify.id,
             icon: "warning",
           });
+          break;
         case "Report":
           swal({
             title: "Report Shift \n",
