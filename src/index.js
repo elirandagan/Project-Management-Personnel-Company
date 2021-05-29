@@ -173,25 +173,24 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         async function getShifts(id) {
             const query = { cwId: id };
-            // const projection = { cwId: 0, rating: 0 }
-            // console.log(query);
 
             // get the shifts with the same cwId
             var shifts = Shifts_Collection.find(query).sort({ startWork: -1 });
             shifts = await shifts.toArray();
 
             // change expired shifts from status pending to status denied
+            // console.log("new Date()).getTime() : ", new Date().getTime());
             for (let i = 0; i < shifts.length; i++) {
+                // console.log("i: ", i, " shifts[i].startWork.getTime()  :", shifts[i].startWork.getTime(), (new Date()).getTime() > shifts[i].startWork.getTime())
                 if (shifts[i].status == "pending" && (new Date()).getTime() > shifts[i].startWork.getTime()) {
                     await Shifts_Collection.updateOne({ _id: shifts[i]._id }, { $set: { status: "denied" } })
-                    console.log("*** inedx : " + i + ", updated shift status to denied, id : " + shifts[i]._id, shifts[i].status, shifts[i].startWork);
+                        // console.log("*** inedx : " + i + ", updated shift status to denied, id : " + shifts[i]._id, shifts[i].status, shifts[i].startWork);
                 }
             }
 
             var temp_shifts = [];
 
-            // delete denied shifts or
-            // console.log("delete denied");
+            // delete denied shifts
             for (let i = 0; i < shifts.length; i++) {
                 if (shifts[i].status == "denied") { // delete denied shifts for the user
                     // console.log("shifts[i] : ", shifts[i]);
@@ -275,9 +274,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                 notify.status = "approved"
                                 status = "Success"
                             } else { // if (shift.status === "approved" or "denied") 
-                                // const diff = Math.round((shift.startWork.getTime() - (new Date()).getTime()) / (1000 * 60 * 60 * 24))
-                                //     // console.log("*** diff :", diff);
-                                // notify.status = (0 < diff && diff < 10) ? "Yes" : "No"; // the deadline of update shift's hours is only 10 days
                                 status = "No Change"
                             }
                             break;
@@ -302,6 +298,30 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             }
                             break;
                         case "report":
+                            try {
+                                console.log("*** in report");
+                                var from = req.body.from
+                                var to = req.body.to
+                                from = from.split(":")
+                                to = to.split(":")
+                                from = new Date(new Date(shift.startWork).setUTCHours(parseInt(from[0]), parseInt(from[1])))
+                                to = new Date(new Date(shift.doneWork).setUTCHours(parseInt(to[0]), parseInt(to[1])))
+
+                                await Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { startWork: from } }, async err => {
+                                    if (err) throw err;
+                                    console.log("1 document updated -> startwork");
+                                    console.log(from);
+                                });
+                                await Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { doneWork: to } }, async err => {
+                                    if (err) throw err;
+                                    console.log("1 document updated -> doneWork");
+                                    console.log(to);
+                                });
+
+                                notify.status = "Success"
+                            } catch (error) {
+                                notify.status = "Failed"
+                            }
                             status = "Report"
                             break;
                         default:

@@ -242,8 +242,8 @@
 
                             <% var start=shifts[i].startWork.split("/"); %>
                                 <% start=new Date(+start[2], start[1] - 1, +start[0]); %>
-                                    <% const diff=Math.ceil((start.getTime() - (new Date()).getTime()) / (1000 * 60 *60
-                                        * 24)) ;%>
+                                    <% const diff=Math.floor(((new Date()).getTime() - start.getTime()) /
+                                        (1000*60*60*24)); %>
 
                                         <% if (shifts[i].status==="approved" && (0 < diff && diff < 10)) { %>
                                             <div class="col-md-4" id='<%= shifts[i]._id %>_box' style="display: inline-block;">
@@ -251,7 +251,7 @@
                                                     <div class="col-md-4" id='<%= shifts[i]._id %>_box' style="display: none;">
                                                         <% } %>
 
-                                                            <div class="card card-body text-center" style="border-radius: 15px;margin: 0;">
+                                                            <div class="card card-body text-center" style="border-radius: 15px;margin: 0;padding: 0">
 
                                                                 <form action="/shifts" method="post" name="accept" onsubmit="return report('<%= shifts[i]._id %>')">
                                                                     <div class="row">
@@ -259,23 +259,39 @@
                                                                         <input type="hidden" name="id" value="<%= shifts[i]._id %>">
                                                                         <input type="hidden" name="type" value="report">
 
-                                                                        <div class="col">
-                                                                            <label style="font-size: 18px;">From :
-                                                                                <input type="time"
-                                                                                    id="<%= shifts[i]._id %>_from"
-                                                                                    name="<%= shifts[i]._id %>_from"
-                                                                                    required>
-                                                                            </label>
-                                                                        </div>
+                                                                        <% if (shifts[i].startHour === undefined || shifts[i].doneHour === undefined
+                                                                            ||  shifts[i].startHour === shifts[i].doneHour) { %>
 
-                                                                        <div class="col">
-                                                                            <label style="font-size: 18px;">To :
-                                                                                <input type="time"
-                                                                                    id="<%= shifts[i]._id %>_to"
-                                                                                    name="<%= shifts[i]._id %>_to"
-                                                                                    required>
+                                                                            <div class="col">
+                                                                                <label style="font-size: 18px;">From :
+                                                                                --:--
+                                                                                    <input type="time" id="<%= shifts[i]._id %>_from" name="from" required>
                                                                             </label>
-                                                                        </div>
+                                                                            </div>
+
+                                                                            <div class="col">
+                                                                                <label style="font-size: 18px;">To :
+                                                                                --:--
+                                                                                    <input type="time" id="<%= shifts[i]._id %>_to" name="to" required>
+                                                                            </label>
+                                                                            </div>
+
+                                                                            <% }else { %>
+
+                                                                                <div class="col">
+                                                                                    <label style="font-size: 18px;">From :
+                                                                                <%= shifts[i].startHour %>
+                                                                                    <input type="time" id="<%= shifts[i]._id %>_from" name="from" required>
+                                                                            </label>
+                                                                                </div>
+
+                                                                                <div class="col">
+                                                                                    <label style="font-size: 18px;">To :
+                                                                                <%= shifts[i].doneHour %>
+                                                                                    <input type="time" id="<%= shifts[i]._id %>_to" name="to" required>
+                                                                            </label>
+                                                                                </div>
+                                                                                <% } %>
 
                                                                     </div>
 
@@ -392,11 +408,9 @@
                 const identity = getCookie("identity")
                 const status = "<%= status %>"
                 const notify = {
-                        id: "<%= notify.id %>",
-                        status: "<%= notify.status %>"
-                    }
-                    // alert(notify.id);
-                    // alert(notify.status);
+                    id: "<%= notify.id %>",
+                    status: "<%= notify.status %>"
+                }
 
                 if ("<%= shifts.length %>" === 0)
                     document.getElementById("insert-name").innerHTML = "Hey There, " + user.userName + " !";
@@ -442,6 +456,7 @@
                             text: "You have reported this shift to HR\nshift ID: " + notify.id,
                             icon: "info",
                         });
+                        window.location.replace("./dashboard")
                         break;
                     default:
                         console.error("error");
@@ -492,7 +507,6 @@
 
         <script>
             function accept(e) {
-                alert(e)
                 swal("Good job!", "You clicked the button!", "success", {
                     button: "Aww yiss!",
                 });
@@ -504,15 +518,14 @@
             function report(e) {
                 const start = document.getElementById(e + "_from").value;
                 const end = document.getElementById(e + "_to").value;
-                alert(start)
-                alert(end)
+
 
                 var s = start.split(":");
                 var e = end.split(":");
                 s = new Date().setHours(s[0], s[1])
                 e = new Date().setHours(e[0], e[1])
 
-                alert("e> s ? " + (e > s))
+                // alert("e> s ? " + (e > s))
 
                 if (e > s) {
                     return true
