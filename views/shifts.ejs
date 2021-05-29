@@ -259,37 +259,48 @@
                                                                         <input type="hidden" name="id" value="<%= shifts[i]._id %>">
                                                                         <input type="hidden" name="type" value="report">
 
-                                                                        <% if (shifts[i].startHour === undefined || shifts[i].doneHour === undefined
-                                                                            ||  shifts[i].startHour === shifts[i].doneHour) { %>
+                                                                        <% if (shifts[i].startHour===undefined ||
+                                                                            shifts[i].doneHour===undefined ||
+                                                                            shifts[i].startHour===shifts[i].doneHour) {
+                                                                            %>
 
                                                                             <div class="col">
                                                                                 <label style="font-size: 18px;">From :
-                                                                                --:--
-                                                                                    <input type="time" id="<%= shifts[i]._id %>_from" name="from" required>
-                                                                            </label>
+                                                                                    --:--
+                                                                                    <input type="time"
+                                                                                        id="<%= shifts[i]._id %>_from"
+                                                                                        name="from" required>
+                                                                                </label>
                                                                             </div>
 
                                                                             <div class="col">
                                                                                 <label style="font-size: 18px;">To :
-                                                                                --:--
-                                                                                    <input type="time" id="<%= shifts[i]._id %>_to" name="to" required>
-                                                                            </label>
+                                                                                    --:--
+                                                                                    <input type="time"
+                                                                                        id="<%= shifts[i]._id %>_to"
+                                                                                        name="to" required>
+                                                                                </label>
                                                                             </div>
 
                                                                             <% }else { %>
 
                                                                                 <div class="col">
-                                                                                    <label style="font-size: 18px;">From :
-                                                                                <%= shifts[i].startHour %>
-                                                                                    <input type="time" id="<%= shifts[i]._id %>_from" name="from" required>
-                                                                            </label>
+                                                                                    <label style="font-size: 18px;">From
+                                                                                        :
+                                                                                        <%= shifts[i].startHour %>
+                                                                                            <input type="time"
+                                                                                                id="<%= shifts[i]._id %>_from"
+                                                                                                name="from" required>
+                                                                                    </label>
                                                                                 </div>
 
                                                                                 <div class="col">
                                                                                     <label style="font-size: 18px;">To :
-                                                                                <%= shifts[i].doneHour %>
-                                                                                    <input type="time" id="<%= shifts[i]._id %>_to" name="to" required>
-                                                                            </label>
+                                                                                        <%= shifts[i].doneHour %>
+                                                                                            <input type="time"
+                                                                                                id="<%= shifts[i]._id %>_to"
+                                                                                                name="to" required>
+                                                                                    </label>
                                                                                 </div>
                                                                                 <% } %>
 

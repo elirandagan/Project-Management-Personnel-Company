@@ -728,11 +728,46 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.get("/searchWorker", function(_req, res) {
-            res.status(200).render("searchWorker");
+            res.status(200).render("searchWorker", { workers: {}, date: null, status: "init" });
         });
-        router.post("/searchWorker", function(req, res) {
+        router.post("/searchWorker", async(req, res) => {
             console.log(req.body);
-            res.status(200).render("searchWorker");
+            const date = req.body.date;
+            const expertise = req.body.expertise;
+            const submit_type = req.body.name;
+
+            if (submit_type === "search") {
+                var workers = Contractor_Users_Collection.find({ expertise: expertise })
+                workers = await workers.toArray()
+                var temp_workers = []
+
+                for (let i = 0; i < workers.length; i++) {
+                    const abs = await Absences_Collection.findOne({ ID: workers[i].ID, from: date })
+                    if (!abs || abs === undefined) {
+                        temp_workers.push(workers[i])
+                    }
+                }
+                workers = temp_workers;
+                return res.status(200).render("searchWorker", { workers: workers, date: date, status: "Found" });
+            } else {
+                const s = await Contractor_Users_Collection.findOne({ ID: req.body.id }, { projection: { _id: 1, area: 1 } })
+                const shift = {
+                    employerId: req.cookies.user.ID,
+                    cwId: req.body.id,
+                    startWork: new Date(req.body.date),
+                    doneWork: new Date(req.body.date),
+                    status: "pending",
+                    rating: 0,
+                    where: s.area
+                }
+                console.log("*****");
+                console.log("shift :", shift);
+                console.log("*****");
+
+                Shifts_Collection.insertOne(shift)
+                return res.status(200).render("searchWorker", { workers: 0, date: 0, status: "Booked" });
+            }
+
         });
 
         router.get("/hiringHistory", function(_req, res) {

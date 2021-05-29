@@ -13,6 +13,7 @@
     <!--     Fonts and icons     -->
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <!-- CSS Files -->
     <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
     <!-- CSS Just for demo purpose, don't include it in your project -->
@@ -179,9 +180,8 @@
                         </div>
 
                         <div class="col-md-2 text-center" style="top:1.2rem;">
-                            <input type="date" name="date" id="date" min="" class="h-50 text-white text-center" style="background-color:darkgray; border-radius: 15px;" required>
+                            <input type="date" name="date" id="date" class="h-50 text-white text-center" style="background-color:darkgray; border-radius: 15px;" required>
                         </div>
-
 
                         <div class="col-md-3 text-center" style="top: 1rem;">
                             <input type="submit" value="Search" class="update-btn btn btn-primary btn-sm" style="font-size: 0.8rem;border-radius: 15px;"></input>
@@ -210,27 +210,44 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                </td>
+                                            <%for (let i=0,len=workers.length;len>i;++i) { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= workers[i].FirstName %>
+                                                    </td>
 
-                                                <td>
-                                                </td>
+                                                    <td>
+                                                        <%= workers[i].LastName %>
+                                                    </td>
 
-                                                <td>
-                                                </td>
+                                                    <td>
+                                                        <%= workers[i].area %>
+                                                    </td>
 
-                                                <td>
-                                                </td>
+                                                    <td>
+                                                        <%= workers[i].rate %>
+                                                    </td>
 
-                                                <td>
-                                                </td>
+                                                    <td>
+                                                        <%= workers[i].hourlyPay %> ₪
+                                                    </td>
 
-                                                <td>
-                                                </td>
+                                                    <td>
+                                                        <form action="/searchWorker" method="post">
+                                                            <input type="hidden" name="name" value="book">
+                                                            <% if (date !==undefined) { %>
+                                                                <input type="hidden" name="date" value="<%= date %>">
+                                                                <% } %>
+                                                                    <input type="hidden" name="id" value="<%= workers[i].ID %>">
 
-                                            </tr>
+                                                                    <button type="submit" rel="tooltip" title="Book" class="btn btn-link btn-sm" style="padding: 0 !important;margin: 0 !important;">
+                                  <i class="material-icons" style="margin-left: 0.5rem;">book</i>
+                                </button>
+                                                        </form>
+                                                    </td>
 
+                                                </tr>
+                                                <%}%>
                                         </tbody>
                                     </table>
                                 </div>
@@ -299,6 +316,31 @@
 
     <script>
         $(document).ready(function() {
+            const status = "<%= status %>";
+            alert(status)
+
+
+            switch (status) {
+                case "Found":
+                    swal({
+                        title: "Success\n",
+                        text: "Found",
+                        icon: "success",
+                    });
+                    break;
+                case "Booked":
+                    swal({
+                        title: "Success\n",
+                        text: "Shift Booked",
+                        icon: "success",
+                    }).then(function() {
+                        window.location.replace("./dashboard")
+                    });
+                    break;
+                default:
+                    break;
+            }
+
             // Javascript method's body can be found in assets/js/demos.js
             md.initDashboardPageCharts();
             const identity = getCookie("identity")
