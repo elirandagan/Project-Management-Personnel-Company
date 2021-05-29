@@ -188,7 +188,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                     var emp_string = emp[0].firstName + " " + emp[0].lastName;
                                     var start = new Date(result[i].startWork)
                                     var done = new Date(result[i].doneWork)
-                                    var date = start.getDay() + "/" + start.getMonth() + "/" + start.getUTCFullYear();
+                                    console.log(String(start.getDate()).padStart(2, '0'));
+                                    var date = String(start.getDate()).padStart(2, '0') + "/" + (start.getUTCMonth()+1 )+ "/" + start.getUTCFullYear();
 
                                     if (start.getUTCMinutes() < 10) {
                                         result[i].startWork = start.getUTCHours() + " : 0" + start.getUTCMinutes();
@@ -208,7 +209,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                     arr.push(SHIFT)
 
                                     if (i + 1 == result.length) {
-                                        var bot_row = { employer: "Shifts: " + totalShifts, date: null, start: null, done: "Houers: " + totalHouers.toFixed(2), salary: "Salary: " + totalSalary.toFixed(2) + " NIS" }
+                                        var bot_row = { employer: "Shifts: " + totalShifts, date: null, start: null, done: "Hours: " + totalHouers.toFixed(2), salary: "Salary: " + totalSalary.toFixed(2) + " NIS" }
                                         arr.push({ employer: null, date: null, start: null, done: null, salary: null })
                                         arr.push(bot_row)
                                         res.status(200).render("workHistory", { results: arr });
