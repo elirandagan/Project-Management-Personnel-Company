@@ -2,40 +2,42 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8"/>
+    <meta charset="utf-8" />
     <link rel="GLEM-touch-icon" sizes="76x76" href="img/Logo.png">
     <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <title>
         Glem-Tech
     </title>
-    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
-          name='viewport'/>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
     <!--     Fonts and icons     -->
-    <link rel="stylesheet" type="text/css"
-          href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons"/>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
     <!-- CSS Files -->
-    <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet"/>
+    <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link href="demo/demo.css" rel="stylesheet"/>
+    <link href="demo/demo.css" rel="stylesheet" />
     <style>
         table {
             width: 750px;
             border-collapse: collapse;
-            margin:50px auto;
+            margin: 50px auto;
         }
         /* Zebra striping */
+        
         tr:nth-of-type(odd) {
             background: #000325;
         }
+        
         th {
             background: #3498db;
             color: white;
             font-weight: bold;
         }
-        td, th {
+        
+        td,
+        th {
             padding: 10px;
             border: 1px solid #ccc;
             text-align: center;
@@ -47,14 +49,19 @@
         This query will take effect for any screen smaller than 760px
         and also iPads specifically.
         */
-        @media
-        only screen and (max-width: 760px),
-        (min-device-width: 768px) and (max-device-width: 1024px)  {
+        
+        @media only screen and (max-width: 760px),
+        (min-device-width: 768px) and (max-device-width: 1024px) {
             table {
                 width: 100%;
             }
             /* Force table to not be like tables anymore */
-            table, thead, tbody, th, td, tr {
+            table,
+            thead,
+            tbody,
+            th,
+            td,
+            tr {
                 display: block;
             }
             /* Hide table headers (but not display: none;, for accessibility) */
@@ -63,7 +70,9 @@
                 top: -9999px;
                 left: -9999px;
             }
-            tr { border: 1px solid #ccc; }
+            tr {
+                border: 1px solid #ccc;
+            }
             td {
                 /* Behave  like a "row" */
                 border: none;
@@ -86,22 +95,26 @@
                 font-weight: bold;
             }
         }
+        
         #container {
             margin: auto;
             width: 50%;
             border: 3px;
             padding: 10px;
         }
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         .star-wrapper {
             display: flex;
             width: 100%;
             direction: rtl;
         }
+        
         .star-wrapper a {
             font-size: 1em;
             color: #fff;
@@ -109,362 +122,379 @@
             transition: all 0.5s;
             margin: 4px;
         }
+        
         .star-wrapper a:hover {
             color: gold;
             transform: scale(1.3);
         }
-        .s1:hover ~ a {
+        
+        .s1:hover~a {
             color: gold;
         }
-        .s2:hover ~ a {
+        
+        .s2:hover~a {
             color: gold;
         }
-        .s3:hover ~ a {
+        
+        .s3:hover~a {
             color: gold;
         }
-        .s4:hover ~ a {
+        
+        .s4:hover~a {
             color: gold;
         }
-        .s5:hover ~ a {
+        
+        .s5:hover~a {
             color: gold;
         }
     </style>
 </head>
 
 <body class="dark-edition">
-<h1 class="container">Hiring history</h1>
-<div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-4.jpg">
-        <!--
+    <h1 class="container">Hiring history</h1>
+    <div class="wrapper ">
+        <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-4.jpg">
+            <!--
           Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
           Tip 2: you can also add an image using data-image tag
       -->
-        <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
+            <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
                 GLEM TECH
             </a></div>
-        <div class="sidebar-wrapper">
-            <ul class="nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="./dashboard">
-                        <i class="material-icons">dashboard</i>
-                        <p>Dashboard</p>
-                    </a>
-                </li>
-                <li class="nav-item " id="searchWorker">
-                    <a class="nav-link" href="./searchWorker">
-                        <i class="material-icons">person</i>
-                        <p>Search Worker</p>
-                    </a>
-                </li>
-                <li class="nav-item " id="hiringHistory">
-                    <a class="nav-link" href="./hiringHistory">
-                        <i class="material-icons">person</i>
-                        <p>Hiring History</p>
-                    </a>
-                </li>
-            </ul>
+            <div class="sidebar-wrapper">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./dashboard">
+                            <i class="material-icons">dashboard</i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " id="searchWorker">
+                        <a class="nav-link" href="./searchWorker">
+                            <i class="material-icons">person</i>
+                            <p>Search Worker</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " id="hiringHistory">
+                        <a class="nav-link" href="./hiringHistory">
+                            <i class="material-icons">person</i>
+                            <p>Hiring History</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
 
 
-    <div id="container"></div>
+        <div id="container"></div>
 
-    <!--   Core JS Files   -->
-    <script src="js/core/jquery.min.js"></script>
-    <script src="js/core/popper.min.js"></script>
-    <script src="js/core/bootstrap-material-design.min.js"></script>
-    <script src="https://unpkg.com/default-passive-events"></script>
-    <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
-    <!-- Place this tag in your head or just before your close body tag. -->
-    <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!--  Google Maps Plugin    -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-    <!-- Chartist JS -->
-    <script src="js/plugins/chartist.min.js"></script>
-    <!--  Notifications Plugin    -->
-    <script src="js/plugins/bootstrap-notify.js"></script>
-    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-    <script src="js/material-dashboard.js?v=2.1.0"></script>
-    <!-- Material Dashboard DEMO methods, don't include it in your project! -->
-    <script src="demo/demo.js"></script>
+        <!--   Core JS Files   -->
+        <script src="js/core/jquery.min.js"></script>
+        <script src="js/core/popper.min.js"></script>
+        <script src="js/core/bootstrap-material-design.min.js"></script>
+        <script src="https://unpkg.com/default-passive-events"></script>
+        <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
+        <!-- Place this tag in your head or just before your close body tag. -->
+        <script async defer src="https://buttons.github.io/buttons.js"></script>
+        <!--  Google Maps Plugin    -->
+        <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+        <!-- Chartist JS -->
+        <script src="js/plugins/chartist.min.js"></script>
+        <!--  Notifications Plugin    -->
+        <script src="js/plugins/bootstrap-notify.js"></script>
+        <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+        <script src="js/material-dashboard.js?v=2.1.0"></script>
+        <!-- Material Dashboard DEMO methods, don't include it in your project! -->
+        <script src="demo/demo.js"></script>
 
-    <script src="https://kit.fontawesome.com/5ea815c1d0.js"></script>
+        <script src="https://kit.fontawesome.com/5ea815c1d0.js"></script>
 
-    <script>
-        $(document).ready(function () {
-            $().ready(function () {
-                $sidebar = $('.sidebar');
-                $sidebar_img_container = $sidebar.find('.sidebar-background');
-                $full_page = $('.full-page');
-                $sidebar_responsive = $('body > .navbar-collapse');
-                window_width = $(window).width();
-                $('.fixed-plugin a').click(function (event) {
-                    // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
-                    if ($(this).hasClass('switch-trigger')) {
-                        if (event.stopPropagation) {
-                            event.stopPropagation();
-                        } else if (window.event) {
-                            window.event.cancelBubble = true;
-                        }
-                    }
-                });
-                $('.fixed-plugin .active-color span').click(function () {
-                    $full_page_background = $('.full-page-background');
-                    $(this).siblings().removeClass('active');
-                    $(this).addClass('active');
-                    var new_color = $(this).data('color');
-                    if ($sidebar.length != 0) {
-                        $sidebar.attr('data-color', new_color);
-                    }
-                    if ($full_page.length != 0) {
-                        $full_page.attr('filter-color', new_color);
-                    }
-                    if ($sidebar_responsive.length != 0) {
-                        $sidebar_responsive.attr('data-color', new_color);
-                    }
-                });
-                $('.fixed-plugin .background-color .badge').click(function () {
-                    $(this).siblings().removeClass('active');
-                    $(this).addClass('active');
-                    var new_color = $(this).data('background-color');
-                    if ($sidebar.length != 0) {
-                        $sidebar.attr('data-background-color', new_color);
-                    }
-                });
-                $('.fixed-plugin .img-holder').click(function () {
-                    $full_page_background = $('.full-page-background');
-                    $(this).parent('li').siblings().removeClass('active');
-                    $(this).parent('li').addClass('active');
-                    var new_image = $(this).find("img").attr('src');
-                    if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-                        $sidebar_img_container.fadeOut('fast', function () {
-                            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-                            $sidebar_img_container.fadeIn('fast');
-                        });
-                    }
-                    if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-                        var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-                        $full_page_background.fadeOut('fast', function () {
-                            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-                            $full_page_background.fadeIn('fast');
-                        });
-                    }
-                    if ($('.switch-sidebar-image input:checked').length == 0) {
-                        var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
-                        var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-                        $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-                        $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-                    }
-                    if ($sidebar_responsive.length != 0) {
-                        $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
-                    }
-                });
-                $('.switch-sidebar-image input').change(function () {
-                    $full_page_background = $('.full-page-background');
-                    $input = $(this);
-                    if ($input.is(':checked')) {
-                        if ($sidebar_img_container.length != 0) {
-                            $sidebar_img_container.fadeIn('fast');
-                            $sidebar.attr('data-image', '#');
-                        }
-                        if ($full_page_background.length != 0) {
-                            $full_page_background.fadeIn('fast');
-                            $full_page.attr('data-image', '#');
-                        }
-                        background_image = true;
-                    } else {
-                        if ($sidebar_img_container.length != 0) {
-                            $sidebar.removeAttr('data-image');
-                            $sidebar_img_container.fadeOut('fast');
-                        }
-                        if ($full_page_background.length != 0) {
-                            $full_page.removeAttr('data-image', '#');
-                            $full_page_background.fadeOut('fast');
-                        }
-                        background_image = false;
-                    }
-                });
-                $('.switch-sidebar-mini input').change(function () {
-                    $body = $('body');
-                    $input = $(this);
-                    if (md.misc.sidebar_mini_active == true) {
-                        $('body').removeClass('sidebar-mini');
-                        md.misc.sidebar_mini_active = false;
-                        $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
-                    } else {
-                        $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
-                        setTimeout(function () {
-                            $('body').addClass('sidebar-mini');
-                            md.misc.sidebar_mini_active = true;
-                        }, 300);
-                    }
-                    // we simulate the window Resize so the charts will get updated in realtime.
-                    var simulateWindowResize = setInterval(function () {
-                        window.dispatchEvent(new Event('resize'));
-                    }, 180);
-                    // we stop the simulation of Window Resize after the animations are completed
-                    setTimeout(function () {
-                        clearInterval(simulateWindowResize);
-                    }, 1000);
-                });
-            });
-        });
-    </script>
-
-    <script>
-        const identity = document.cookie.substr(9, document.cookie.length)
-        console.log("IDENTITY: " + identity + " length: " + identity.length)
-        if (identity.toString() == "Contractor_Users") {
-            document.getElementById("recruit").style.display = "none";
-            document.getElementById("trackingWorkers").style.display = "none";
-            document.getElementById("statistics").style.display = "none";
-            document.getElementById("searchWorker").style.display = "none";
-            document.getElementById("hiringHistory").style.display = "none";
-        } else if (identity.toString() == "HR_Users") {
-            document.getElementById("shifts").style.display = "none";
-            document.getElementById("workHistory").style.display = "none";
-            document.getElementById("absences").style.display = "none";
-            document.getElementById("userProfile").style.display = "none";
-            document.getElementById("searchWorker").style.display = "none";
-            document.getElementById("hiringHistory").style.display = "none";
-        } else if (identity.toString() == "Employer_Users") {
-            document.getElementById("shifts").style.display = "none";
-            document.getElementById("workHistory").style.display = "none";
-            document.getElementById("absences").style.display = "none";
-            document.getElementById("userProfile").style.display = "none";
-            document.getElementById("recruit").style.display = "none";
-            document.getElementById("trackingWorkers").style.display = "none";
-            document.getElementById("statistics").style.display = "none";
-        }
-        $(document).ready(function () {
-            // Javascript method's body can be found in assets/js/demos.js
-            md.initDashboardPageCharts();
-        });
-    </script>
-
-    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-            const args = <%- JSON.stringify(args) %>;
-            const msg = <%= msg %>;
-            console.log(args)
-            if (msg === 0) {
-                console.log("DEFAULT")
-            }else if (msg === -1) {
-                swal({
-                    title: "Empty field\n",
-                    text: "Cant find for this employer hiring history",
-                    icon: "warning",
-                });
-            }
-            else if (msg === 1) {
-                swal({
-                    title: "Vote\n",
-                    text: "Your vote successfully update",
-                    icon: "success",
-                });
-            }else if (msg === 2) {
-                swal({
-                    title: "Vote\n",
-                    text: "you already voted",
-                    icon: "warning",
-                });
-            }
-            if (args) {
-                const newArr = args.map(({_id, ...rest}) => ({...rest}))
-                //rerender to hiringHistory
-                // if(window.location.href.toString().includes("modify")){
-                //     window.location.pathname.replace("/modify", "/hiringHistory");
-                // }
-                var _table_ = document.createElement('table'),
-                    _tr_ = document.createElement('tr'),
-                    _th_ = document.createElement('th'),
-                    _td_ = document.createElement('td');
-// Builds the HTML Table out of myList json data from Ivy restful service.
-                function buildHtmlTable(arr) {
-                    table = _table_.cloneNode(false), columns = addAllColumnHeaders(arr, table);
-                    let cellValue;
-                    for (var i = 0, maxi = arr.length; i < maxi; ++i) {
-                        tr = _tr_.cloneNode(false);
-                        for (var j = 0, maxj = columns.length; j < maxj; ++j) {
-                            td = _td_.cloneNode(false);
-                            cellValue = arr[i][columns[j]];
-                            cellValue = cellValue.toString().includes("000Z") ? dateChangeFormat(cellValue) : cellValue
-                            td.appendChild(document.createTextNode(cellValue || ''));
-                            tr.appendChild(td);
-                        }
-                        table.appendChild(tr);
-                    }
-                    return table;
-                }
-// Adds a header row to the table and returns the set of columns.
-// Need to do union of keys from all records as some records may not contain
-// all records
-                function addAllColumnHeaders(arr, table) {
-                    var columnSet = [],
-                        tr = _tr_.cloneNode(false);
-                    for (var i = 0, l = arr.length; i < l; i++) {
-                        for (var key in arr[i]) {
-                            if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key) === -1) {
-                                columnSet.push(key);
-                                var th = _th_.cloneNode(false);
-                                th.appendChild(document.createTextNode(key));
-                                tr.appendChild(th);
+        <script>
+            $(document).ready(function() {
+                $().ready(function() {
+                    $sidebar = $('.sidebar');
+                    $sidebar_img_container = $sidebar.find('.sidebar-background');
+                    $full_page = $('.full-page');
+                    $sidebar_responsive = $('body > .navbar-collapse');
+                    window_width = $(window).width();
+                    $('.fixed-plugin a').click(function(event) {
+                        // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
+                        if ($(this).hasClass('switch-trigger')) {
+                            if (event.stopPropagation) {
+                                event.stopPropagation();
+                            } else if (window.event) {
+                                window.event.cancelBubble = true;
                             }
                         }
-                    }
-                    tr.appendChild(th);
-                    table.appendChild(tr);
-                    return columnSet;
+                    });
+                    $('.fixed-plugin .active-color span').click(function() {
+                        $full_page_background = $('.full-page-background');
+                        $(this).siblings().removeClass('active');
+                        $(this).addClass('active');
+                        var new_color = $(this).data('color');
+                        if ($sidebar.length != 0) {
+                            $sidebar.attr('data-color', new_color);
+                        }
+                        if ($full_page.length != 0) {
+                            $full_page.attr('filter-color', new_color);
+                        }
+                        if ($sidebar_responsive.length != 0) {
+                            $sidebar_responsive.attr('data-color', new_color);
+                        }
+                    });
+                    $('.fixed-plugin .background-color .badge').click(function() {
+                        $(this).siblings().removeClass('active');
+                        $(this).addClass('active');
+                        var new_color = $(this).data('background-color');
+                        if ($sidebar.length != 0) {
+                            $sidebar.attr('data-background-color', new_color);
+                        }
+                    });
+                    $('.fixed-plugin .img-holder').click(function() {
+                        $full_page_background = $('.full-page-background');
+                        $(this).parent('li').siblings().removeClass('active');
+                        $(this).parent('li').addClass('active');
+                        var new_image = $(this).find("img").attr('src');
+                        if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+                            $sidebar_img_container.fadeOut('fast', function() {
+                                $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+                                $sidebar_img_container.fadeIn('fast');
+                            });
+                        }
+                        if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
+                            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+                            $full_page_background.fadeOut('fast', function() {
+                                $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+                                $full_page_background.fadeIn('fast');
+                            });
+                        }
+                        if ($('.switch-sidebar-image input:checked').length == 0) {
+                            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
+                            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
+                            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
+                            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
+                        }
+                        if ($sidebar_responsive.length != 0) {
+                            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
+                        }
+                    });
+                    $('.switch-sidebar-image input').change(function() {
+                        $full_page_background = $('.full-page-background');
+                        $input = $(this);
+                        if ($input.is(':checked')) {
+                            if ($sidebar_img_container.length != 0) {
+                                $sidebar_img_container.fadeIn('fast');
+                                $sidebar.attr('data-image', '#');
+                            }
+                            if ($full_page_background.length != 0) {
+                                $full_page_background.fadeIn('fast');
+                                $full_page.attr('data-image', '#');
+                            }
+                            background_image = true;
+                        } else {
+                            if ($sidebar_img_container.length != 0) {
+                                $sidebar.removeAttr('data-image');
+                                $sidebar_img_container.fadeOut('fast');
+                            }
+                            if ($full_page_background.length != 0) {
+                                $full_page.removeAttr('data-image', '#');
+                                $full_page_background.fadeOut('fast');
+                            }
+                            background_image = false;
+                        }
+                    });
+                    $('.switch-sidebar-mini input').change(function() {
+                        $body = $('body');
+                        $input = $(this);
+                        if (md.misc.sidebar_mini_active == true) {
+                            $('body').removeClass('sidebar-mini');
+                            md.misc.sidebar_mini_active = false;
+                            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
+                        } else {
+                            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
+                            setTimeout(function() {
+                                $('body').addClass('sidebar-mini');
+                                md.misc.sidebar_mini_active = true;
+                            }, 300);
+                        }
+                        // we simulate the window Resize so the charts will get updated in realtime.
+                        var simulateWindowResize = setInterval(function() {
+                            window.dispatchEvent(new Event('resize'));
+                        }, 180);
+                        // we stop the simulation of Window Resize after the animations are completed
+                        setTimeout(function() {
+                            clearInterval(simulateWindowResize);
+                        }, 1000);
+                    });
+                });
+            });
+        </script>
+
+        <script>
+            const identity = document.cookie.substr(9, document.cookie.length)
+            console.log("IDENTITY: " + identity + " length: " + identity.length)
+            if (identity.toString() == "Contractor_Users") {
+                document.getElementById("recruit").style.display = "none";
+                document.getElementById("trackingWorkers").style.display = "none";
+                document.getElementById("statistics").style.display = "none";
+                document.getElementById("searchWorker").style.display = "none";
+                document.getElementById("hiringHistory").style.display = "none";
+            } else if (identity.toString() == "HR_Users") {
+                document.getElementById("shifts").style.display = "none";
+                document.getElementById("workHistory").style.display = "none";
+                document.getElementById("absences").style.display = "none";
+                document.getElementById("userProfile").style.display = "none";
+                document.getElementById("searchWorker").style.display = "none";
+                document.getElementById("hiringHistory").style.display = "none";
+            } else if (identity.toString() == "Employer_Users") {
+                document.getElementById("shifts").style.display = "none";
+                document.getElementById("workHistory").style.display = "none";
+                document.getElementById("absences").style.display = "none";
+                document.getElementById("userProfile").style.display = "none";
+                document.getElementById("recruit").style.display = "none";
+                document.getElementById("trackingWorkers").style.display = "none";
+                document.getElementById("statistics").style.display = "none";
+            }
+            $(document).ready(function() {
+                // Javascript method's body can be found in assets/js/demos.js
+                md.initDashboardPageCharts();
+            });
+        </script>
+
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+
+        <script>
+            $(document).ready(function() {
+                const args = <%- JSON.stringify(args) %>;
+                const msg = <%= msg %>;
+                console.log(args)
+                if (msg === 0) {
+                    console.log("DEFAULT")
+
+                } else if (msg === -1) {
+                    swal({
+                        title: "Empty field\n",
+                        text: "Cant find for this employer hiring history",
+                        icon: "warning",
+                    });
+                } else if (msg === 1) {
+                    swal({
+                        title: "Vote\n",
+                        text: "Your vote successfully update",
+                        icon: "success",
+                    });
+                } else if (msg === 2) {
+                    swal({
+                        title: "Vote\n",
+                        text: "you already voted",
+                        icon: "warning",
+                    });
                 }
-                document.getElementById('container').appendChild(buildHtmlTable(newArr));
-                for (var i = 1; i < newArr.length + 1; i++) {
-                    let x = table.rows[i].cells[5];
+                if (args) {
+                    const newArr = args.map(({
+                            _id,
+                            ...rest
+                        }) => ({...rest
+                        }))
+                        //rerender to hiringHistory
+                        // if(window.location.href.toString().includes("modify")){
+                        //     window.location.pathname.replace("/modify", "/hiringHistory");
+                        // }
+                    var _table_ = document.createElement('table'),
+                        _tr_ = document.createElement('tr'),
+                        _th_ = document.createElement('th'),
+                        _td_ = document.createElement('td');
+                    // Builds the HTML Table out of myList json data from Ivy restful service.
+                    function buildHtmlTable(arr) {
+                        table = _table_.cloneNode(false), columns = addAllColumnHeaders(arr, table);
+                        let cellValue;
+                        for (var i = 0, maxi = arr.length; i < maxi; ++i) {
+                            tr = _tr_.cloneNode(false);
+                            for (var j = 0, maxj = columns.length; j < maxj; ++j) {
+                                td = _td_.cloneNode(false);
+                                cellValue = arr[i][columns[j]];
+                                cellValue = cellValue.toString().includes("000Z") ? dateChangeFormat(cellValue) : cellValue
+                                td.appendChild(document.createTextNode(cellValue || ''));
+                                tr.appendChild(td);
+                            }
+                            table.appendChild(tr);
+                        }
+                        return table;
+                    }
+                    // Adds a header row to the table and returns the set of columns.
+                    // Need to do union of keys from all records as some records may not contain
+                    // all records
+                    function addAllColumnHeaders(arr, table) {
+                        var columnSet = [],
+                            tr = _tr_.cloneNode(false);
+                        for (var i = 0, l = arr.length; i < l; i++) {
+                            for (var key in arr[i]) {
+                                if (arr[i].hasOwnProperty(key) && columnSet.indexOf(key) === -1) {
+                                    columnSet.push(key);
+                                    var th = _th_.cloneNode(false);
+                                    th.appendChild(document.createTextNode(key));
+                                    tr.appendChild(th);
+                                }
+                            }
+                        }
+                        tr.appendChild(th);
+                        table.appendChild(tr);
+                        return columnSet;
+                    }
+                    document.getElementById('container').appendChild(buildHtmlTable(newArr));
+                    for (var i = 1; i < newArr.length + 1; i++) {
+                        let x = table.rows[i].cells[5];
+
                         //create element
                         let newDiv = document.createElement("div");
-//create 5 star rate scale
+                        //create 5 star rate scale
                         let star = []
                         for (let j = 0; j < 5; j++) {
                             star[j] = document.createElement("a")
                             star[j].className = `fas fa-star s${j + 1}`
                             star[j].id = args[i - 1]._id + `#${j + 1}`
-                            //star[j].href = "/modify_rate_star"
+                                //star[j].href = "/modify_rate_star"
                             star[j].onclick = () => {
                                 document.cookie = "id=" + star[j].id
                                 location.assign("/modify_rate_star")
                             }
                         }
+
                         newDiv.append(star[4])
                         newDiv.append(star[3])
                         newDiv.append(star[2])
                         newDiv.append(star[1])
                         newDiv.append(star[0])
+
+
                         newDiv.className = "star-wrapper"
+
                         x.append(newDiv)
+
+                    }
+                } else {
+                    console.log("ERROR ACCRUED")
                 }
-            } else {
-                console.log("ERROR ACCRUED")
-            }
-            function dateChangeFormat(date){
-                const getDate = new Date(date);
-                let returnDate = getDate.getDay() + "/" + getDate.getMonth() + "/" + getDate.getUTCFullYear();
-                let hours
-                if (getDate.getUTCMinutes() < 10) {
-                    hours = getDate.getUTCHours() + " : 0" + getDate.getUTCMinutes();
+
+                function dateChangeFormat(date) {
+                    const getDate = new Date(date);
+                    let returnDate = getDate.getDay() + "/" + getDate.getMonth() + "/" + getDate.getUTCFullYear();
+                    let hours
+                    if (getDate.getUTCMinutes() < 10) {
+                        hours = getDate.getUTCHours() + " : 0" + getDate.getUTCMinutes();
+                    } else {
+                        hours = getDate.getUTCHours() + " : " + getDate.getUTCMinutes();
+                    }
+                    return returnDate + " " + hours
                 }
-                else {
-                    hours = getDate.getUTCHours() + " : " + getDate.getUTCMinutes();
-                }
-               return returnDate + " " + hours
-            }
-        });
-    </script>
 
 
+            });
+        </script>
 
-</div>
+
+    </div>
 </body>
 
 </html>
