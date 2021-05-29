@@ -219,7 +219,9 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 const company = await Employer_Users_Collection.findOne(q, { projection: p });
                 shifts[i].company = Object.values(company);
             }
-
+            console.log("*******************");
+            console.log(shifts);
+            console.log("*******************");
             return shifts;
         }
 
@@ -248,6 +250,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.post("/shifts", async(req, res) => {
+            console.log("*** req.body : ", req.body);
             try {
                 const submit_type = req.body.type;
                 const submit_id = req.body.id;
@@ -258,6 +261,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
                 console.log("submit_type : ", submit_type);
                 console.log("submit_id : ", submit_id);
+
+
                 if (validateUser && shifts) {
                     switch (submit_type) {
                         case "accept":
@@ -270,21 +275,15 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                 notify.status = "approved"
                                 status = "Success"
                             } else { // if (shift.status === "approved" or "denied") 
-                                const diff = Math.round((shift.startWork.getTime() - (new Date()).getTime()) / (1000 * 60 * 60 * 24))
-                                    // console.log("*** diff :", diff);
-                                notify.status = (0 < diff && diff < 10) ? "Yes" : "No"; // the deadline of update shift's hours is only 10 days
+                                // const diff = Math.round((shift.startWork.getTime() - (new Date()).getTime()) / (1000 * 60 * 60 * 24))
+                                //     // console.log("*** diff :", diff);
+                                // notify.status = (0 < diff && diff < 10) ? "Yes" : "No"; // the deadline of update shift's hours is only 10 days
                                 status = "No Change"
                             }
                             break;
                         case "deny":
                             if (shift.status === "pending") {
                                 console.log("inside deny");
-                                // Shifts_Collection.deleteOne({ _id: submit_id }, err => {
-                                //     if (err) throw err;
-                                //     console.log("1 document deleted :" + submit_id)
-                                // });
-
-                                // await Denied_Shifts_Collection.insertOne(shift);
 
                                 await Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "denied" } }, async err => {
                                     if (err) throw err;
@@ -308,8 +307,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                         default:
                             status = "Failed"
                     }
-                    // console.log("*** status : ", status);
-                    // console.log("*** notify : ", notify);
+
                     res.status(200).render("shifts", { status: status, shifts: shifts, notify: notify }); // render with relevant data
                 }
             } catch (error) {
