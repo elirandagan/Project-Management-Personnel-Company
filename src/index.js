@@ -218,9 +218,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 const company = await Employer_Users_Collection.findOne(q, { projection: p });
                 shifts[i].company = Object.values(company);
             }
-            console.log("*******************");
-            console.log(shifts);
-            console.log("*******************");
             return shifts;
         }
 
