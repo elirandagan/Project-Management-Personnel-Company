@@ -188,8 +188,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                     var emp_string = emp[0].firstName + " " + emp[0].lastName;
                                     var start = new Date(result[i].startWork)
                                     var done = new Date(result[i].doneWork)
-                                    console.log(String(start.getDate()).padStart(2, '0'));
-                                    var date = String(start.getDate()).padStart(2, '0') + "/" + (start.getUTCMonth()+1 )+ "/" + start.getUTCFullYear();
+                                    console.log(String(start.getDate()).padStart(2, "0"));
+                                    var date = String(start.getDate()).padStart(2, "0") + "/" + (start.getUTCMonth() + 1) + "/" + start.getUTCFullYear();
 
                                     if (start.getUTCMinutes() < 10) {
                                         result[i].startWork = start.getUTCHours() + " : 0" + start.getUTCMinutes();
@@ -558,9 +558,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 result = await result.toArray()
 
                 //{'Technician','Carpenter','Electrician','Gardener','Painter','Plumber'} 
-                console.log("*****");
-                console.log("Cookies: ", req.cookies)
-                console.log("*****");
+
                 for (let i = 0; i < result.length; i++) {
                     if (result[i].expertise == "Technician")
                         ++experts[0];
@@ -634,10 +632,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             // console.log("*** totalHours: ", totalHours);
             // console.log("*** employers: ", employers);
             return { shifts, employers, totalHours };
-        };
+        }
 
         router.get("/trackingWorkers", function(_req, res) {
-            res.status(200).render("trackingWorkers", { status: "init", worker: {}, shifts: {}, employers: {}, totalHours: {} });
+            res.status(200).render("trackingWorkers", { status: "init", worker: {}, shifts: {}, employers: {}, totalHours: {} })
         });
 
         router.post("/trackingWorkers", async(req, res) => {
@@ -832,9 +830,10 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         async function updateShifts(shifts) {
             for (let i = 0; i < shifts.length; i++) {
                 Contractor_Users_Collection.find({ ID: shifts[i].cwId }).toArray().then((user) => {
-                    Shifts_Collection.updateOne({ _id: shifts[i]._id }, { $set: { rating: avg(user[0].rate, user[0].vote).toFixed(2) } }, function(err, _res) {
-                        if (err) throw err;
-                    });
+                    Shifts_Collection.updateOne({ _id: shifts[i]._id }, { $set: { rating: avg(user[0].rate, user[0].vote).toFixed(2) } },
+                        err => {
+                            if (err) throw err;
+                        });
                 })
             }
             return shifts
