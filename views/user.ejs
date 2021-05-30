@@ -301,12 +301,8 @@
         $(document).ready(function() {
             const user = getCookie("user")
             console.log("user.length :", user.length);
-            alert("user.userName : " + user.userName)
             const identity = getCookie("identity")
-            alert("identity: " + identity)
             const status = "<%= status %>";
-            console.log(user.expertise);
-            console.log(status)
 
             document.getElementById("user-name").innerHTML = user.userName;
             document.getElementById("user-company").innerHTML = user.partOfCompany;
@@ -322,8 +318,6 @@
             elements.forEach(function(elem) {
                 elem.innerHTML = user.expertise;
             });
-
-            alert(status)
 
             if (status === "Success") {
                 console.log("Success")
@@ -343,7 +337,7 @@
                     icon: "warning"
                 });
             }
-            console.log(status);
+            console.log("status :", status);
 
             if (identity === "Contractor_Users") {
                 document.getElementById("recruit").style.display = "none";

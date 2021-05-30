@@ -471,11 +471,12 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             res.status(200).render("user", { status: "init" });
         });
 
-        router.post("/user", (req, res) => {
+        router.post("/user", async(req, res) => {
             console.log("user inside user: ", req.cookies.user);
-            const query = { _id: req.cookies.user.ID }
-                // eslint-disable-next-line no-undef
-            const newvalues = {
+            // console.log("type : ", typeof req.cookies.user._id);
+            // const query = { _id: req.cookies.user._id }
+            // eslint-disable-next-line no-undef
+            const newValues = {
                 ...req.cookies.user,
                 FirstName: req.body.FirstName,
                 LastName: req.body.LastName,
@@ -483,22 +484,22 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 expertise: req.body.expertise,
                 area: req.body.area,
             }
-            console.log("newvalues :", newvalues);
-            res.cookie("user", newvalues, { maxAge: 900000, httpOnly: false }); // create cookie.
+            console.log("newvalues :", newValues);
+            res.cookie("user", newValues, { maxAge: 900000, httpOnly: false }); // create cookie.
 
-            var status;
             // eslint-disable-next-line no-undef,no-unused-vars
-            Contractor_Users_Collection.updateOne(query, { $set: newvalues }, function(err, _res2) {
+            Contractor_Users_Collection.updateOne({ _id: newValues._id }, { $set: newValues }, err => {
                 if (err) {
-                    console.log(err.body + " ** Failed to update **");
-                    status = "Failed";
+                    console.log(err + " ** Failed to update **");
                 } else {
                     console.log("\n** Success to update **");
-                    status = "Success";
                 }
             });
 
-            res.status(200).render("user", { status: status });
+            const u = await Contractor_Users_Collection.findOne({ _id: ObjectId(newValues._id) });
+            console.log("u after update:", u);
+
+            res.status(200).render("user", { status: "Success" });
         });
 
         async function getSignUps() {
@@ -769,11 +770,15 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         });
 
-        router.get("/hiringHistory", function(_req, res) {
-            console.log("router get")
-            Shifts_Collection.find().toArray().then((schema) => {
-                console.log("schema : " + JSON.stringify(schema))
-                schema ? res.status(200).render("hiringHistory", { args: schema }) : console.error("shifts empty")
+        router.get("/hiringHistory", function(req, res) {
+            console.log(req.cookies.user.ID)
+            Shifts_Collection.find({ employerId: req.cookies.user.ID }).toArray().then(async(shifts) => {
+                let newShifts = await (updateShifts(shifts))
+
+                newShifts.length > 0 ? res.status(200).render("hiringHistory", {
+                    args: newShifts,
+                    msg: 0
+                }) : res.status(200).render("hiringHistory", { args: newShifts, msg: -1 })
             })
         });
 
