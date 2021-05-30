@@ -465,9 +465,8 @@
                         for (var j = 0, maxj = columns.length; j < maxj; ++j) {
                             td = _td_.cloneNode(false);
                             cellValue = arr[i][columns[j]];
-                            cellValue = cellValue.toString().includes("000Z") ? dateChangeFormat(cellValue) : cellValue
                             console.log(cellValue)
-                            console.log(typeof cellValue)
+                            cellValue = cellValue.toString().includes("000Z") ? dateChangeFormat(cellValue) : cellValue
                             td.appendChild(document.createTextNode(cellValue || ''));
                             tr.appendChild(td);
                         }
