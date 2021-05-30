@@ -189,8 +189,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                                     var emp_string = emp[0].firstName + " " + emp[0].lastName;
                                     var start = new Date(result[i].startWork)
                                     var done = new Date(result[i].doneWork)
-                                    console.log(String(start.getDate()).padStart(2, "0"));
-                                    var date = String(start.getDate()).padStart(2, "0") + "/" + (start.getUTCMonth() + 1) + "/" + start.getUTCFullYear();
+                                    console.log(String(start.getDate()).padStart(2, '0'));
+                                    var date = String(start.getDate()).padStart(2, '0') + "/" + (start.getUTCMonth() + 1) + "/" + start.getUTCFullYear();
 
                                     if (start.getUTCMinutes() < 10) {
                                         result[i].startWork = start.getUTCHours() + " : 0" + start.getUTCMinutes();
