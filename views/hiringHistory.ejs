@@ -161,8 +161,8 @@
           Tip 2: you can also add an image using data-image tag
       -->
             <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
-                GLEM TECH
-            </a></div>
+                    GLEM TECH
+                </a></div>
             <div class="sidebar-wrapper">
                 <ul class="nav">
                     <li class="nav-item">
@@ -410,7 +410,7 @@
 
         <script>
             $(document).ready(function() {
-                const args = <%- JSON.stringify(args) %>;
+                const args = <% - JSON.stringify(args) %>;
                 const msg = <%= msg %>;
 
                 console.log(args)
@@ -442,7 +442,8 @@
                     const newArr = args.map(({
                         _id,
                         ...rest
-                    }) => ({...rest
+                    }) => ({
+                        ...rest
                     }))
 
                     //rerender to hiringHistory
