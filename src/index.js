@@ -592,11 +592,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
         });
 
         router.get("/hiringHistory", function (req, res) {
-            console.log("router get")
-            Shifts_Collection.find().toArray().then((schema) => {
-                console.log("schema : " + JSON.stringify(schema))
-                schema ? res.status(200).render("hiringHistory", { args: schema }) : console.error("shifts empty")
-            })
+            renderToHiringHistory(req,res,0)
         });
 
         router.post("/hiringHistory", function (req, res) {
@@ -623,10 +619,7 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                     const myQuery = {_id: new ObjectId(shiftId)}
                     Shifts_Collection.find(myQuery).toArray().then((shift) => {
                         Contractor_Users_Collection.find({ID: shift[0].cwId}).toArray().then((user) => {
-                            console.log(`typeof staramount ${starAmount}`, typeof starAmount)
                             starAmount = parseInt(starAmount)
-                            console.log(`typeof staramount ${starAmount}`, typeof starAmount)
-                            console.log(`typeof user[0].rate ${user[0].rate}`, typeof user[0].rate)
                             if (user.length > 0) {
                                 Contractor_Users_Collection.updateOne({ID: shift[0].cwId}, {
                                     $set: {
@@ -682,6 +675,15 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             }
             return sum / amount
         }
+
+        router.get("/hiringHistoryNew", function (req, res) {
+            Shifts_Collection.find({employerId: req.cookies.user.ID}).toArray().then(newShifts => {
+                newShifts.length > 0 ? res.status(200).render("hiringHistoryNew", {
+                    args: newShifts,
+                    msg: 0
+                }) : res.status(200).render("hiringHistoryNew", {args: newShifts, msg: -1})
+            })
+        });
 
         //add the router
 
