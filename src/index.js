@@ -278,42 +278,100 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/shifts", async(req, res) => {
             try {
-                var shifts = Shifts_Collection.find(query).project(projection).sort({ startWork: -1 })
-                shifts = await shifts.toArray()
-                for (let i = 0; i < shifts.length; ++i) {
-                    var start = new Date(shifts[i].startWork)
-                    var done = new Date(shifts[i].doneWork)
-                    startMonth = start.getMonth() + 1;
-                    doneMonth = done.getMonth() + 1;
-                    if (startMonth < 10) {
-                        startMonth = '0' + startMonth;
-                    }
-                    shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
-                    shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
 
-                    if (start.getUTCMinutes() < 10) {
-                        shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
-                    } else {
-                        shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
-                    }
-                    if (done.getUTCMinutes() < 10) {
-                        shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
-                    } else {
-                        shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
-                    }
-                }
-                console.log("**Before***");
-                console.log(shifts);
-                console.log("*****");
-
+                var shifts = await getShifts(req.cookies.user.ID);
                 if (validateUser) {
-                    res.status(200).render("shifts", { shifts: shifts });
+                    const notify = { id: "init", status: "init" }
+                    res.status(200).render("shifts", { status: "init", shifts: shifts, notify: notify });
                 }
             } catch (error) {
                 console.error(error)
                 throw error
             }
+        });
 
+        router.post("/shifts", async(req, res) => {
+            console.log("*** req.body : ", req.body);
+            try {
+                const submit_type = req.body.type;
+                const submit_id = req.body.id;
+                const shift = await Shifts_Collection.findOne({ _id: ObjectId(submit_id) });
+                const shifts = await getShifts(req.cookies.user.ID)
+                var notify = { id: submit_id, status: "init" }
+                var status
+
+                console.log("submit_type : ", submit_type);
+                console.log("submit_id : ", submit_id);
+
+
+                if (validateUser && shifts) {
+                    switch (submit_type) {
+                        case "accept":
+                            if (shift.status === "pending") { // shift waits for approval
+                                Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "approved" } },
+                                    err => {
+                                        if (err) throw err;
+                                        console.log("1 document updated by status to approved");
+                                    });
+                                notify.status = "approved"
+                                status = "Success"
+                            } else { // if (shift.status === "approved" or "denied") 
+                                status = "No Change"
+                            }
+                            break;
+                        case "deny":
+                            if (shift.status === "pending") {
+                                console.log("inside deny");
+
+                                await Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { status: "denied" } }, async err => {
+                                    if (err) throw err;
+                                    console.log("1 document updated from pending to denied");
+                                });
+
+                                notify.status = "denied"
+                                status = "Success"
+                            } else { // if (shift.status === "approved" or "denied") 
+                                notify.status = "denied"
+                                status = "No Change"
+                            }
+                            break;
+                        case "report":
+                            try {
+                                console.log("*** in report");
+                                var from = req.body.from
+                                var to = req.body.to
+                                from = from.split(":")
+                                to = to.split(":")
+                                from = new Date(new Date(shift.startWork).setUTCHours(parseInt(from[0]), parseInt(from[1])))
+                                to = new Date(new Date(shift.doneWork).setUTCHours(parseInt(to[0]), parseInt(to[1])))
+
+                                await Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { startWork: from } }, async err => {
+                                    if (err) throw err;
+                                    console.log("1 document updated -> startwork");
+                                    console.log(from);
+                                });
+                                await Shifts_Collection.updateOne({ _id: ObjectId(submit_id) }, { $set: { doneWork: to } }, async err => {
+                                    if (err) throw err;
+                                    console.log("1 document updated -> doneWork");
+                                    console.log(to);
+                                });
+
+                                notify.status = "Success"
+                            } catch (error) {
+                                notify.status = "Failed"
+                            }
+                            status = "Report"
+                            break;
+                        default:
+                            status = "Failed"
+                    }
+
+                    res.status(200).render("shifts", { status: status, shifts: shifts, notify: notify }); // render with relevant data
+                }
+            } catch (error) {
+                console.error(error)
+                throw error
+            }
         });
 
         router.get("/absences", function(req, res) {
@@ -400,36 +458,39 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             })
         })
 
-        router.get("/user", (req, res) => {
-            console.log("******");
-            console.log("in user router");
-            console.log(req.cookies.user);
-            console.log(req.cookies.identity);
-            console.log("******");
+        router.get("/user", (_req, res) => {
             res.status(200).render("user", { status: "init" });
         });
 
-        router.post("/user", (req, res) => {
-            const query = { _id: req.cookies.user.ID }
-                // eslint-disable-next-line no-undef
-            const newvalues = {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
+        router.post("/user", async(req, res) => {
+            console.log("user inside user: ", req.cookies.user);
+            // console.log("type : ", typeof req.cookies.user._id);
+            // const query = { _id: req.cookies.user._id }
+            // eslint-disable-next-line no-undef
+            const newValues = {
+                ...req.cookies.user,
+                FirstName: req.body.FirstName,
+                LastName: req.body.LastName,
                 partOfCompany: req.body.partOfCompany,
                 expertise: req.body.expertise,
                 area: req.body.area,
-                // lastUpdate: new Timestamp()
             }
-            var status;
+            console.log("newvalues :", newValues);
+            res.cookie("user", newValues, { maxAge: 900000, httpOnly: false }); // create cookie.
+
             // eslint-disable-next-line no-undef,no-unused-vars
-            Contractor_Users_Collection.updateOne(query, { $set: newvalues }, function(err, res2) {
+            Contractor_Users_Collection.updateOne({ _id: newValues._id }, { $set: newValues }, err => {
                 if (err) {
                     console.log(err + " ** Failed to update **");
                 } else {
                     console.log("\n** Success to update **");
                 }
             });
-            res.status(200).render("user", { status: status });
+
+            const u = await Contractor_Users_Collection.findOne({ _id: ObjectId(newValues._id) });
+            console.log("u after update:", u);
+
+            res.status(200).render("user", { status: "Success" });
         });
 
         async function getSignUps() {
@@ -517,19 +578,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/statistics", async(req, res) => {
             const signUps = await getSignUps();
-            console.log("*****");
-            console.log("signUps :" + signUps);
-            console.log("*****");
-
             const recruitments = await getRecruitments();
-            console.log("*****");
-            console.log("recruitments :" + recruitments);
-            console.log("*****");
-
             const expertises = await getExpertises();
-            console.log("*****");
-            console.log("expertises :" + expertises);
-            console.log("*****");
 
             res.status(200).render("statistics", {
                 signUps: signUps,
@@ -537,6 +587,46 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 expertises: expertises
             });
         });
+
+        async function getEmployers(shifts) {
+            var employers = new Array(shifts.length);
+            const project = { userName: 0, password: 0 };
+
+            for (let i = 0; i < shifts.length; i++) { // creates employers
+                let employer = Employer_Users_Collection.findOne({ ID: shifts[i].employerId }, { projection: project });
+                employer = await employer;
+                if (employer) {
+                    employers[i] = employer;
+                } else {
+                    employers[i] =
+                        Employer_Users_Collection.insertOne({
+                            firstName: "undefined",
+                            lastName: "undefined",
+                            ID: shifts[i].employerId,
+                            partOfCompany: "GLEM",
+                            password: "123456",
+                            userName: "user" + String(Math.floor(Math.random() * 999) + 1) + Math.random().toString(36).substring(2)
+                        });
+                }
+            }
+            return employers;
+        }
+
+        async function getTrackWorkersInitData(id) {
+            var shifts = Shifts_Collection.find({ cwId: id }).sort({ startWork: -1 }); // get all shifts for given id
+            shifts = await shifts.toArray();
+
+            var employers = await getEmployers(shifts); // get all employers that match each shift
+
+            var totalHours = getHoursArray(shifts); // get manipulated hours array
+            console.log("##$$$1 shifts", shifts);
+            shifts = modifyShiftsHours(shifts); // modify shifts' hours to match hh:mm
+            console.log("##$$$2 shifts", shifts);
+            // console.log("*** shifts: ", shifts);
+            // console.log("*** totalHours: ", totalHours);
+            // console.log("*** employers: ", employers);
+            return { shifts, employers, totalHours };
+        };
 
         router.get("/trackingWorkers", function(req, res) {
             res.status(200).render("trackingWorkers", {
@@ -549,113 +639,152 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         });
 
         router.post("/trackingWorkers", async(req, res) => {
-            console.log("$***$");
-            console.log(req.body);
-            console.log("$***$");
-
             try {
-                var result = Contractor_Users_Collection.findOne({ ID: req.body["id-text"] })
-                result = await result;
-                console.log('*****');
-                console.log(result);
-                console.log('*****');
+                const data = req.body.id.split("_") //get the data (type & id) of submit
+                console.log("req.body :", req.body);
+                console.log("data :", data);
+                const type = (data.length === 2) ? data[1] : "search"; // get type from data
+                var worker;
 
-                if (result) {
-                    var shifts = Shifts_Collection.find({ cwId: req.body["id-text"] }).sort({ startWork: -1 })
-                    shifts = await shifts.toArray();
+                console.log("type of submit :", type);
+                console.log("req.body.id :", req.body.id);
 
-                    var employers = new Array(shifts.length)
-                    const project = { userName: 0, password: 0 };
+                if (type === "search") {
+                    worker = await Contractor_Users_Collection.findOne({ ID: req.body.id })
+                    if (typeof worker.createAt === "string" || worker.createAt instanceof String) {
+                        worker._id = ObjectId(worker._id);
+                        worker.createAt = new Date(worker.createAt);
+                    }
+                    console.log("*** worker :", worker);
 
-                    for (let i = 0; i < shifts.length; i++) { // creates employers
-                        let employer = Employer_Users_Collection.findOne({ ID: shifts[i].employerId }, { projection: project });
-                        employer = await employer;
-                        if (employer) {
-                            employers[i] = employer;
+                    if (!worker) { // user not found.
+                        if (!req.cookies.track_emp) { // not cookie found
+                            console.log("$$ Im in a very bad place ... $$");
+                            return res.status(200).render("trackingWorkers", { status: "Not Found", worker: {}, shifts: {}, employers: {}, totalHours: {} });
                         } else {
-                            employers[i] = {
-                                firstName: "undefined",
-                                lastName: "undefined",
-                                ID: shifts[i].employerId,
-                                partOfCompany: "undefined"
-                            }
+                            console.log("!@%$#%$ no worker but we have a COOKIE ! !@%$#%$");
+                            console.log("!@%$#%$ the Cookie ladie and gents : ", req.cookies.track_emp);
+                            worker = req.cookies.track_emp;
+                            worker._id = ObjectId(worker._id)
+                            worker.createAt = new Date(w.createAt);
+                            console.log("!@%$#%$ the Cookie ladie and gents : ", worker);
                         }
                     }
+                    const { shifts, employers, totalHours } = await getTrackWorkersInitData(worker.ID); // get data for search success
 
-                    var totalHours = new Array(shifts.length);
-                    for (let i = 0; i < shifts.length; i++) { // create total hours array
-                        const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
-                        totalHours[i] = Math.abs(date1 - date2) / 36e5;
-                    }
+                    res.cookie("track_emp", worker, { maxAge: 900000, httpOnly: false }); // create cookie.
 
-                    for (let i = 0; i < shifts.length; ++i) { // modifies shifts
-                        var start = new Date(shifts[i].startWork)
-                        var done = new Date(shifts[i].doneWork)
-                        startMonth = start.getMonth() + 1;
-                        doneMonth = done.getMonth() + 1;
-                        if (startMonth < 10) {
-                            startMonth = "0" + startMonth;
-                        }
-                        shifts[i].startWork = start.getUTCDate() + '/' + startMonth + '/' + start.getFullYear()
-                        shifts[i].doneWork = start.getUTCDate() + '/' + doneMonth + '/' + start.getFullYear()
-
-                        if (start.getUTCMinutes() < 10) {
-                            shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
-                        } else {
-                            shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
-                        }
-                        if (done.getUTCMinutes() < 10) {
-                            shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
-                        } else {
-                            shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
-                        }
-                    }
+                    return res.status(200).render("trackingWorkers", { status: "Search Success", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
                 }
-                console.log('$ $$$$');
-                console.log(shifts);
-                console.log('$$$$$');
-                if (!result)
-                    res.status(200).render("trackingWorkers", {
-                        status: "Not Found",
-                        worker: req.body["id-text"],
-                        shifts: {}
-                    });
-                else
-                    res.status(200).render("trackingWorkers", { status: "Success", worker: result, shifts: shifts });
+                // else type is not search (from or to)
+                else {
+                    var w = req.cookies.track_emp;
+                    [w._id, w.createAt] = [ObjectId(w._id), new Date(w.createAt)];
+                    const worker = w;
+                    // console.log("worker : ", worker);
 
+                    const id = req.body.id.split("_")[0]; // req.body.id is "<id_value>_from" or "<id_value>_to"
+                    console.log("id : ", id);
+
+                    // if the type is startWork or doneWork, then different projection
+                    const project = { _id: 0, startWork: 1, doneWork: 1 };
+
+                    // get the shifts that requierd to be updated
+                    var shift = await Shifts_Collection.findOne({ _id: ObjectId(id) }, { projection: project });
+
+                    // console.log("shift :", shift);
+
+                    if (!shift || shift === null) { // if the shifts has not been found
+                        console.log("!@%$#%$  no shift !@%$#%$");
+                        return res.status(200).render("trackingWorkers", { status: "Not Found", worker: id, shifts: {}, employers: {}, totalHours: {} });
+                    }
+                    const time = (type === "from") ? shift.startWork : shift.doneWork;
+                    const new_date = getNewDate(req.body["time_" + type], time); //get the new date
+                    const { shifts, employers, totalHours } = await getTrackWorkersInitData(worker.ID); // get data for update
+
+                    // console.log("** new_date : ", new_date, new_date.getUTCHours(), new_date.getUTCMinutes());
+                    // console.log("** shift.startWork : ", shift.startWork, shift.startWork.getUTCHours(), shift.startWork.getUTCMinutes());
+                    // console.log("** shift.doneWork : ", shift.doneWork, shift.doneWork.getUTCHours(), shift.doneWork.getUTCMinutes());
+
+                    const counter_date = (type === "to") ? shift.startWork : shift.doneWork;
+                    if (isInvalidTime(type, counter_date, new_date))
+                        return res.status(200).render("trackingWorkers", { status: "No Change", worker: worker, shifts: shifts, employers: employers, totalHours: totalHours });
+
+                    // if the type is startWork or doneWork, then different projection
+                    const set = (type === "from") ? { startWork: new_date } : { doneWork: new_date }
+
+                    Shifts_Collection.updateOne({ _id: ObjectId(id) }, { $set: set }, err => {
+                        if (err) throw err;
+                        console.log("1 document updated in " + Object.keys(set));
+                    });
+
+                    return res.status(200).render("trackingWorkers", { status: "Update Success", worker: req.cookies.track_emp, shifts: shifts, employers: employers, totalHours: totalHours });
+                }
             } catch (error) {
                 console.error(error)
                 throw error
             }
         });
 
-        router.get("/searchWorker", function(req, res) {
-            res.status(200).render("searchWorker");
+        router.get("/searchWorker", async(req, res) => {
+            res.status(200).render("searchWorker", { workers: {}, date: null, status: "Init" });
         });
 
-        router.get("/hiringHistory", function(req, res) {
-            console.log(req.cookies.user.ID)
-            Shifts_Collection.find({ employerId: req.cookies.user.ID }).toArray().then(async(shifts) => {
-                let newShifts = await (updateShifts(shifts))
+        router.post("/searchWorker", async(req, res) => {
+            console.log(req.body);
+            const date = req.body.date;
+            const expertise = req.body.expertise;
+            const submit_type = req.body.name;
 
-                newShifts.length > 0 ? res.status(200).render("hiringHistory", {
-                    args: newShifts,
-                    msg: 0
-                }) : res.status(200).render("hiringHistory", { args: newShifts, msg: -1 })
-            })
+            if (submit_type === "search") {
+                var workers = Contractor_Users_Collection.find({ expertise: expertise })
+                workers = await workers.toArray()
+                var temp_workers = []
+
+                for (let i = 0; i < workers.length; i++) {
+                    const abs = await Absences_Collection.findOne({ ID: workers[i].ID, from: date })
+                    if (!abs || abs === undefined) {
+                        temp_workers.push(workers[i])
+                    }
+                }
+                workers = temp_workers;
+                console.log("workers :", workers);
+                return res.status(200).render("searchWorker", { workers: workers, date: date, status: "Found" });
+            } else {
+                const s = await Contractor_Users_Collection.findOne({ ID: req.body.id }, { projection: { _id: 1, area: 1 } })
+                const shift = {
+                    employerId: req.cookies.user.ID,
+                    cwId: req.body.id,
+                    startWork: new Date(req.body.date),
+                    doneWork: new Date(req.body.date),
+                    status: "pending",
+                    rating: 0,
+                    where: s.area
+                }
+                console.log("*****");
+                console.log("shift :", shift);
+                console.log("*****");
+
+                Shifts_Collection.insertOne(shift)
+                return res.status(200).render("searchWorker", { workers: 0, date: 0, status: "Booked" });
+            }
+
         });
-
-        router.post("/hiringHistory", function(req, res) {
-            console.log("router post")
-            res.status(200).render("hiringHistory", { arguments: "router post" });
-        });
-
 
         router.get("/dashboard", function(req, res) {
             Shifts_Collection.find({}).toArray().then(shift => {
                 updateShifts(shift)
             })
             validateUser ? res.status(200).render("dashboard") : res.status(200).render("login");
+        });
+
+        router.get("/hiringHistory", function(req, res) {
+            renderToHiringHistory(req, res, 0)
+        });
+
+        router.post("/hiringHistory", function(req, res) {
+            console.log("router post")
+            res.status(200).render("hiringHistory", { arguments: "router post" });
         });
 
 
@@ -720,7 +849,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             })
         }
 
-
         function avg(sum, amount) {
             if (amount === 0) {
                 return 0
@@ -729,8 +857,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         }
 
         //add the router
-
-
         app.use("/", router);
     })
     .catch(error => console.error(error))

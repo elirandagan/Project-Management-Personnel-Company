@@ -2,129 +2,126 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <link rel="GLEM-touch-icon" sizes="76x76" href="img/Logo.png">
-  <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>
-    Glem-Tech
-  </title>
-  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
-    name='viewport' />
-  <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css"
-    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
-  <!-- CSS Files -->
-  <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
-  <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link href="demo/demo.css" rel="stylesheet" />
+    <meta charset="utf-8" />
+    <link rel="GLEM-touch-icon" sizes="76x76" href="img/Logo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="https://i.ibb.co/Vm7PGwB/Logo.png">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>
+        Glem-Tech
+    </title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <!-- CSS Files -->
+    <link href="css/material-dashboard.css?v=2.1.0" rel="stylesheet" />
+    <!-- CSS Just for demo purpose, don't include it in your project -->
+    <link href="demo/demo.css" rel="stylesheet" />
 </head>
 
 <body class="dark-edition">
-  <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-2.jpg">
-      <!--
+    <div class="wrapper ">
+        <div class="sidebar" data-color="purple" data-background-color="black" data-image="img/sidebar-2.jpg">
+            <!--
         Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
 
         Tip 2: you can also add an image using data-image tag
     -->
-      <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
+            <div class="logo"><a href="javascript:void(0)" class="simple-text logo-normal">
           GLEM TECH
         </a></div>
-      <div class="sidebar-wrapper">
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link" href="./dashboard">
-              <i class="material-icons">dashboard</i>
-              <p>Dashboard</p>
-            </a>
-          </li>
-          <li class="nav-item" id="shifts">
-            <a class="nav-link" href="./shifts">
-              <i class="material-icons">content_paste</i>
-              <p>Shifts</p>
-            </a>
-          </li>
-          <li class="nav-item " id="workHistory">
-            <a class="nav-link" href="./workHistory">
-              <i class="material-icons">library_books</i>
-              <p>Work History</p>
-            </a>
-          </li>
-          <li class="nav-item " id="absences">
-            <a class="nav-link" href="./absences">
-              <i class="material-icons">content_paste</i>
-              <p>Absences</p>
-            </a>
-          </li>
-          <li class="nav-item " id="userProfile">
-            <a class="nav-link" href="./user">
-              <i class="material-icons">person</i>
-              <p>User Profile</p>
-            </a>
-          </li>
-          <li class="nav-item " id="recruit">
-            <a class="nav-link" href="./recruit">
-              <i class="material-icons">person</i>
-              <p>Recruit</p>
-            </a>
-          </li>
-          <li class="nav-item active" id="trackingWorkers">
-            <a class="nav-link" href="./trackingWorkers">
-              <i class="material-icons">person</i>
-              <p>Tracking Workers</p>
-            </a>
-          </li>
-          <li class="nav-item " id="statistics">
-            <a class="nav-link" href="./statistics">
-              <i class="material-icons">person</i>
-              <p>Statistics</p>
-            </a>
-          </li>
-          <li class="nav-item " id="searchWorker">
-            <a class="nav-link" href="./searchWorker">
-              <i class="material-icons">person</i>
-              <p>Search Worker</p>
-            </a>
-          </li>
-          <li class="nav-item " id="hiringHistory">
-            <a class="nav-link" href="./hiringHistory">
-              <i class="material-icons">person</i>
-              <p>Hiring History</p>
-            </a>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div class="main-panel">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
-        <div class="container-fluid">
-          <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:void(0)">Tracking Workers</a>
-          </div>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
-            aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
+            <div class="sidebar-wrapper">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="./dashboard">
+                            <i class="material-icons">dashboard</i>
+                            <p>Dashboard</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" id="shifts">
+                        <a class="nav-link" href="./shifts">
+                            <i class="material-icons">content_paste</i>
+                            <p>Shifts</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " id="workHistory">
+                        <a class="nav-link" href="./workHistory">
+                            <i class="material-icons">library_books</i>
+                            <p>Work History</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " id="absences">
+                        <a class="nav-link" href="./absences">
+                            <i class="material-icons">content_paste</i>
+                            <p>Absences</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " id="userProfile">
+                        <a class="nav-link" href="./user">
+                            <i class="material-icons">person</i>
+                            <p>User Profile</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " id="recruit">
+                        <a class="nav-link" href="./recruit">
+                            <i class="material-icons">person</i>
+                            <p>Recruit</p>
+                        </a>
+                    </li>
+                    <li class="nav-item active" id="trackingWorkers">
+                        <a class="nav-link" href="./trackingWorkers">
+                            <i class="material-icons">person</i>
+                            <p>Tracking Workers</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " id="statistics">
+                        <a class="nav-link" href="./statistics">
+                            <i class="material-icons">person</i>
+                            <p>Statistics</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " id="searchWorker">
+                        <a class="nav-link" href="./searchWorker">
+                            <i class="material-icons">person</i>
+                            <p>Search Worker</p>
+                        </a>
+                    </li>
+                    <li class="nav-item " id="hiringHistory">
+                        <a class="nav-link" href="./hiringHistory">
+                            <i class="material-icons">person</i>
+                            <p>Hiring History</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="main-panel">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top " id="navigation-example">
+                <div class="container-fluid">
+                    <div class="navbar-wrapper">
+                        <a class="navbar-brand" href="javascript:void(0)">Tracking Workers</a>
+                    </div>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation" data-target="#navigation-example">
             <span class="sr-only">Toggle navigation</span>
             <span class="navbar-toggler-icon icon-bar"></span>
             <span class="navbar-toggler-icon icon-bar"></span>
             <span class="navbar-toggler-icon icon-bar"></span>
           </button>
-          <div class="collapse navbar-collapse justify-content-end">
-            <form name="upper-search-form" class="navbar-form">
-              <div class="input-group no-border">
-                <input type="text" value="" class="form-control" placeholder="Search...">
-                <button type="submit" class="btn btn-default btn-round btn-just-icon">
+                    <div class="collapse navbar-collapse justify-content-end">
+                        <form name="upper-search-form" class="navbar-form">
+                            <div class="input-group no-border">
+                                <input type="text" value="" class="form-control" placeholder="Search...">
+                                <button type="submit" class="btn btn-default btn-round btn-just-icon">
                   <i class="material-icons">search</i>
                   <div class="ripple-container"></div>
                 </button>
-              </div>
-            </form>
-            <ul class="navbar-nav">
+                            </div>
+                        </form>
+                        <ul class="navbar-nav">
 
-              <!-- <li class="nav-item dropdown">
+                            <!-- <li class="nav-item dropdown">
                 <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown"
                   aria-haspopup="true" aria-expanded="false">
                   <i class="material-icons">notifications</i>
@@ -141,444 +138,425 @@
                   <a class="dropdown-item" href="javascript:void(0)">Another One</a>
                 </div>
               </li> -->
-              <li class="nav-item dropdown">
-                <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown"
-                  aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">person</i>
-                  <p class="d-lg-none d-md-block">
-                    Account
-                  </p>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item fa fa-sign-out" href="\" id="logout_btn">
-                    <span style="margin-left: 6px;"> Logout </span>
-                  </a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">person</i>
+                                    <p class="d-lg-none d-md-block">
+                                        Account
+                                    </p>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item fa fa-sign-out" href="\" id="logout_btn">
+                                        <span style="margin-left: 6px;"> Logout </span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>3
-      <!-- End Navbar -->
-      <div class="content">
-        <div class="container">
-        </div>
-        <form name="worker-search-form" action="/trackingWorkers" method="POST" onsubmit="return check()" required>
-          <input type="hidden" name="name" value="search">
+            </nav>3
+            <!-- End Navbar -->
+            <div class="content">
+                <div class="container">
+                </div>
+                <form name="worker-search-form" action="/trackingWorkers" method="POST" onsubmit="return check()" required>
+                    <input type="hidden" name="name" value="search">
 
-          <div class="row">
-            <div class="col-md-2">
-              <h3 class="pull-right text-white">Worker ID:</h3>
-            </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <h3 class="pull-right text-white">Worker ID:</h3>
+                        </div>
 
-            <div class="col-md-3 text-center" style="top:1.2rem;">
-              <input type="text" name="id" class="h-50 text-white text-center"
-                style="background-color:darkgray; border-radius: 15px;">
-            </div>
-            <div class="col-md-1 text-center" style="top: 1rem;">
-              <input type="submit" value="Search" class="update-btn btn btn-primary btn-sm"
-                style="font-size: 0.8rem;border-radius: 15px;"></input>
-            </div>
-        </form>
-      </div>
+                        <div class="col-md-3 text-center" style="top:1.2rem;">
+                            <input type="text" name="id" class="h-50 text-white text-center" style="background-color:darkgray; border-radius: 15px;">
+                        </div>
+                        <div class="col-md-1 text-center" style="top: 1rem;">
+                            <input type="submit" value="Search" class="update-btn btn btn-primary btn-sm" style="font-size: 0.8rem;border-radius: 15px;"></input>
+                        </div>
+                </form>
+                </div>
 
-      <div class="container">
-        <div class="card card-profile">
-          <div class="card">
-            <div class="card-header card-header-primary">
-              <h4 class="card-title textwhite">Worker Details</h4>
-            </div>
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-2">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">First Name: <%= worker.FirstName %> </label>
-                  </div>
-                </div>
-                <div class="col-md-8 ">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">Payment : <%= worker.hourlyPay %></label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-2">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">Last Name : <%= worker.LastName %></label>
-                  </div>
-                </div>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <label for="expertise">Expertise : <%= worker.expertise %></label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-2">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">User Name : <%= worker.userName %></label>
-                  </div>
-                </div>
-                <div class="col-md-8 ">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">Registration Date :
+                <div class="container">
+                    <div class="card card-profile">
+                        <div class="card">
+                            <div class="card-header card-header-primary">
+                                <h4 class="card-title textwhite">Worker Details</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">First Name: <%= worker.FirstName %> </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 ">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">Payment : <%= worker.hourlyPay %></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">Last Name : <%= worker.LastName %></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="expertise">Expertise : <%= worker.expertise %></label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">User Name : <%= worker.userName %></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8 ">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">Registration Date :
                       <% if (worker) { %>
                         <%= new Date(worker.createAt).toDateString() %>
                           <% } %>
                     </label>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-2">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">Area : <%= worker.area %></label>
-                  </div>
-                </div>
-                <div class="col-md-8">
-                  <div class="form-group">
-                    <label class="bmd-label-floating">Rate : *rate is missing for now*</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="container">
-        <div class="card card-profile">
-          <div class="card">
-            <div class="card-header card-header-primary">
-              <h4 class="card-title text-white">Worker History</h4>
-            </div>
-            <div class="card-body">
-              <div class="container" style="position: relative; top: 1.5rem;">
-                <table id="productTable" class="table table-bordered table-hover">
-                  <thead class="">
-                    <tr>
-                      <th>Date</th>
-                      <th>Company</th>
-                      <th>By</th>
-                      <th>From</th>
-                      <th>To</th>
-                      <th>Total Hours</th>
-                      <th>Payment</th>
-                      <th>Report</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-
-                    <% for( let i=0,len=shifts.length; len>i; ++i ) { %>
-                      <tr>
-                        <td>
-                          <%= shifts[i].startWork %>
-                        </td>
-                        <% if (employers[i]) { %>
-                          <td>
-                            <%= employers[i].partOfCompany %>
-                          </td>
-                          <td>
-                            <%= employers[i].firstName %>
-                              <%= employers[i].lastName %>
-                          </td>
-                          <% } %>
-                            <td>
-                              <form name="from-time-form" action="/trackingWorkers"
-                                onsubmit="return submit_check('<%= shifts[i]._id %>_from')" method="post">
-
-                                <div id="<%= shifts[i]._id %>_from">
-                                  <%= shifts[i].startHour %>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">Area : <%= worker.area %></label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label class="bmd-label-floating">Rate : <%= worker.rate / worker.vote %></label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container">
+                    <div class="card card-profile">
+                        <div class="card">
+                            <div class="card-header card-header-primary">
+                                <h4 class="card-title text-white">Worker History</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="container" style="position: relative; top: 1.5rem;">
+                                    <table id="productTable" class="table table-bordered table-hover">
+                                        <thead class="">
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Company</th>
+                                                <th>By</th>
+                                                <th>From</th>
+                                                <th>To</th>
+                                                <th>Total Hours</th>
+                                                <th>Payment</th>
+                                                <th>Report</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
 
-                                <input type="hidden" id="time_from_<%= shifts[i]._id %>" name="time_from">
+                                            <% for( let i=0,len=shifts.length; len>i; ++i ) { %>
+                                                <tr>
+                                                    <td>
+                                                        <%= shifts[i].startWork %>
+                                                    </td>
+                                                    <% if (employers[i]) { %>
+                                                        <td>
+                                                            <%= employers[i].partOfCompany %>
+                                                        </td>
+                                                        <td>
+                                                            <%= employers[i].firstName %>
+                                                                <%= employers[i].lastName %>
+                                                        </td>
+                                                        <% } %>
+                                                            <td>
+                                                                <form name="from-time-form" action="/trackingWorkers" onsubmit="return submit_check('<%= shifts[i]._id %>_from')" method="post">
 
-                                <input type="hidden" id="id_from_<%= shifts[i]._id %>" name="id">
+                                                                    <div id="<%= shifts[i]._id %>_from">
+                                                                        <%= shifts[i].startHour %>
+                                                                    </div>
 
-                                <button type="button" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;"
-                                  onclick="edit_hours('<%= shifts[i]._id %>_from')">
+                                                                    <input type="hidden" id="time_from_<%= shifts[i]._id %>" name="time_from">
+
+                                                                    <input type="hidden" id="id_from_<%= shifts[i]._id %>" name="id">
+
+                                                                    <button type="button" class="btn btn-link btn-sm" style="padding: 0 !important;margin: 0 !important;" onclick="edit_hours('<%= shifts[i]._id %>_from')">
                                   <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
                                 </button>
 
-                                <button type="submit" id="<%= shifts[i]._id %>_from_check" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;">
+                                                                    <button type="submit" id="<%= shifts[i]._id %>_from_check" class="btn btn-link btn-sm" style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;">
                                   <i class="material-icons" style="margin-left: 0.5rem;">check</i>
                                 </button>
 
-                              </form>
-                            </td>
+                                                                </form>
+                                                            </td>
 
-                            <td>
-                              <form name="to-time-form" action="/trackingWorkers"
-                                onsubmit="return submit_check('<%= shifts[i]._id %>_to')" method="post">
+                                                            <td>
+                                                                <form name="to-time-form" action="/trackingWorkers" onsubmit="return submit_check('<%= shifts[i]._id %>_to')" method="post">
 
-                                <div id="<%= shifts[i]._id %>_to">
-                                  <%= shifts[i].doneHour %>
-                                </div>
+                                                                    <div id="<%= shifts[i]._id %>_to">
+                                                                        <%= shifts[i].doneHour %>
+                                                                    </div>
 
-                                <input id="time_to_<%= shifts[i]._id %>" type="hidden" name="time_to">
+                                                                    <input id="time_to_<%= shifts[i]._id %>" type="hidden" name="time_to">
 
-                                <input type="hidden" id="id_to_<%= shifts[i]._id %>" name="id">
+                                                                    <input type="hidden" id="id_to_<%= shifts[i]._id %>" name="id">
 
-                                <button type="button" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;"
-                                  onclick="edit_hours('<%= shifts[i]._id %>_to')">
+                                                                    <button type="button" class="btn btn-link btn-sm" style="padding: 0 !important;margin: 0 !important;" onclick="edit_hours('<%= shifts[i]._id %>_to')">
                                   <i class="material-icons" style="margin-left: 0.5rem;">edit</i>
                                 </button>
 
-                                <button type="submit" id="<%= shifts[i]._id %>_to_check" class="btn btn-link btn-sm"
-                                  style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;"
-                                  name="submit">
+                                                                    <button type="submit" id="<%= shifts[i]._id %>_to_check" class="btn btn-link btn-sm" style="padding: 0 !important;margin: 0 !important;display: none;color: forestgreen;" name="submit">
                                   <i class="material-icons" style="margin-left: 0.5rem;">check</i>
                                 </button>
 
-                              </form>
-                            </td>
+                                                                </form>
+                                                            </td>
 
-                            <td>
-                              <%= totalHours[i] %>
-                            </td>
+                                                            <td>
+                                                                <%= totalHours[i] %>
+                                                            </td>
 
-                            <td>
-                              <%= (worker.hourlyPay * totalHours[i]).toFixed(2) %> ₪
-                            </td>
+                                                            <td>
+                                                                <%= (worker.hourlyPay * totalHours[i]).toFixed(2) %> ₪
+                                                            </td>
 
-                            <td>
-                              <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm"
-                                onclick="report()" style="padding: 0 !important;margin: 0 !important;">
+                                                            <td>
+                                                                <button type="button" rel="tooltip" title="Report" class="btn btn-link btn-sm" onclick="report()" style="padding: 0 !important;margin: 0 !important;">
                                 <i class="material-icons" style="margin-left: 0.5rem;color: yellow;">report_problem</i>
                               </button>
-                            </td>
-                      </tr>
-                      <% } %>
+                                                            </td>
+                                                </tr>
+                                                <% } %>
 
-                  </tbody>
-                </table>
-              </div>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <footer class="footer">
-      <div class="container-fluid">
-        <nav class="float-left">
-          <ul>
-            <li>
-              <a href="https://www.creative-tim.com">
+            <footer class="footer">
+                <div class="container-fluid">
+                    <nav class="float-left">
+                        <ul>
+                            <li>
+                                <a href="https://www.creative-tim.com">
                 GLEM TECH
               </a>
-            </li>
-            <li>
-              <a href="https://creative-tim.com/presentation">
+                            </li>
+                            <li>
+                                <a href="https://creative-tim.com/presentation">
                 About Us
               </a>
-            </li>
-            <li>
-              <a href="http://blog.creative-tim.com">
+                            </li>
+                            <li>
+                                <a href="http://blog.creative-tim.com">
                 Blog
               </a>
-            </li>
-            <li>
-              <a href="https://www.creative-tim.com/license">
+                            </li>
+                            <li>
+                                <a href="https://www.creative-tim.com/license">
                 Licenses
               </a>
-            </li>
-          </ul>
-        </nav>
-        <div class="copyright float-right" id="date">
-          , made with <i class="material-icons">favorite</i> by
-          <a href="https://www.creative-tim.com" target="_blank">GLEM TECH</a> for a better web.
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="copyright float-right" id="date">
+                        , made with <i class="material-icons">favorite</i> by
+                        <a href="https://www.creative-tim.com" target="_blank">GLEM TECH</a> for a better web.
+                    </div>
+                </div>
+            </footer>
+            <script>
+                const x = new Date().getFullYear();
+                let date = document.getElementById('date');
+                date.innerHTML = '&copy; ' + x + date.innerHTML;
+            </script>
         </div>
-      </div>
-    </footer>
+    </div>
+
+    </div>
+    <!--   Core JS Files   -->
+    <script src="js/core/jquery.min.js"></script>
+    <script src="js/core/popper.min.js"></script>
+    <script src="js/core/bootstrap-material-design.min.js"></script>
+    <script src="https://unpkg.com/default-passive-events"></script>
+    <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <!--  Google Maps Plugin    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
+    <!-- Chartist JS -->
+    <script src="js/plugins/chartist.min.js"></script>
+    <!--  Notifications Plugin    -->
+    <script src="js/plugins/bootstrap-notify.js"></script>
+    <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+    <script src="js/material-dashboard.js?v=2.1.0"></script>
+    <!-- Material Dashboard DEMO methods, don't include it in your project! -->
+    <script src="demo/demo.js"></script>
+
     <script>
-      const x = new Date().getFullYear();
-      let date = document.getElementById('date');
-      date.innerHTML = '&copy; ' + x + date.innerHTML;
+        $(document).ready(function() {
+            const user = getCookie("user")
+            const identity = getCookie("identity")
+                // const worker = getCookie("track_emp")
+
+            const status = "<%= status %>";
+            const worker = "<%= worker %>";
+
+            const shifts = "<%= shifts %>";
+            const employers = "<%= employers %>";
+            const totalHours = "<%= totalHours %>";
+
+            switch (status) {
+                case "init":
+                    swal({
+                        title: "init \n",
+                        text: "",
+                        icon: "info",
+                    });
+                    break;
+                case "Not Found":
+                    swal({
+                        title: "Worker Not Found\n",
+                        text: "",
+                        icon: "info",
+                    });
+                    break;
+                case "No Change":
+                    swal({
+                        title: "No Change Has Been Made\n",
+                        text: "",
+                        icon: "info",
+                    });
+                    break;
+                case "Search Success":
+                    swal({
+                        title: "Found worker\n",
+                        text: "",
+                        icon: "success",
+                    });
+                    break;
+                case "Update Success":
+                    swal({
+                        title: "Successfully Upadated Shifts\n",
+                        text: "",
+                        icon: "success",
+                    });
+                    break;
+
+                default:
+                    break;
+            }
+
+            if (identity === "Contractor_Users") {
+                document.getElementById("recruit").style.display = "none";
+                document.getElementById("trackingWorkers").style.display = "none";
+                document.getElementById("statistics").style.display = "none";
+                document.getElementById("searchWorker").style.display = "none";
+                document.getElementById("hiringHistory").style.display = "none";
+            } else if (identity === "HR_Users") {
+                document.getElementById("shifts").style.display = "none";
+                document.getElementById("workHistory").style.display = "none";
+                document.getElementById("absences").style.display = "none";
+                document.getElementById("userProfile").style.display = "none";
+                document.getElementById("searchWorker").style.display = "none";
+                document.getElementById("hiringHistory").style.display = "none";
+            } else if (identity === "Employer_Users") {
+                document.getElementById("shifts").style.display = "none";
+                document.getElementById("workHistory").style.display = "none";
+                document.getElementById("absences").style.display = "none";
+                document.getElementById("userProfile").style.display = "none";
+                document.getElementById("recruit").style.display = "none";
+                document.getElementById("trackingWorkers").style.display = "none";
+                document.getElementById("statistics").style.display = "none";
+            }
+        })
     </script>
-  </div>
-  </div>
+    <script>
+        function check() {
+            let id = document.forms["worker-search-form"].id.value;
+            if (id !== "") {
+                return true;
+            } else {
+                swal({
+                    title: "EMPTY ID\n",
+                    text: "Search value should not be empty",
+                    icon: "warning",
+                });
+                return false;
+            }
+        }
 
-  </div>
-  <!--   Core JS Files   -->
-  <script src="js/core/jquery.min.js"></script>
-  <script src="js/core/popper.min.js"></script>
-  <script src="js/core/bootstrap-material-design.min.js"></script>
-  <script src="https://unpkg.com/default-passive-events"></script>
-  <script src="js/plugins/perfect-scrollbar.jquery.min.js"></script>
-  <!-- Place this tag in your head or just before your close body tag. -->
-  <script async defer src="https://buttons.github.io/buttons.js"></script>
-  <!--  Google Maps Plugin    -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script>
-  <!-- Chartist JS -->
-  <script src="js/plugins/chartist.min.js"></script>
-  <!--  Notifications Plugin    -->
-  <script src="js/plugins/bootstrap-notify.js"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="js/material-dashboard.js?v=2.1.0"></script>
-  <!-- Material Dashboard DEMO methods, don't include it in your project! -->
-  <script src="demo/demo.js"></script>
+        function report() {
+            swal("Report", "This shift has been reported", "warning");
+            return true;
+        }
+    </script>
+    <script>
+        function edit_hours(e) {
+            var element = document.getElementById(e);
 
-  <script>
-    $(document).ready(function () {
-      const user = getCookie("user")
-      const identity = getCookie("identity")
-      // const worker = getCookie("track_emp")
+            if (element.contentEditable !== "true") {
+                element.contentEditable = "true";
+                document.getElementById(e + "_check").style.display = "inline";
+            } else {
+                element.contentEditable = "false";
+                document.getElementById(e + "_check").style.display = "none";
+            }
+        }
 
-      const status = "<%= status %>";
-      const worker = "<%= worker %>";
+        function submit_check(e) {
+            var time = document.getElementById(e).innerText;
 
-      const shifts = "<%= shifts %>";
-      const employers = "<%= employers %>";
-      const totalHours = "<%= totalHours %>";
+            if (!/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time) || time.length !== 5) {
+                swal({
+                    title: "Invalid time entered\n",
+                    text: "Time must be in format hh:mm\nInvalid value entered - " + time,
+                    icon: "warning",
+                });
+                return false;
+            }
+            var time, id;
+            if (e.split("_")[1] === "from") {
+                time = document.getElementById('time_from_' + e.split("_")[0])
+                id = document.getElementById('id_from_' + e.split("_")[0])
+            } else {
+                time = document.getElementById('time_to_' + e.split("_")[0])
+                id = document.getElementById('id_to_' + e.split("_")[0])
+            }
 
-      switch (status) {
-        case "init":
-          swal({
-            title: "init \n",
-            text: "",
-            icon: "info",
-          });
-          break;
-        case "Not Found":
-          swal({
-            title: "Worker Not Found\n",
-            text: "",
-            icon: "info",
-          });
-          break;
-        case "No Change":
-          swal({
-            title: "No Change Has Been Made\n",
-            text: "",
-            icon: "info",
-          });
-          break;
-        case "Search Success":
-          swal({
-            title: "Found worker\n",
-            text: "",
-            icon: "success",
-          });
-          break;
-        case "Update Success":
-          swal({
-            title: "Successfully Upadated Shifts\n",
-            text: "",
-            icon: "success",
-          });
-          break;
-
-        default:
-          break;
-      }
-
-      if (identity === "Contractor_Users") {
-        document.getElementById("recruit").style.display = "none";
-        document.getElementById("trackingWorkers").style.display = "none";
-        document.getElementById("statistics").style.display = "none";
-        document.getElementById("searchWorker").style.display = "none";
-        document.getElementById("hiringHistory").style.display = "none";
-      }
-      else if (identity === "HR_Users") {
-        document.getElementById("shifts").style.display = "none";
-        document.getElementById("workHistory").style.display = "none";
-        document.getElementById("absences").style.display = "none";
-        document.getElementById("userProfile").style.display = "none";
-        document.getElementById("searchWorker").style.display = "none";
-        document.getElementById("hiringHistory").style.display = "none";
-      }
-      else if (identity === "Employer_Users") {
-        document.getElementById("shifts").style.display = "none";
-        document.getElementById("workHistory").style.display = "none";
-        document.getElementById("absences").style.display = "none";
-        document.getElementById("userProfile").style.display = "none";
-        document.getElementById("recruit").style.display = "none";
-        document.getElementById("trackingWorkers").style.display = "none";
-        document.getElementById("statistics").style.display = "none";
-      }
-    })
-  </script>
-  <script>
-    function check() {
-      let id = document.forms["worker-search-form"].id.value;
-      if (id !== "") {
-        return true;
-      }
-      else {
-        swal({
-          title: "EMPTY ID\n",
-          text: "Search value should not be empty",
-          icon: "warning",
-        });
-        return false;
-      }
-    }
-
-    function report() {
-      swal("Report", "This shift has been reported", "warning");
-      return true;
-    }
-  </script>
-  <script>
-    function edit_hours(e) {
-      var element = document.getElementById(e);
-
-      if (element.contentEditable !== "true") {
-        element.contentEditable = "true";
-        document.getElementById(e + "_check").style.display = "inline";
-      }
-      else {
-        element.contentEditable = "false";
-        document.getElementById(e + "_check").style.display = "none";
-      }
-    }
-
-    function submit_check(e) {
-      var time = document.getElementById(e).innerText;
-
-      if (! /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(time) || time.length !== 5) {
-        swal({
-          title: "Invalid time entered\n",
-          text: "Time must be in format hh:mm\nInvalid value entered - " + time,
-          icon: "warning",
-        });
-        return false;
-      }
-      var time, id;
-      if (e.split("_")[1] === "from") {
-        time = document.getElementById('time_from_' + e.split("_")[0])
-        id = document.getElementById('id_from_' + e.split("_")[0])
-      }
-      else {
-        time = document.getElementById('time_to_' + e.split("_")[0])
-        id = document.getElementById('id_to_' + e.split("_")[0])
-      }
-
-      time.value = document.getElementById(e).innerText;
-      id.value = e;
-      return true;
-    }
-  </script>
-  <script>
-    function getCookie(name) {
-      const value = "; " + document.cookie;
-      const parts = value.split("; " + name + "=");
-      if (parts.length == 2) {
-        const vlu = parts.pop().split(";").shift();
-        const decode_vlu = decodeURIComponent(vlu);
-        const replace_vlu = decode_vlu.replace(/[+]/, ' ');
-        const temp = replace_vlu.split(',')
-        if (temp.length > 1)
-          return JSON.parse(replace_vlu.replace("j:", ""));
-        else
-          return replace_vlu
-      }
-      else
-        return '';
-    }
-  </script>
+            time.value = document.getElementById(e).innerText;
+            id.value = e;
+            return true;
+        }
+    </script>
+    <script>
+        function getCookie(name) {
+            const value = "; " + document.cookie;
+            const parts = value.split("; " + name + "=");
+            if (parts.length == 2) {
+                const vlu = parts.pop().split(";").shift();
+                const decode_vlu = decodeURIComponent(vlu);
+                const replace_vlu = decode_vlu.replace(/[+]/, ' ');
+                const temp = replace_vlu.split(',')
+                if (temp.length > 1)
+                    return JSON.parse(replace_vlu.replace("j:", ""));
+                else
+                    return replace_vlu
+            } else
+                return '';
+        }
+    </script>
 </body>
 
 </html>
