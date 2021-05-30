@@ -12,13 +12,13 @@ const validateFunction = require("./validate");
 const date = require("./date");
 
 let validateUser = false
-let identity = {HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Employer_Users: "Employer_Users"}
+let identity = { HR_Users: "HR_Users", Contractor_Users: "Contractor_Users", Employer_Users: "Employer_Users" }
 
 const MongoClient = require("mongodb").MongoClient;
 
 const uri = "mongodb+srv://EliranDagan123:dagan123@cluster0.aszt8.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
-MongoClient.connect(uri, {useUnifiedTopology: true})
+MongoClient.connect(uri, { useUnifiedTopology: true })
     .then(client => {
         console.log("Connected to Database")
         const db = client.db("GLEM-TECH")
@@ -31,18 +31,19 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 
         const Absences_Collection = db.collection("Absences")
         const Shifts_Collection = db.collection("Shifts")
+        const Denied_Shifts_Collection = db.collection("Denied_Shifts")
         const AlreadyVoted_Collection = db.collection("AlreadyVoted")
-        // const Employer_Users_Collection = db.collection("Employer_Users")
+            // const Employer_Users_Collection = db.collection("Employer_Users")
 
         app.set("view engine", "ejs");
         app.use(CookieParser())
         app.use(express.static("public"));
-        app.use(bodyParser.urlencoded({extended: true}))
+        app.use(bodyParser.urlencoded({ extended: true }))
         app.use(bodyParser.json())
 
 
         // HOW TO "GET" FROM COLLECTION
-        router.get("/", async function (req, res) {
+        router.get("/", async function(_req, res) {
             console.log("HOMEPAGE")
             res.status(200).render("login", {exist: 0});
         });
@@ -172,34 +173,33 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             }
         });
 
-        router.get("/workHistory", function (req, res) {
+        router.get("/workHistory", function(req, res) {
             if (validateUser) {
                 const projection = { _id: 0, employerId: 1, startWork: 1, doneWork: 1 }
-                Shifts_Collection.find({ cwId: req.cookies.user.ID, status: "approved" }).project(projection).toArray(function (err, result) {
+                Shifts_Collection.find({ cwId: req.cookies.user.ID, status: "approved" }).project(projection).toArray(function(err, result) {
                     if (result.length > 0) {
                         var arr = [];
                         var totalSalary = 0;
                         var totalHouers = 0;
                         var totalShifts = result.length;
                         for (let i = 0; i < result.length; ++i) {
-                            Employer_Users_Collection.find({ ID: result[i].employerId }).toArray(function (er, emp) {
+                            Employer_Users_Collection.find({ ID: result[i].employerId }).toArray(function(_er, emp) {
                                 if (emp) {
                                     // console.log("Employer first Name: " + JSON.stringify(emp))
                                     var emp_string = emp[0].firstName + " " + emp[0].lastName;
                                     var start = new Date(result[i].startWork)
                                     var done = new Date(result[i].doneWork)
-                                    var date = start.getDay() + "/" + start.getMonth() + "/" + start.getUTCFullYear();
+                                    console.log(String(start.getDate()).padStart(2, "0"));
+                                    var date = String(start.getDate()).padStart(2, "0") + "/" + (start.getUTCMonth() + 1) + "/" + start.getUTCFullYear();
 
                                     if (start.getUTCMinutes() < 10) {
                                         result[i].startWork = start.getUTCHours() + " : 0" + start.getUTCMinutes();
-                                    }
-                                    else {
+                                    } else {
                                         result[i].startWork = start.getUTCHours() + " : " + start.getUTCMinutes();
                                     }
                                     if (done.getUTCMinutes() < 10) {
                                         result[i].doneWork = done.getUTCHours() + " : 0" + done.getUTCMinutes();
-                                    }
-                                    else {
+                                    } else {
                                         result[i].doneWork = done.getUTCHours() + " : " + done.getUTCMinutes();
                                     }
 
@@ -209,17 +209,16 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                                     var SHIFT = { employer: emp_string, date: date, start: result[i].startWork, done: result[i].doneWork, salary: salary.toFixed(2) + " NIS" }
                                     arr.push(SHIFT)
 
-                                    if(i + 1 == result.length){
-                                        var bot_row = {employer:"Shifts: " + totalShifts, date:null,start:null,done:"Houers: " + totalHouers.toFixed(2),salary:"Salary: " +totalSalary.toFixed(2) + " NIS"}
-                                        arr.push({ employer:null, date: null, start:null, done: null, salary:null })
+                                    if (i + 1 == result.length) {
+                                        var bot_row = { employer: "Shifts: " + totalShifts, date: null, start: null, done: "Hours: " + totalHouers.toFixed(2), salary: "Salary: " + totalSalary.toFixed(2) + " NIS" }
+                                        arr.push({ employer: null, date: null, start: null, done: null, salary: null })
                                         arr.push(bot_row)
                                         res.status(200).render("workHistory", { results: arr });
                                     }
                                 }
                             })
                         }
-                    }
-                    else {
+                    } else {
                         console.log(err);
                         res.status(200).render("workHistory", { results: [] });
                     }
@@ -227,10 +226,57 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             }
         });
 
-        router.get("/shifts", async (req, res) => {
-            const query = {cwId: req.cookies.user.ID};
-            const projection = {_id: 0, cwId: 0, rating: 0}
-            console.log(query);
+        async function getShifts(id) {
+            const query = { cwId: id };
+
+            // get the shifts with the same cwId
+            var shifts = Shifts_Collection.find(query).sort({ startWork: -1 });
+            shifts = await shifts.toArray();
+
+            // change expired shifts from status pending to status denied
+            // console.log("new Date()).getTime() : ", new Date().getTime());
+            for (let i = 0; i < shifts.length; i++) {
+                // console.log("i: ", i, " shifts[i].startWork.getTime()  :", shifts[i].startWork.getTime(), (new Date()).getTime() > shifts[i].startWork.getTime())
+                if (shifts[i].status == "pending" && (new Date()).getTime() > shifts[i].startWork.getTime()) {
+                    await Shifts_Collection.updateOne({ _id: shifts[i]._id }, { $set: { status: "denied" } })
+                        // console.log("*** inedx : " + i + ", updated shift status to denied, id : " + shifts[i]._id, shifts[i].status, shifts[i].startWork);
+                }
+            }
+
+            var temp_shifts = [];
+
+            // delete denied shifts
+            for (let i = 0; i < shifts.length; i++) {
+                if (shifts[i].status == "denied") { // delete denied shifts for the user
+                    // console.log("shifts[i] : ", shifts[i]);
+                    await Denied_Shifts_Collection.insertOne(shifts[i])
+                    await Shifts_Collection.deleteOne({ _id: shifts[i]._id }, async err => {
+                        if (err) throw err;
+                        console.log("1 document deleted, 1 document iserted to denied shifts DB")
+                    });
+                } else { // save only non-denied shifts and re-assign
+                    temp_shifts.push(shifts[i])
+                }
+            }
+
+            // if temp_shifts is not empty - re-assign shifts
+            if (temp_shifts.length > 0)
+                shifts = temp_shifts
+
+            //modify shifts' hours
+            shifts = modifyShiftsHours(shifts)
+
+            // add each employer's company to shifts
+            for (let i = 0; i < shifts.length; i++) {
+                const q = { ID: shifts[i].employerId };
+                const p = { _id: 0, partOfCompany: 1 };
+                const company = await Employer_Users_Collection.findOne(q, { projection: p });
+                shifts[i].company = Object.values(company);
+            }
+            return shifts;
+        }
+
+        router.get("/shifts", async(req, res) => {
             try {
                 var shifts = Shifts_Collection.find(query).project(projection).sort({startWork: -1})
                 shifts = await shifts.toArray()
@@ -620,6 +666,8 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
                     Shifts_Collection.find(myQuery).toArray().then((shift) => {
                         Contractor_Users_Collection.find({ID: shift[0].cwId}).toArray().then((user) => {
                             starAmount = parseInt(starAmount)
+                            console.log(`typeof staramount ${starAmount}`, typeof starAmount)
+                            console.log(`typeof user[0].rate ${user[0].rate}`, typeof user[0].rate)
                             if (user.length > 0) {
                                 Contractor_Users_Collection.updateOne({ID: shift[0].cwId}, {
                                     $set: {
@@ -676,15 +724,6 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
             return sum / amount
         }
 
-        router.get("/hiringHistoryNew", function (req, res) {
-            Shifts_Collection.find({employerId: req.cookies.user.ID}).toArray().then(newShifts => {
-                newShifts.length > 0 ? res.status(200).render("hiringHistoryNew", {
-                    args: newShifts,
-                    msg: 0
-                }) : res.status(200).render("hiringHistoryNew", {args: newShifts, msg: -1})
-            })
-        });
-
         //add the router
 
 
@@ -699,3 +738,93 @@ MongoClient.connect(uri, {useUnifiedTopology: true})
 module.exports = app.listen(app_port);
 console.log(`app is running. port: ${app_port}`);
 console.log(`http://127.0.0.1:${app_port}`);
+
+// val is which time should be changed (from or to),
+// the counetr_date is the date which should be checked against,
+// new_date is the new date
+function isInvalidTime(val, counter_date, new_date) {
+    var val1, val2;
+    if (val === "from") {
+        val1 = ((counter_date.getUTCHours() >= new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() > new_date.getUTCMinutes()));
+
+        val2 = ((counter_date.getUTCHours() > new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() >= new_date.getUTCMinutes()));
+
+    } else if (val === "to") {
+        val1 = ((counter_date.getUTCHours() <= new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() < new_date.getUTCMinutes()));
+
+        val2 = ((counter_date.getUTCHours() < new_date.getUTCHours()) &&
+            (counter_date.getUTCMinutes() <= new_date.getUTCMinutes()));
+    }
+
+    return !(val1 || val2);
+}
+
+function getNewDate(timeString, prev_date) {
+
+    const time = timeString.split(":"); // convert to ["hh","mm"]
+    const [hours, minutes] = [parseInt(time[0]), parseInt(time[1])]; // convert to [hh,mm]
+
+    console.log("^%$^$% prev_date.getUTCHours :", prev_date.getUTCHours());
+
+    if (prev_date.getUTCHours() >= 21)
+        prev_date.setDate(prev_date.getDate() - 1)
+
+    const new_date = new Date(new Date(prev_date).setHours(hours + 3, minutes)); //create new date
+
+    console.log("&&& prev_date :", prev_date);
+    console.log("&&& new_date :", new_date);
+
+    return new_date;
+}
+
+function getHoursArray(shifts) {
+    var totalHours = new Array(shifts.length);
+    for (let i = 0; i < shifts.length; i++) { // create total hours array
+        const [date1, date2] = [shifts[i].doneWork, shifts[i].startWork];
+        totalHours[i] = (Math.abs(date1 - date2) / 36e5).toFixed(2);
+    }
+    return totalHours;
+}
+
+function modifyShiftsHours(shifts) {
+    var temp_shifts = shifts;
+
+    for (let i = 0; i < temp_shifts.length; ++i) { // modifies shifts hours
+        var start = new Date(temp_shifts[i].startWork);
+        var done = new Date(temp_shifts[i].doneWork);
+        var startMonth = start.getMonth() + 1;
+        var doneMonth = done.getMonth() + 1;
+        if (startMonth < 10) {
+            // eslint-disable-next-line no-undef,no-unused-vars
+            startMonth = "0" + startMonth;
+        }
+        // eslint-disable-next-line no-undef,no-unused-vars
+        temp_shifts[i].startWork = start.getUTCDate() + "/" + startMonth + "/" + start.getFullYear();
+        // eslint-disable-next-line no-undef,no-unused-vars
+        temp_shifts[i].doneWork = start.getUTCDate() + "/" + doneMonth + "/" + start.getFullYear();
+        // eslint-disable-next-line no-undef,no-unused-vars
+        if (start.getUTCMinutes() < 10) {
+            temp_shifts[i].startHour = start.getUTCHours() + ":0" + start.getUTCMinutes();
+        } else {
+            temp_shifts[i].startHour = start.getUTCHours() + ":" + start.getUTCMinutes();
+        }
+        // eslint-disable-next-line no-undef,no-unused-vars
+        if (done.getUTCMinutes() < 10) {
+            temp_shifts[i].doneHour = done.getUTCHours() + ":0" + done.getUTCMinutes();
+        } else {
+            temp_shifts[i].doneHour = done.getUTCHours() + ":" + done.getUTCMinutes();
+        }
+        // eslint-disable-next-line no-undef,no-unused-vars
+        if (start.getUTCHours() < 10) {
+            temp_shifts[i].startHour = "0" + temp_shifts[i].startHour;
+        }
+        // eslint-disable-next-line no-undef,no-unused-vars
+        if (done.getUTCHours() < 10) {
+            temp_shifts[i].doneHour = "0" + temp_shifts[i].doneHour;
+        }
+    }
+    return temp_shifts;
+}
