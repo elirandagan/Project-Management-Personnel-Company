@@ -410,7 +410,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             res.status(200).render("user", {status: "init"});
         });
 
-<<<<<<< HEAD
         router.post("/user", async(req, res) => {
             console.log("user inside user: ", req.cookies.user);
             // console.log("type : ", typeof req.cookies.user._id);
@@ -420,45 +419,42 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 ...req.cookies.user,
                 FirstName: req.body.FirstName,
                 LastName: req.body.LastName,
-=======
+
         router.post("/user", (req, res) => {
             const query = {_id: req.cookies.user.ID}
             // eslint-disable-next-line no-undef
             const newvalues = {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
->>>>>>> a64950428f03d789e01aa97e2d5d20a2b0d4cd10
                 partOfCompany: req.body.partOfCompany,
                 expertise: req.body.expertise,
                 area: req.body.area,
                 // lastUpdate: new Timestamp()
             }
-<<<<<<< HEAD
+
             console.log("newvalues :", newValues);
             res.cookie("user", newValues, { maxAge: 900000, httpOnly: false }); // create cookie.
 
             // eslint-disable-next-line no-undef,no-unused-vars
             Contractor_Users_Collection.updateOne({ _id: newValues._id }, { $set: newValues }, err => {
-=======
+
             var status;
             // eslint-disable-next-line no-undef,no-unused-vars
             Contractor_Users_Collection.updateOne(query, {$set: newvalues}, function (err, res2) {
->>>>>>> a64950428f03d789e01aa97e2d5d20a2b0d4cd10
                 if (err) {
                     console.log(err + " ** Failed to update **");
                 } else {
                     console.log("\n** Success to update **");
                 }
             });
-<<<<<<< HEAD
+
 
             const u = await Contractor_Users_Collection.findOne({ _id: ObjectId(newValues._id) });
             console.log("u after update:", u);
 
             res.status(200).render("user", { status: "Success" });
-=======
+
             res.status(200).render("user", {status: status});
->>>>>>> a64950428f03d789e01aa97e2d5d20a2b0d4cd10
         });
 
         async function getSignUps() {
@@ -663,7 +659,6 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
             res.status(200).render("searchWorker");
         });
 
-<<<<<<< HEAD
         router.get("/hiringHistory", function(req, res) {
             console.log(req.cookies.user.ID)
             Shifts_Collection.find({ employerId: req.cookies.user.ID }).toArray().then(async(shifts) => {
@@ -674,10 +669,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     msg: 0
                 }) : res.status(200).render("hiringHistory", { args: newShifts, msg: -1 })
             })
-=======
         router.get("/hiringHistory", function (req, res) {
             renderToHiringHistory(req,res,0)
->>>>>>> a64950428f03d789e01aa97e2d5d20a2b0d4cd10
         });
 
         router.post("/hiringHistory", function (req, res) {
