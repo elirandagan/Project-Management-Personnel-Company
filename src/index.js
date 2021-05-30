@@ -185,7 +185,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                             Employer_Users_Collection.find({ ID: result[i].employerId }).toArray(function(_er, emp) {
                                 if (emp) {
                                     // console.log("Employer first Name: " + JSON.stringify(emp))
-                                    var emp_string = emp[0].firstName + " " + emp[0].lastName;
+                                    var emp_string = emp[0].FirstName + " " + emp[0].LastName;
                                     var start = new Date(result[i].startWork)
                                     var done = new Date(result[i].doneWork)
                                     console.log(String(start.getDate()).padStart(2, "0"));
@@ -428,7 +428,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
 
         router.get("/recruit", function(_req, res) {
             console.log("recruit")
-            HR_Users_Collection.find({ firstName: "Lior" }).toArray(function(err, result) {
+            HR_Users_Collection.find({ FirstName: "Lior" }).toArray(function(err, result) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -468,25 +468,24 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
         })
 
         router.get("/user", (_req, res) => {
-            // console.log("******");
-            // console.log("in user router");
-            // console.log(req.cookies.user);
-            // console.log(req.cookies.identity);
-            // console.log("******");
             res.status(200).render("user", { status: "init" });
         });
 
         router.post("/user", (req, res) => {
+            console.log("user inside user: ", req.cookies.user);
             const query = { _id: req.cookies.user.ID }
                 // eslint-disable-next-line no-undef
             const newvalues = {
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
+                ...req.cookies.user,
+                FirstName: req.body.FirstName,
+                LastName: req.body.LastName,
                 partOfCompany: req.body.partOfCompany,
                 expertise: req.body.expertise,
                 area: req.body.area,
-                // lastUpdate: new Timestamp()
             }
+            console.log("newvalues :", newvalues);
+            res.cookie("user", newvalues, { maxAge: 900000, httpOnly: false }); // create cookie.
+
             var status;
             // eslint-disable-next-line no-undef,no-unused-vars
             Contractor_Users_Collection.updateOne(query, { $set: newvalues }, function(err, _res2) {
@@ -498,6 +497,7 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                     status = "Success";
                 }
             });
+
             res.status(200).render("user", { status: status });
         });
 
@@ -606,8 +606,8 @@ MongoClient.connect(uri, { useUnifiedTopology: true })
                 } else {
                     employers[i] =
                         Employer_Users_Collection.insertOne({
-                            firstName: "undefined",
-                            lastName: "undefined",
+                            FirstName: "undefined",
+                            LastName: "undefined",
                             ID: shifts[i].employerId,
                             partOfCompany: "GLEM",
                             password: "123456",
